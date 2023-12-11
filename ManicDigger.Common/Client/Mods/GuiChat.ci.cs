@@ -172,6 +172,8 @@
 
 	public override void OnKeyDown(Game game_, KeyEventArgs args)
 	{
+        
+
 		if (game.guistate != GuiState.Normal)
 		{
 			//Don't open chat when not in normal game
@@ -235,7 +237,7 @@
 				args.SetHandled(true);
 				return;
 			}
-			if (game.keyboardStateRaw[game.GetKey(GlKeys.ControlLeft)] || game.keyboardStateRaw[game.GetKey(GlKeys.ControlRight)])
+			if (game.input.IsCtrlDown)
 			{
 				if (key == game.GetKey(GlKeys.V))
 				{

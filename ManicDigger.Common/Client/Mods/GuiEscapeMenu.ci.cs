@@ -568,30 +568,12 @@
 		}
 		LanguageCi language = game.language;
 		int count = 0;
-		helps[count++] = KeyHelpCreate(language.KeyMoveFoward(), GlKeys.W);
-		helps[count++] = KeyHelpCreate(language.KeyMoveBack(), GlKeys.S);
-		helps[count++] = KeyHelpCreate(language.KeyMoveLeft(), GlKeys.A);
-		helps[count++] = KeyHelpCreate(language.KeyMoveRight(), GlKeys.D);
-		helps[count++] = KeyHelpCreate(language.KeyJump(), GlKeys.Space);
-		helps[count++] = KeyHelpCreate(language.KeyShowMaterialSelector(), GlKeys.B);
-		helps[count++] = KeyHelpCreate(language.KeySetSpawnPosition(), GlKeys.P);
-		helps[count++] = KeyHelpCreate(language.KeyRespawn(), GlKeys.O);
-		helps[count++] = KeyHelpCreate(language.KeyReloadWeapon(), GlKeys.R);
-		helps[count++] = KeyHelpCreate(language.KeyToggleFogDistance(), GlKeys.F);
-		helps[count++] = KeyHelpCreate(game.platform.StringFormat(language.KeyMoveSpeed(), "1"), GlKeys.F1);
-		helps[count++] = KeyHelpCreate(game.platform.StringFormat(language.KeyMoveSpeed(), "10"), GlKeys.F2);
-		helps[count++] = KeyHelpCreate(language.KeyFreeMove(), GlKeys.F3);
-		helps[count++] = KeyHelpCreate(language.KeyThirdPersonCamera(), GlKeys.F5);
-		helps[count++] = KeyHelpCreate(language.KeyTextEditor(), GlKeys.F9);
-		helps[count++] = KeyHelpCreate(language.KeyFullscreen(), GlKeys.F11);
-		helps[count++] = KeyHelpCreate(language.KeyScreenshot(), GlKeys.F12);
-		helps[count++] = KeyHelpCreate(language.KeyPlayersList(), GlKeys.Tab);
-		helps[count++] = KeyHelpCreate(language.KeyChat(), GlKeys.T);
-		helps[count++] = KeyHelpCreate(language.KeyTeamChat(), GlKeys.Y);
-		helps[count++] = KeyHelpCreate(language.KeyCraft(), GlKeys.C);
-		helps[count++] = KeyHelpCreate(language.KeyBlockInfo(), GlKeys.I);
-		helps[count++] = KeyHelpCreate(language.KeyUse(), GlKeys.E);
-		helps[count++] = KeyHelpCreate(language.KeyReverseMinecart(), GlKeys.Q);
+
+        for(int c=0; c < game.input.keymaps.Count; c++) {
+            helps[c] = KeyHelpCreate(game.input.keymaps[c].description, c);
+        }
+
+ 
 		return helps;
 	}
 
@@ -632,7 +614,8 @@
 		{
 			if (keyselectid != -1)
 			{
-				game.options.Keys[keyhelps()[keyselectid].DefaultKey] = eKey;
+                game.input.ChangBinding(keyselectid, eKey);
+
 				keyselectid = -1;
 				args.SetHandled(true);
 			}
@@ -797,6 +780,7 @@ public class KeyHelp
 {
 	internal string Text;
 	internal int DefaultKey;
+
 }
 
 public class DisplayResolutionCi

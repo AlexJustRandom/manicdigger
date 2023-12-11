@@ -1,6 +1,19 @@
 ﻿public class ModCameraKeys : ClientMod
 {
-	public override void OnNewFrameFixed(Game game, NewFrameEventArgs args)
+    public ModCameraKeys(Game game){
+        ForwardKeycode =game.input.GetInputID("KeyMoveFoward");
+        RightKeycode = game.input.GetInputID("KeyMoveRight");
+        LeftKeycode = game.input.GetInputID("KeyMoveLeft");
+        BackKeycode = game.input.GetInputID("KeyMoveBack");
+        BackKeycode = game.input.GetInputID("KeyJump");
+
+    }
+    int ForwardKeycode;
+    int RightKeycode;
+    int LeftKeycode;
+    int BackKeycode;
+
+    public override void OnNewFrameFixed(Game game, NewFrameEventArgs args)
 	{
 		float one = 1;
 		float dt = args.GetDt();
@@ -33,10 +46,10 @@
 				if (game.overheadcamera)
 				{
 					CameraMove m = new CameraMove();
-					if (game.keyboardState[game.GetKey(GlKeys.A)]) { game.overheadcameraK.TurnRight(dt * overheadcameraspeed); }
-					if (game.keyboardState[game.GetKey(GlKeys.D)]) { game.overheadcameraK.TurnLeft(dt * overheadcameraspeed); }
-					if (game.keyboardState[game.GetKey(GlKeys.W)]) { angleup = true; }
-					if (game.keyboardState[game.GetKey(GlKeys.S)]) { angledown = true; }
+					if (game.input.IsInputDown(BackKeycode)) { game.overheadcameraK.TurnRight(dt * overheadcameraspeed); }
+					if (game.input.IsInputDown(RightKeycode)) { game.overheadcameraK.TurnLeft(dt * overheadcameraspeed); }
+					if (game.input.IsInputDown(ForwardKeycode)) { angleup = true; }
+					if (game.input.IsInputDown(BackKeycode)) { angledown = true; }
 					game.overheadcameraK.Center.X = game.player.position.x;
 					game.overheadcameraK.Center.Y = game.player.position.y;
 					game.overheadcameraK.Center.Z = game.player.position.z;
@@ -64,11 +77,11 @@
 				}
 				else if (game.enable_move)
 				{
-					if (game.keyboardState[game.GetKey(GlKeys.W)]) { game.controls.movedy += 1; }
-					if (game.keyboardState[game.GetKey(GlKeys.S)]) { game.controls.movedy += -1; }
-					if (game.keyboardState[game.GetKey(GlKeys.A)]) { game.controls.movedx += -1; game.localplayeranimationhint.leanleft = true; game.localstance = 1; }
+                    if (game.input.IsInputDown(ForwardKeycode)) { game.controls.movedy += 1; }
+                    if (game.input.IsInputDown(BackKeycode)) { game.controls.movedy += -1; }
+                    if (game.input.IsInputDown(LeftKeycode)) { game.controls.movedx += -1; game.localplayeranimationhint.leanleft = true; game.localstance = 1; }
 					else { game.localplayeranimationhint.leanleft = false; }
-					if (game.keyboardState[game.GetKey(GlKeys.D)]) { game.controls.movedx += 1; game.localplayeranimationhint.leanright = true; game.localstance = 2; }
+                    if (game.input.IsInputDown(RightKeycode)) { game.controls.movedx += 1; game.localplayeranimationhint.leanright = true; game.localstance = 2; }
 					else { game.localplayeranimationhint.leanright = false; }
 					if (!game.localplayeranimationhint.leanleft && !game.localplayeranimationhint.leanright) { game.localstance = 0; }
 
