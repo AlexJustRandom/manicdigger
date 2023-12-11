@@ -63,93 +63,95 @@
         // Commands requiring numeric arguments
         if (arguments != "")
         {
-            if (cmd == "fog")
+            switch (cmd)
             {
-                int foglevel;
-                foglevel = game.platform.IntParse(arguments);
-                {
-                    int foglevel2 = foglevel;
-                    if (foglevel2 > 1024)
+                case "fog":
+                    int foglevel;
+                    foglevel = game.platform.IntParse(arguments);
                     {
-                        foglevel2 = 1024;
+                        int foglevel2 = foglevel;
+                        if (foglevel2 > 1024)
+                        {
+                            foglevel2 = 1024;
+                        }
+                        if (foglevel2 % 2 == 0)
+                        {
+                            foglevel2--;
+                        }
+                        game.d_Config3d.viewdistance = foglevel2;
                     }
-                    if (foglevel2 % 2 == 0)
-                    {
-                        foglevel2--;
-                    }
-                    game.d_Config3d.viewdistance = foglevel2;
-                }
-                game.OnResize();
-            }
-            else if (cmd == "fov")
-            {
-                int arg = game.platform.IntParse(arguments);
-                int minfov = 1;
-                int maxfov = 179;
-                if (!game.issingleplayer)
-                {
-                    minfov = 60;
-                }
-                if (arg < minfov || arg > maxfov)
-                {
-                    game.Log(game.platform.StringFormat2("Valid field of view: {0}-{1}", game.platform.IntToString(minfov), game.platform.IntToString(maxfov)));
-                }
-                else
-                {
-                    float fov_ = (2 * Game.GetPi() * (game.one * arg / 360));
-                    game.fov = fov_;
                     game.OnResize();
-                }
-            }
-            else if (cmd == "movespeed")
-            {
-                if (game.AllowFreemove)
-                {
-                    if (game.platform.FloatParse(arguments) <= 500)
+                    break;
+                case "fov":
+                    int arg = game.platform.IntParse(arguments);
+                    int minfov = 1;
+                    int maxfov = 179;
+                    if (!game.issingleplayer)
                     {
-                        game.movespeed = game.basemovespeed * game.platform.FloatParse(arguments);
-                        game.AddChatline(game.platform.StringFormat("Movespeed: {0}x", arguments));
+                        minfov = 60;
+                    }
+                    if (arg < minfov || arg > maxfov)
+                    {
+                        game.Log(game.platform.StringFormat2("Valid field of view: {0}-{1}", game.platform.IntToString(minfov), game.platform.IntToString(maxfov)));
                     }
                     else
                     {
-                        game.AddChatline("Entered movespeed to high! max. 500x");
+                        float fov_ = (2 * Game.GetPi() * (game.one * arg / 360));
+                        game.fov = fov_;
+                        game.OnResize();
                     }
-                }
-                else
-                {
-                    game.Log(strFreemoveNotAllowed);
-                    return true;
-                }
-            }
-            else if (cmd == "serverinfo")
-            {
-                //Fetches server info from given adress
-                IntRef splitCount = new IntRef();
-                string[] split = game.platform.StringSplit(arguments, ":", splitCount);
-                if (splitCount.value == 2)
-                {
-                    QueryClient qClient = new QueryClient();
-                    qClient.SetPlatform(game.platform);
-                    qClient.PerformQuery(split[0], game.platform.IntParse(split[1]));
-                    if (qClient.querySuccess)
+
+                    break;
+                case "movespeed":
+                    if (game.AllowFreemove)
                     {
-                        //Received result
-                        QueryResult r = qClient.GetResult();
-                        game.AddChatline(r.GameMode);
-                        game.AddChatline(game.platform.IntToString(r.MapSizeX));
-                        game.AddChatline(game.platform.IntToString(r.MapSizeY));
-                        game.AddChatline(game.platform.IntToString(r.MapSizeZ));
-                        game.AddChatline(game.platform.IntToString(r.MaxPlayers));
-                        game.AddChatline(r.MOTD);
-                        game.AddChatline(r.Name);
-                        game.AddChatline(game.platform.IntToString(r.PlayerCount));
-                        game.AddChatline(r.PlayerList);
-                        game.AddChatline(game.platform.IntToString(r.Port));
-                        game.AddChatline(r.PublicHash);
-                        game.AddChatline(r.ServerVersion);
+                        if (game.platform.FloatParse(arguments) <= 500)
+                        {
+                            game.movespeed = game.basemovespeed * game.platform.FloatParse(arguments);
+                            game.AddChatline(game.platform.StringFormat("Movespeed: {0}x", arguments));
+                        }
+                        else
+                        {
+                            game.AddChatline("Entered movespeed to high! max. 500x");
+                        }
                     }
-                    game.AddChatline(qClient.GetServerMessage());
-                }
+                    else
+                    {
+                        game.Log(strFreemoveNotAllowed);
+                        return true;
+                    }
+
+                    break;
+                case "serverinfo":
+                    //Fetches server info from given adress
+                    IntRef splitCount = new IntRef();
+                    string[] split = game.platform.StringSplit(arguments, ":", splitCount);
+                    if (splitCount.value == 2)
+                    {
+                        QueryClient qClient = new QueryClient();
+                        qClient.SetPlatform(game.platform);
+                        qClient.PerformQuery(split[0], game.platform.IntParse(split[1]));
+                        if (qClient.querySuccess)
+                        {
+                            //Received result
+                            QueryResult r = qClient.GetResult();
+                            game.AddChatline(r.GameMode);
+                            game.AddChatline(game.platform.IntToString(r.MapSizeX));
+                            game.AddChatline(game.platform.IntToString(r.MapSizeY));
+                            game.AddChatline(game.platform.IntToString(r.MapSizeZ));
+                            game.AddChatline(game.platform.IntToString(r.MaxPlayers));
+                            game.AddChatline(r.MOTD);
+                            game.AddChatline(r.Name);
+                            game.AddChatline(game.platform.IntToString(r.PlayerCount));
+                            game.AddChatline(r.PlayerList);
+                            game.AddChatline(game.platform.IntToString(r.Port));
+                            game.AddChatline(r.PublicHash);
+                            game.AddChatline(r.ServerVersion);
+                        }
+                        game.AddChatline(qClient.GetServerMessage());
+                    }
+
+                    break;
             }
         }
 
