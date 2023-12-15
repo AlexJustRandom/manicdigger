@@ -1,12 +1,12 @@
-﻿using ManicDigger.Common;
-using System;
+﻿using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using ManicDigger.Common;
 
 namespace ManicDigger.Server
 {
-	public class ServerSystemLoadConfig : ServerSystem
+    public class ServerSystemLoadConfig : ServerSystem
 	{
 		public override void Update(Server server, float dt)
 		{

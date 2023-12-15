@@ -54,7 +54,7 @@ namespace ManicDigger.Common
 			}
 			progress.value = 1;
 			list.count = assets.Count;
-			list.items = new Asset[2048];
+			list.items = new Asset[4096];
 			for (int i = 0; i < assets.Count; i++)
 			{
 				list.items[i] = assets[i];

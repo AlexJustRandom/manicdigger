@@ -89,7 +89,7 @@ namespace ManicDigger.Server
 			this.ChatLogging = false;
 			this.AllowScripting = false;
 			this.Key = Guid.NewGuid().ToString();
-			this.IsCreative = true;
+			this.IsCreative = false;
 			this.Public = true;
 			this.AllowGuests = true;
 			this.Monsters = true;
