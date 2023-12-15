@@ -181,7 +181,7 @@ public class ScreenSingleplayer : MainMenuScreen
 				ListEntry e = new ListEntry();
                 e.textTopLeft = menu.p.FileName(savegames[i]);
                 e.textTopLeft = menu.p.FileName(savegames[i]);
-                e.textTopRight= "textTopRight";
+                e.textTopRight= menu.p.IntToString(savegamesCount_.value);
                 e.textBottomLeft = "textBottomLeft";
                 e.textBottomRight = "textBottomRight";
 

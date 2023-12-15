@@ -1187,6 +1187,15 @@ namespace ManicDigger.Server
 
             return server.d_Data.IsHarvestableByTool(blockid, toolid);
         }
+
+        /// <summary>
+        /// comand for testing new functions etc ...
+        /// </summary>
+        public void VIPDEBUGTEST(string texr, int val)
+        {
+            server.VIPDEBUGTEST(texr, val);
+
+        }
         #endregion
 
 

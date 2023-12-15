@@ -122,8 +122,18 @@ namespace ManicDigger.Server
 		public Random rnd = new Random();
 		public int SpawnPositionRandomizationRange = 96;
 		public bool IsMono = Type.GetType("Mono.Runtime") != null;
+        public bool vipdbgbool;
+        public string vipdbgtes;
+        public int vipdbgtesval;
 
-		public string serverpathlogs = Path.Combine(GameStorePath.GetStorePath(), "Logs");
+        public void VIPDEBUGTEST(string texr, int val) {
+            vipdbgtes=texr;
+            vipdbgtesval = val;
+            vipdbgbool = true;
+        }
+           
+    
+    public string serverpathlogs = Path.Combine(GameStorePath.GetStorePath(), "Logs");
 		private void BuildLog(string p)
 		{
 			if (!config.BuildLogging)
@@ -203,10 +213,17 @@ namespace ManicDigger.Server
 				{
 					systems[i].Update(this, dt);
 				}
-                SaveBlockstoJson();
 
-                //Save data
-                ProcessSave();
+                if (vipdbgbool)
+                {
+                    if (vipdbgtes == "spmod")
+                    {
+                        Timer.speedMod = (float)vipdbgtesval / 100.0f;
+                        modManager.SendMessageToAll("spmod activated");
+                    }
+                }
+                    //Save data
+                    ProcessSave();
 				//Do server stuff
 				ProcessMain();
 
@@ -3928,7 +3945,8 @@ namespace ManicDigger.Server
 	}
 	public class Timer
 	{
-		public double INTERVAL { get { return interval; } set { interval = value; } }
+        public static double speedMod=1;
+		public double INTERVAL { get { return interval/speedMod; } set { interval = value; } }
 		public double MaxDeltaTime { get { return maxDeltaTime; } set { maxDeltaTime = value; } }
 		double interval = 1;
 		double maxDeltaTime = double.PositiveInfinity;

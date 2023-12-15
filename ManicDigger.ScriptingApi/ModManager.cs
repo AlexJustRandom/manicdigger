@@ -731,6 +731,10 @@ namespace ManicDigger
         /// </summary>
         int GetToolType(string name);
         bool IsHarvestableByTool(int harvestabilitymask, int tooltype);
+
+void VIPDEBUGTEST(string texr, int val);
+        
+
         #endregion
 
 
@@ -741,7 +745,7 @@ namespace ManicDigger
 
 
 
-        #region Deprecated functions
+            #region Deprecated functions
         [Obsolete("GetCurrentYearTotal is deprecated, please use GetYear instead.", false)]
 		double GetCurrentYearTotal();
 		[Obsolete("GetCurrentHourTotal is deprecated, please use GetTotalHours instead.", false)]

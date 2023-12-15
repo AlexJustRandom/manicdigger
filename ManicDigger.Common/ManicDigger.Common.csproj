@@ -326,6 +326,7 @@
     <None Include="Server\Mods\Fortress\Unused\PermissionBlock.cs" />
     <None Include="Server\Mods\Fortress\Unused\Fluids.cs" />
     <None Include="Server\Mods\Fortress\Upgrades\AdvancedWorldGenerator.cs" />
+    <None Include="Server\Mods\Fortress\MoreCommands\ServerDebug.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Packet.proto">
