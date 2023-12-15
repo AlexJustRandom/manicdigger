@@ -13,8 +13,7 @@ cp ManicDigger.Common/bin/Release/ManicDigger.Common.dll output
 # Scripting API
 cp ManicDigger.ScriptingApi/bin/Release/ManicDigger.ScriptingApi.dll output
 
-# Game Client
-cp ManicDigger/bin/Release/*.exe output
+# Game ManicDigger/bin/ManicDigger/bin/Release/
 
 # Server
 cp ManicDigger.Server/bin/Release/*.exe output
@@ -33,7 +32,14 @@ cp packages/OpenTK.3.3.3/lib/net20/OpenTK.dll output
 cp packages/OpenTK.3.3.3/content/OpenTK.dll.config output
 cp packages/protobuf-net.2.4.0/lib/net40/protobuf-net.dll output
 cp packages/Newtonsoft.Json.13.0.3/lib/net40/Newtonsoft.Json.dll output
-rm -f output/*vshost.exe
+
 cp COPYING.md output/credits.txt
+# Nuget packages 2 time sometimes when developing dll's go missing? maybe its monodevelop thing
+cp packages/OpenTK.3.3.3/lib/net20/OpenTK.dll ManicDigger/bin/Release/    
+cp packages/OpenTK.3.3.3/content/OpenTK.dll.config ManicDigger/bin/Release/ 
+cp packages/protobuf-net.2.4.0/lib/net40/protobuf-net.dll ManicDigger/bin/Release/
+cp packages/Newtonsoft.Json.13.0.3/lib/net40/Newtonsoft.Json.dll ManicDigger/bin/Release/
+
+rm -f output/*vshost.exe
 
 # pause
