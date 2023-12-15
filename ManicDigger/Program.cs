@@ -1,13 +1,14 @@
 ﻿#region Using Statements
+using ManicDigger;
+using ManicDigger.ClientNative;
+using ManicDigger.Common;
+using ManicDigger.Server;
+using OpenTK.Graphics;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using ManicDigger.ClientNative;
-using ManicDigger.Common;
-using ManicDigger.Server;
-using OpenTK.Graphics;
 #endregion
 
 public class ManicDiggerProgram
@@ -15,11 +16,11 @@ public class ManicDiggerProgram
 	[STAThread]
 	public static void Main(string[] args)
 	{
-		#if !DEBUG
+#if !DEBUG
 		//Catch unhandled exceptions
 		CrashReporter.DefaultFileName = "ManicDiggerClientCrash.txt";
 		CrashReporter.EnableGlobalExceptionHandling(false);
-		#endif
+#endif
 
 		new ManicDiggerProgram(args);
 	}
@@ -29,19 +30,23 @@ public class ManicDiggerProgram
 		dummyNetwork = new DummyNetwork();
 		dummyNetwork.Start(new MonitorObject(), new MonitorObject());
 
-		#if !DEBUG
+#if !DEBUG
 		crashreporter = new CrashReporter();
 		crashreporter.Start(delegate { Start(args); });
-		#else
+#else
 		Start(args);
-		#endif
+#endif
 	}
 
 	CrashReporter crashreporter;
 
 	private void Start(string[] args)
 	{
-		string appPath = Path.GetDirectoryName(Application.ExecutablePath);
+      //  BlockLoader loader = new BlockLoader();
+
+        //loader.Load("/home/Alex/Desktop/data.json", null);
+
+        string appPath = Path.GetDirectoryName(Application.ExecutablePath);
 		if (!Debugger.IsAttached)
 		{
 			System.Environment.CurrentDirectory = appPath;
@@ -53,7 +58,7 @@ public class ManicDiggerProgram
 		platform.crashreporter = crashreporter;
 		platform.singlePlayerServerDummyNetwork = dummyNetwork;
 		this.platform = platform;
-		platform.StartSinglePlayerServer = (filename) => { savefilename = filename; new Thread(ServerThreadStart).Start(); };
+		platform.StartSinglePlayerServer = (serverSettings) => { serverInitSettings= serverSettings; new Thread(ServerThreadStart).Start(); };
 		GraphicsMode mode = new GraphicsMode(OpenTK.DisplayDevice.Default.BitsPerPixel, 24);
 		using (GameWindowNative game = new GameWindowNative(mode))
 		{
@@ -79,17 +84,18 @@ public class ManicDiggerProgram
 	}
 
 	DummyNetwork dummyNetwork;
-	string savefilename;
-	public GameExit exit = new GameExit();
-	GamePlatformNative platform;
+    ServerInitSettings serverInitSettings;
 
+    public GameExit exit = new GameExit();
+	GamePlatformNative platform;
+    
 	public void ServerThreadStart()
 	{
 		try
 		{
 			Server server = new Server();
-			server.SaveFilenameOverride = savefilename;
-			server.exit = exit;
+            server.serverInitSettings = serverInitSettings;
+            server.exit = exit;
 			DummyNetServer netServer = new DummyNetServer();
 			netServer.SetPlatform(new GamePlatformNative());
 			netServer.SetNetwork(dummyNetwork);

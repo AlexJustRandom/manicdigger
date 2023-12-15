@@ -24,6 +24,8 @@ _ReSharper.*
 *.sdsettings
 local.properties
 packages/
+.vs/
+TestResult*
 
 # OS generated files #
 ######################

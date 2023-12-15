@@ -1,4 +1,8 @@
-﻿using System;
+﻿using ManicDigger.Common;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
+using OpenTK.Input;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -7,24 +11,21 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using System.Xml.Serialization;
-using ManicDigger.Common;
-using OpenTK;
-using OpenTK.Audio;
-using OpenTK.Graphics.OpenGL;
-using OpenTK.Input;
+using Newtonsoft.Json;
+
+using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 namespace ManicDigger.ClientNative
 {
 	public class GamePlatformNative : GamePlatform
 	{
-		#region Primitive
-		public override int FloatToInt(float value)
+    
+        #region Primitive
+        public override int FloatToInt(float value)
 		{
 			return (int)value;
 		}
@@ -65,6 +66,20 @@ namespace ManicDigger.ClientNative
 		public override int IntParse(string value)
 		{
 			return System.Int32.Parse(value);
+		}
+
+		public override bool IntTryParse(string s, IntRef ret)
+		{
+			int i;
+			if (int.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out i))
+			{
+				ret.SetValue(i);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		public override float FloatParse(string value)
@@ -270,7 +285,8 @@ namespace ManicDigger.ClientNative
 
 		public override string PathSavegames()
 		{
-			return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            return GameStorePath.gamepathsaves;
 		}
 
 		public override string PathCombine(string part1, string part2)
@@ -1230,7 +1246,6 @@ namespace ManicDigger.ClientNative
 
 		public void Start()
 		{
-			window.Keyboard.KeyRepeat = true;
 			window.KeyDown += new EventHandler<KeyboardKeyEventArgs>(game_KeyDown);
 			window.KeyUp += new EventHandler<KeyboardKeyEventArgs>(game_KeyUp);
 			window.KeyPress += new EventHandler<OpenTK.KeyPressEventArgs>(game_KeyPress);
@@ -1240,6 +1255,7 @@ namespace ManicDigger.ClientNative
 			window.MouseWheel += new EventHandler<OpenTK.Input.MouseWheelEventArgs>(Mouse_WheelChanged);
 			window.RenderFrame += new EventHandler<OpenTK.FrameEventArgs>(window_RenderFrame);
 			window.Closed += new EventHandler<EventArgs>(window_Closed);
+			window.Resize += new EventHandler<EventArgs>(window_Resized);
 			window.TargetRenderFrequency = 0;
 			window.Title = "Manic Digger";
 		}
@@ -1247,6 +1263,19 @@ namespace ManicDigger.ClientNative
 		void window_Closed(object sender, EventArgs e)
 		{
 			gameexit.SetExit(true);
+		}
+
+		void window_Resized(object sender, EventArgs e)
+		{
+			Size sizeLimit = new Size(1280, 720);
+			if (window.Width < sizeLimit.Width)
+			{
+				window.Width = sizeLimit.Width;
+			}
+			if (window.Height < sizeLimit.Height)
+			{
+				window.Height = sizeLimit.Height;
+			}
 		}
 
 		public override void SetVSync(bool enabled)
@@ -1366,7 +1395,9 @@ namespace ManicDigger.ClientNative
 		public override void GlDisableDepthTest()
 		{
 			GL.Disable(EnableCap.DepthTest);
-		}
+             
+        }
+
 
 		public override void BindTexture2d(int texture)
 		{
@@ -1575,7 +1606,7 @@ namespace ManicDigger.ClientNative
 			if (ENABLE_TRANSPARENCY)
 			{
 				GL.Enable(EnableCap.Blend);
-				GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 				//GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Blend);
 				//GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvColor, new Color4(0, 0, 0, byte.MaxValue));
 			}
@@ -1606,6 +1637,11 @@ namespace ManicDigger.ClientNative
 		public override void GlEnableTexture2d()
 		{
 			GL.Enable(EnableCap.Texture2D);
+		}
+
+		public override void GlDisableTexture2d()
+		{
+			GL.Disable(EnableCap.Texture2D);
 		}
 
 		public override void GLLineWidth(int width)
@@ -1724,20 +1760,241 @@ namespace ManicDigger.ClientNative
 			GL.Disable(EnableCap.Fog);
 		}
 
-		#endregion
+		public override void GlActiveTexture(int textureUnit)
+		{
+			switch (textureUnit)
+			{
+				case 0:
+					GL.ActiveTexture(TextureUnit.Texture0);
+					break;
+				case 1:
+					GL.ActiveTexture(TextureUnit.Texture1);
+					break;
+				case 2:
+					GL.ActiveTexture(TextureUnit.Texture2);
+					break;
+				case 3:
+					GL.ActiveTexture(TextureUnit.Texture3);
+					break;
+				default:
+					throw new NotImplementedException("Only four texture units are supported currently.");
+			}
+		}
 
-		#region Game
+		public override GlProgram GlCreateProgram()
+		{
+			return new GlProgramNative() { id = GL.CreateProgram() };
+		}
 
-		bool singlePlayerServerAvailable = true;
+		public override void GlDeleteProgram(GlProgram program)
+		{
+			GlProgramNative p = (GlProgramNative)program;
+			GL.DeleteProgram(p.id);
+		}
+
+		public override GlShader GlCreateShader(ShaderType shaderType)
+		{
+			OpenTK.Graphics.OpenGL.ShaderType glShaderType;
+			switch (shaderType)
+			{
+				case ShaderType.VertexShader:
+					glShaderType = OpenTK.Graphics.OpenGL.ShaderType.VertexShader;
+					break;
+				case ShaderType.FragmentShader:
+				default:
+					glShaderType = OpenTK.Graphics.OpenGL.ShaderType.FragmentShader;
+					break;
+			}
+			return new GLShaderNative() { id = GL.CreateShader(glShaderType) };
+		}
+
+		public override void GlShaderSource(GlShader shader, string source)
+		{
+			GLShaderNative s = (GLShaderNative)shader;
+			GL.ShaderSource(s.id, source);
+		}
+
+		public override void GlCompileShader(GlShader shader)
+		{
+			GLShaderNative s = (GLShaderNative)shader;
+			GL.CompileShader(s.id);
+		}
+
+		public override bool GlGetShaderCompileStatus(GlShader shader)
+		{
+			GLShaderNative s = (GLShaderNative)shader;
+			int status_code;
+			GL.GetShader(s.id, ShaderParameter.CompileStatus, out status_code);
+			return (1 == status_code);
+		}
+
+		public override string GlGetShaderInfoLog(GlShader shader)
+		{
+			GLShaderNative s = (GLShaderNative)shader;
+			return GL.GetShaderInfoLog(s.id);
+		}
+
+		public override void GlAttachShader(GlProgram program, GlShader shader)
+		{
+			GlProgramNative p = (GlProgramNative)program;
+			GLShaderNative s = (GLShaderNative)shader;
+			GL.AttachShader(p.id, s.id);
+		}
+
+		public override void GlUseProgram(GlProgram program)
+		{
+			if (program == null)
+			{
+				GL.UseProgram(0);
+				return;
+			}
+			GlProgramNative p = (GlProgramNative)program;
+			GL.UseProgram(p.id);
+		}
+
+		public override int GlGetUniformLocation(GlProgram program, string name)
+		{
+			GlProgramNative p = (GlProgramNative)program;
+			return GL.GetUniformLocation(p.id, name);
+		}
+
+		public override void GlLinkProgram(GlProgram program)
+		{
+			GlProgramNative p = (GlProgramNative)program;
+			GL.LinkProgram(p.id);
+		}
+
+		public override bool GlGetProgramLinkStatus(GlProgram program)
+		{
+			GlProgramNative p = (GlProgramNative)program;
+			int status_code;
+			GL.GetProgram(p.id, GetProgramParameterName.LinkStatus, out status_code);
+			return (1 == status_code);
+		}
+
+		public override string GlGetProgramInfoLog(GlProgram program)
+		{
+			GlProgramNative p = (GlProgramNative)program;
+			return GL.GetProgramInfoLog(p.id);
+		}
+
+		public override string GlGetStringSupportedShadingLanguage()
+		{
+			return GL.GetString(StringName.ShadingLanguageVersion);
+		}
+
+		public override void GlUniform1i(int location, int v0)
+		{
+			GL.Uniform1(location, v0);
+		}
+
+		public override void GlUniform1f(int location, float v0)
+		{
+			GL.Uniform1(location, v0);
+		}
+
+		public override void GlUniform2f(int location, float v0, float v1)
+		{
+			GL.Uniform2(location, v0, v1);
+		}
+
+		public override void GlUniform3f(int location, float v0, float v1, float v2)
+		{
+			GL.Uniform3(location, v0, v1, v2);
+		}
+
+		public override void GlUniform4f(int location, float v0, float v1, float v2, float v3)
+		{
+			GL.Uniform4(location, v0, v1, v2, v3);
+		}
+
+		public override void GlUniformArray1f(int location, int count, float[] values)
+		{
+			GL.Uniform2(location, count, values);
+		}
+        FrameBuffer1 frameBuffer;
+        bool scissor;
+        bool depth;
+        bool cullFace;
+        public override void GenerateTextureStart() {
+             frameBuffer=new FrameBuffer1();
+            int textureSize = 32;
+            bool scissor = GL.IsEnabled(EnableCap.ScissorTest);
+            GL.Disable(EnableCap.ScissorTest);
+            bool depth = GL.IsEnabled(EnableCap.DepthTest);
+            GL.Disable(EnableCap.DepthTest);
+            bool cullFace = GL.IsEnabled(EnableCap.CullFace);
+            GL.Disable(EnableCap.CullFace);
+
+            frameBuffer.Init(false,(int) TextureMinFilter.Nearest, (int)TextureWrapMode.Repeat);
+            frameBuffer.UpdateSize(textureSize, textureSize, (int)PixelInternalFormat.Rgba16f);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            //frameBuffer.
+ 
+         
+
+
+
+
+        }
+        public override void GenerateTextureEnd(int faces,int alocationStart)
+        {
+            int textureSize = 32;
+
+            //c.glDrawElementsBaseVertex(c.GL_TRIANGLES, 6 * faces, c.GL_UNSIGNED_INT, null, allocation.start * 4);
+            GL.DrawElementsBaseVertex(BeginMode.Triangles, 6 * faces, DrawElementsType.UnsignedInt,IntPtr.Zero , 0);
+            FrameBuffer1 finalFrameBuffer = new FrameBuffer1();
+
+            finalFrameBuffer.Init(false, (int)TextureMinFilter.Nearest, (int)TextureWrapMode.Repeat);
+            finalFrameBuffer.UpdateSize(textureSize, textureSize, (int)PixelInternalFormat.Rgba16f);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            uint texture = finalFrameBuffer.texture;
+
+            ShaderCi shader=new ShaderCi();
+
+
+
+
+
+            shader.BeginUse();
+            //uniform
+
+            frameBuffer.BindTexture((int)TextureUnit.Texture3);
+
+
+            int rectVAO = GL.GenVertexArray();
+            GL.BindVertexArray(rectVAO);
+
+            GL.Disable(EnableCap.Blend);
+            GL.DrawArrays(BeginMode.TriangleStrip, 0, 4);
+            GL.Enable(EnableCap.Blend);
+
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+
+            GL.Viewport(0, 0, window.Width, window.Height);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+            frameBuffer.Deinit();
+
+            GL.DeleteFramebuffer(finalFrameBuffer.frameBuffer);
+            if (scissor) GL.Enable(EnableCap.ScissorTest);
+            if (depth) GL.Enable(EnableCap.DepthTest);
+            if (cullFace) GL.Enable(EnableCap.CullFace);
+        }
+
+            #endregion
+
+            #region Game
+
+            bool singlePlayerServerAvailable = true;
 		public override bool SinglePlayerServerAvailable()
 		{
 			return singlePlayerServerAvailable;
 		}
 
-		public override void SinglePlayerServerStart(string saveFilename)
+		public override void SinglePlayerServerStart(ServerInitSettings serverInitSettings)
 		{
 			singlepLayerServerExit = false;
-			StartSinglePlayerServer(saveFilename);
+			StartSinglePlayerServer(serverInitSettings);
 		}
 
 		public bool singlepLayerServerExit;
@@ -1746,7 +2003,7 @@ namespace ManicDigger.ClientNative
 			singlepLayerServerExit = true;
 		}
 
-		public System.Action<string> StartSinglePlayerServer;
+		public System.Action<ServerInitSettings> StartSinglePlayerServer;
 		public bool singlePlayerServerLoaded;
 
 		public override bool SinglePlayerServerLoaded()
@@ -1758,8 +2015,12 @@ namespace ManicDigger.ClientNative
 		{
 			return singlePlayerServerDummyNetwork;
 		}
+       
+         
 
-		public override void SinglePlayerServerDisable()
+        //Copyright (c) 2013, Brandon Jones, Colin MacKenzie IV. All rights reserved.
+
+        public override void SinglePlayerServerDisable()
 		{
 			singlePlayerServerAvailable = false;
 		}
@@ -1955,14 +2216,15 @@ namespace ManicDigger.ClientNative
 			{
 				return;
 			}
-			if (current != previous)
+			if (current != previous && !mousePointerLocked)
 			{
-				// Mouse state has changed
+                // Mouse state has changed
 				int xdelta = current.X - previous.X;
 				int ydelta = current.Y - previous.Y;
 				foreach (MouseEventHandler h in mouseEventHandlers)
 				{
-					MouseEventArgs args = new MouseEventArgs();
+     
+                    MouseEventArgs args = new MouseEventArgs();
 					args.SetX(lastX);
 					args.SetY(lastY);
 					args.SetMovementX(xdelta);
@@ -1974,43 +2236,49 @@ namespace ManicDigger.ClientNative
 			previous = current;
 			if (mousePointerLocked)
 			{
-				/*
-				* Windows: OK
-				* Cursor hides properly
-				* Cursor is trapped inside window
-				* Centering works
-				*
-				* Linux: Needs workaround
-				* Cursor hides properly
-				* Cursor is trapped inside window
-				* Centering broken
-				*
-				* Mac OS X: OK
-				* Cursor hides properly (although visible when doing Skype screencast)
-				* Centering works
-				* Opening "mission control" by gesture does not free cursor
-				*/
+                /*
+                * Windows: UNTESTED
+                *                
+                * Linux: OK
+                * Cursor hides properly
+                * Cursor is trapped inside window
+                * Centering working
+                * Orginal code was Working for mac os and windows i dont have time right now for testing this
+                * I run  Native Linux soo... TODO               
+                *               
+                * Mac OS X: Untested
 
-				int centerx = window.Bounds.Left + (window.Bounds.Width / 2);
-				int centery = window.Bounds.Top + (window.Bounds.Height / 2);
+                */
+                var mouseDelta = Cursor.Position - new Size(_lastMousePos);
+                if (mouseDelta != Point.Empty)
+                {
+                    foreach (MouseEventHandler h in mouseEventHandlers)
+                    {
 
-				// Setting cursor position this way works on Windows and Mac
-				Mouse.SetPosition(centerx, centery);
-			}
+                        MouseEventArgs args = new MouseEventArgs();
+                        args.SetX(lastX);
+                        args.SetY(lastY);
+                        args.SetMovementX(mouseDelta.X);
+                        args.SetMovementY(mouseDelta.Y);
+                        args.SetEmulated(true);
+                        h.OnMouseMove(args);
+                    }
+                    ResetCursorPosition();
+                }
+
+
+ 
+            }
 		}
+        Point _lastMousePos;
+        protected void ResetCursorPosition()
+        {
+            Cursor.Position = new Point(window.Bounds.Left + (window.Bounds.Width / 2), window.Bounds.Top + (window.Bounds.Height / 2));
+            _lastMousePos = Cursor.Position;
+        }
 
-		int lastMouseWheelTick;
-		void Mouse_WheelChanged(object sender, OpenTK.Input.MouseWheelEventArgs e)
+        void Mouse_WheelChanged(object sender, OpenTK.Input.MouseWheelEventArgs e)
 		{
-			int currentTick = TimeMillisecondsFromStart();
-			if (currentTick - lastMouseWheelTick < 10)
-			{
-				// Limit processing of MouseWheel events
-				// This is due to a bug in OpenTK that fires two events on Windows 10
-				// Documented in issue #207
-				return;
-			}
-
 			foreach (MouseEventHandler h in mouseEventHandlers)
 			{
 				MouseWheelEventArgs args = new MouseWheelEventArgs();
@@ -2018,8 +2286,6 @@ namespace ManicDigger.ClientNative
 				args.SetDeltaPrecise(e.DeltaPrecise);
 				h.OnMouseWheel(args);
 			}
-
-			lastMouseWheelTick = currentTick;
 		}
 
 		void Mouse_ButtonDown(object sender, MouseButtonEventArgs e)
@@ -2140,7 +2406,111 @@ namespace ManicDigger.ClientNative
 		#endregion
 	}
 
-	public class RandomNative : RandomCi
+     public class FrameBuffer1 : FrameBuffer
+    {
+        public uint frameBuffer;
+        public uint texture;
+        public bool hasDepthTexture;
+        public uint depthTexture;
+
+        public override void Init(bool hasDepthTexture, int textureFilter, int textureWrap)
+        {
+            this.frameBuffer = 0;
+            this.texture = 0;
+            this.depthTexture = 0;
+            this.hasDepthTexture = hasDepthTexture;
+
+            GL.GenFramebuffers(1, out this.frameBuffer);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.frameBuffer);
+
+            if (hasDepthTexture)
+            {
+                GL.GenTextures(1, out this.depthTexture);
+                GL.BindTexture(TextureTarget.Texture2D, this.depthTexture);
+                GL.TextureParameter(depthTexture, TextureParameterName.TextureMinFilter, textureFilter);
+                GL.TextureParameter(depthTexture, TextureParameterName.TextureMagFilter, textureFilter);
+                GL.TextureParameter(depthTexture, TextureParameterName.TextureWrapR, textureWrap);
+                GL.TextureParameter(depthTexture, TextureParameterName.TextureWrapT, textureWrap);
+                GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, this.depthTexture, 0);
+            }
+
+            GL.GenTextures(1, out this.texture);
+            GL.BindTexture(TextureTarget.Texture2D, this.texture);
+            GL.TextureParameter(texture, TextureParameterName.TextureMinFilter, textureFilter);
+            GL.TextureParameter(texture, TextureParameterName.TextureMagFilter, textureFilter);
+            GL.TextureParameter(texture, TextureParameterName.TextureWrapR, textureWrap);
+            GL.TextureParameter(texture, TextureParameterName.TextureWrapT, textureWrap);
+            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, this.texture, 0);
+
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+        }
+
+        public override void Deinit()
+        {
+            GL.DeleteFramebuffers(1, ref this.frameBuffer);
+            if (this.hasDepthTexture)
+            {
+                GL.DeleteRenderbuffers(1, ref this.depthTexture);
+            }
+            GL.DeleteTextures(1, ref this.texture);
+        }
+
+        public override void UpdateSize(int width, int height, int internalFormat)
+        {
+            int updatedWidth = (int)Math.Max(width, 1);
+            int updatedHeight = (int)Math.Max(height, 1);
+
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.frameBuffer);
+
+            if (this.hasDepthTexture)
+            {
+                GL.BindTexture(TextureTarget.Texture2D, this.depthTexture);
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent32f, updatedWidth, updatedHeight, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+            }
+
+            GL.BindTexture(TextureTarget.Texture2D, this.texture);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, (PixelInternalFormat)internalFormat, updatedWidth, updatedHeight, 0, PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
+        }
+
+        public override bool Validate()
+        {
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.frameBuffer);
+            //   if (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != FramebufferStatus.FramebufferComplete)
+            //   {
+            //       Console.WriteLine("Frame Buffer Object error: {0}", GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer));
+            //       return false;
+            //   }
+            return true;
+        }
+
+        public override void BindTexture(int target)
+        {
+            GL.ActiveTexture((TextureUnit)target);
+            GL.BindTexture(TextureTarget.Texture2D, this.texture);
+        }
+
+        public override void BindDepthTexture(int target)
+        {
+            if (this.hasDepthTexture)
+            {
+                GL.ActiveTexture((TextureUnit)target);
+                GL.BindTexture(TextureTarget.Texture2D, this.depthTexture);
+            }
+        }
+
+        public override void Bind()
+        {
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.frameBuffer);
+        }
+
+        public void Unbind()
+        {
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+        }
+
+    }
+
+    public class RandomNative : RandomCi
 	{
 		public Random rnd = new Random();
 		public override float NextFloat()
@@ -2238,10 +2608,13 @@ namespace ManicDigger.ClientNative
 	{
 		public Bitmap bmp;
 	}
-
-	public class TextureNative : Texture
+	public class GlProgramNative : GlProgram
 	{
-		public int value;
+		public int id;
+	}
+	public class GLShaderNative : GlShader
+	{
+		public int id;
 	}
 
 
@@ -2251,8 +2624,10 @@ namespace ManicDigger.ClientNative
 		public GameWindowNative(OpenTK.Graphics.GraphicsMode mode)
 			: base(1280, 720, mode)
 		{
-			VSync = OpenTK.VSyncMode.Off;
+			VSync = OpenTK.VSyncMode.On;
 			WindowState = OpenTK.WindowState.Normal;
 		}
 	}
 }
+
+
