@@ -60,7 +60,7 @@
 			int z = game.currentAttackedBlock.Z;
 			int blocktype = game.map.GetBlock(x, y, z);
 			float health = game.GetCurrentBlockHealth(x, y, z);
-			float progress = health / game.d_Data.Strength()[blocktype];
+			float progress = health / game.blocktypes[blocktype].Strength;
 			if (game.IsUsableBlock(blocktype))
 			{
 				DrawEnemyHealthUseInfo(game, game.language.Get(StringTools.StringAppend(game.platform, "Block_", game.blocktypes[blocktype].Name)), progress, true,blocktype);
@@ -114,8 +114,8 @@
         game.rend.Draw2dText(name, font, game.xcenter(w.value), 40, null, false);
         if(blockid != 0) {
            bool isharvestable = (game.d_Data.IsHarvestableByTool(blockid, game.d_Inventory.RightHand[game.ActiveHudIndex].BlockId));
-            int blockspeedmask = game.d_Data.ToolSpeedBonusMask()[blockid];
-            int toolspeedmask = game.d_Data.HarvestabilityMask()[game.d_Inventory.RightHand[game.ActiveHudIndex].BlockId];
+            int blockspeedmask = game.blocktypes[blockid].ToolSpeedBonusMask;
+            int toolspeedmask = game.blocktypes[game.d_Inventory.RightHand[game.ActiveHudIndex].BlockId].ToolTypeMask;
             string val = game.platform.StringFormat3("Harvestable ? {0} | mask =  {1} | tool = {2}"
                , isharvestable ? "yes " : "no"
                 , game.platform.IntToString(blockspeedmask)

@@ -528,6 +528,7 @@ public class ProcessPacketTask : Action_
 					}
 				}
 				game.d_Data.UseBlockTypes(game.blocktypes, GlobalVar.MAX_BLOCKTYPES);
+                game.LoadSpecialblocksID();
 				for (int i = 0; i < GlobalVar.MAX_BLOCKTYPES; i++)
 				{
 					Packet_BlockType b = game.blocktypes[i];

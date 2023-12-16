@@ -189,7 +189,7 @@
 		terrainchunktesselator.game = this;
 
 		Packet_Inventory inventory = new Packet_Inventory();
-		inventory.RightHand = new Packet_Item[10];
+		inventory.Hud = new Packet_Item[10];
 		GameDataItemsClient dataItems = new GameDataItemsClient();
 		dataItems.game = this;
 		InventoryUtilClient inventoryUtil = new InventoryUtilClient();
@@ -639,7 +639,26 @@
 		}
 	}
 
-	void ChatLinesAdd(Chatline chatline)
+    internal int BlockIdFillArea;
+    internal int BlockIdFillStart;
+    internal int BlockIdCuboid;
+    internal int BlockIdTrampoline;
+    internal int BlockIdCompass; 
+            internal int BlockIdEmptyHand; 
+
+
+    internal void LoadSpecialblocksID()
+    {
+        BlockIdDirt = d_Data.GetBlockId("CraftingTable");
+        BlockIdFillArea = d_Data.GetBlockId("FillArea");
+        BlockIdFillStart = d_Data.GetBlockId("FillStart");
+        BlockIdCuboid = d_Data.GetBlockId("Cuboid");
+        BlockIdTrampoline = d_Data.GetBlockId("Trampoline");//to remove
+        BlockIdCompass = d_Data.GetBlockId("Compass");//to remove
+        BlockIdEmptyHand = d_Data.GetBlockId("EmptyHand");
+    }
+
+    void ChatLinesAdd(Chatline chatline)
 	{
 		if (ChatLinesCount >= ChatLinesMax)
 		{
@@ -1117,11 +1136,11 @@
 			}
 		}
 	}
-
-	public int HudSlots_(int i)
+    int BlockIdDirt;
+    public int HudSlots_(int i)
 	{
 		Packet_Item item = d_Inventory.RightHand[i];
-		int m = d_Data.BlockIdDirt();
+		int m = BlockIdDirt;
 		if (item != null && item.ItemClass == Packet_ItemClassEnum.Block)
 		{
 			m = d_Inventory.RightHand[i].BlockId;
@@ -1146,8 +1165,8 @@
 		}
 		int block = map.GetBlockValid(x, y, z);
 		return block == SpecialBlockId.Empty
-			|| block == d_Data.BlockIdFillArea()
-			|| IsWater(block);
+			|| block == BlockIdFillArea
+            || IsWater(block);
 	}
 
 	internal bool IsTileEmptyForPhysicsClose(int x, int y, int z)
@@ -1309,10 +1328,10 @@
 
     internal float GetToolStrenght(int  blocktypetool,int blocktype)
     {
-        if (d_Data.ToolStrength()[blocktypetool] <= 1)//beter way? todo 
+        if (DeserializeFloat(blocktypes[blocktypetool].ToolStrenghtFloat) <= 1)//beter way? todo 
             return 3;
-        bool getsBonus = (d_Data.ToolSpeedBonusMask()[blocktype] & d_Data.ToolTypeMask()[blocktypetool] )> 0;
-        return (getsBonus) ? d_Data.ToolStrength()[blocktypetool] : 3;
+        bool getsBonus = (blocktypes[blocktype].ToolSpeedBonusMask & blocktypes[blocktypetool].ToolTypeMask) > 0;
+        return (getsBonus) ? DeserializeFloat(blocktypes[blocktypetool].ToolStrenghtFloat) : 3;
     }
 
     internal float GetCurrentBlockHealth(int x, int y, int z)
@@ -1322,7 +1341,7 @@
 			return blockHealth.Get(x, y, z);
 		}
 		int blocktype = map.GetBlock(x, y, z);
-		return d_Data.Strength()[blocktype] ; 
+		return blocktypes[blocktype].Strength ; 
 	}
 
 	internal Vector3IntRef currentAttackedBlock;
@@ -1435,9 +1454,9 @@
 
 	internal bool IsFillBlock(int blocktype)
 	{
-		return blocktype == d_Data.BlockIdFillArea()
-			|| blocktype == d_Data.BlockIdFillStart()
-			|| blocktype == d_Data.BlockIdCuboid();
+		return blocktype == BlockIdFillArea
+			|| blocktype == BlockIdFillStart
+			|| blocktype == BlockIdCuboid;
 	}
 
 	internal bool IsAnyPlayerInPos(int blockposX, int blockposY, int blockposZ)
@@ -1702,14 +1721,14 @@
 	{
 		int eyesBlock = GetPlayerEyesBlock();
 		if (eyesBlock == -1) { return true; }
-		return d_Data.WalkableType1()[eyesBlock] == Packet_WalkableTypeEnum.Fluid;
+		return blocktypes[eyesBlock].WalkableType == Packet_WalkableTypeEnum.Fluid;
 	}
 
 	internal bool SwimmingBody()
 	{
 		int block = map.GetBlock(platform.FloatToInt(player.position.x), platform.FloatToInt(player.position.z), platform.FloatToInt(player.position.y + 1));
 		if (block == -1) { return true; }
-		return d_Data.WalkableType1()[block] == Packet_WalkableTypeEnum.Fluid;
+		return blocktypes[block].WalkableType == Packet_WalkableTypeEnum.Fluid;
 	}
 
 	internal bool WaterSwimmingEyes()
@@ -1822,7 +1841,7 @@
 			int blockunderplayer = BlockUnderPlayer();
 			if (blockunderplayer != -1)
 			{
-				float floorSpeed = d_Data.WalkSpeed()[blockunderplayer];
+                float floorSpeed =DeserializeFloat(blocktypes[blockunderplayer].WalkSpeedFloat);
 				if (floorSpeed != 0)
 				{
 					movespeednow *= floorSpeed;
@@ -2060,9 +2079,9 @@
 
 	internal void MapLoaded()
 	{
-		RedrawAllBlocks();
-		materialSlots = d_Data.DefaultHudSlots();
-		GuiStateBackToGame();
+		RedrawAllBlocks();//INTRESTING ACTUAL USE CASE ?
+        materialSlots = new int[d_Data.DefaultHudSlotCount()];
+        GuiStateBackToGame();
 
 		playerPositionSpawnX = player.position.x;
 		playerPositionSpawnY = player.position.y;

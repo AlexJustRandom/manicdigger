@@ -77,10 +77,10 @@
 			acceleration.acceleration3 = 70;
 		}
 
-		// Trampoline
+		// Trampoline //CHANGE TO PROPERT BOUNCY TODO
 		{
 			int blockunderplayer = game.BlockUnderPlayer();
-			if (blockunderplayer != -1 && blockunderplayer == game.d_Data.BlockIdTrampoline()
+            if (blockunderplayer != -1 && blockunderplayer == game.BlockIdTrampoline
 				&& (!isplayeronground) && !game.controls.shiftkeydown)
 			{
 				game.controls.wantsjump = true;
@@ -91,7 +91,7 @@
 		// Slippery walk on ice and when swimming
 		{
 			int blockunderplayer = game.BlockUnderPlayer();
-			if ((blockunderplayer != -1 && game.d_Data.IsSlipperyWalk()[blockunderplayer]) || game.SwimmingBody())
+			if (blockunderplayer != -1 && game.blocktypes[blockunderplayer].IsSlipperyWalk || game.SwimmingBody())
 			{
 				acceleration.acceleration1 = 0.99f;
 				acceleration.acceleration2 = 0.2f;

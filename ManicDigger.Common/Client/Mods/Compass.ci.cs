@@ -28,7 +28,7 @@
 	{
 		for (int i = 0; i < 10; i++)
 		{
-			if (game.HudSlots_(i) == game.d_Data.BlockIdCompass())
+			if (game.HudSlots_(i) == game.BlockIdCompass)
 			{
 				return true;
 			}

@@ -5,6 +5,7 @@
 		handler = new PacketHandlerCraftingRecipes();
 		handler.mod = this;
 		fontCraftingGui = new FontCi();
+        craftingTableID = -1;
 	}
 	PacketHandlerCraftingRecipes handler;
 	public override void OnNewFrameDraw2d(Game game, float deltaTime)
@@ -22,7 +23,7 @@
 		}
 		DrawCraftingRecipes(game);
 	}
-
+    int craftingTableID;
 	public override void OnNewFrameFixed(Game game, NewFrameEventArgs args)
 	{
 		if (game.guistate != GuiState.CraftingRecipes)
@@ -30,7 +31,7 @@
 			return;
 		}
 		CraftingMouse(game);
-	}
+    }
 
 	internal Packet_CraftingRecipe[] d_CraftingRecipes;
 	internal int d_CraftingRecipesCount;
@@ -149,7 +150,10 @@
 
 	public override void OnKeyDown(Game game, KeyEventArgs args)
 	{
-		int eKey = args.GetKeyCode();
+        if(craftingTableID==-1)
+            craftingTableID = game.d_Data.GetBlockId("CraftingTable");
+
+        int eKey = args.GetKeyCode();
 		if (eKey == (game.GetKey(GlKeys.E)) && game.GuiTyping == TypingState.None)
 		{
 			if (!(game.SelectedBlockPosition.x == -1 && game.SelectedBlockPosition.y == -1 && game.SelectedBlockPosition.z == -1))
@@ -157,7 +161,7 @@
 				int posx = game.SelectedBlockPosition.x;
 				int posy = game.SelectedBlockPosition.z;
 				int posz = game.SelectedBlockPosition.y;
-				if (game.map.GetBlock(posx, posy, posz) == game.d_Data.BlockIdCraftingTable())
+				if (game.map.GetBlock(posx, posy, posz) == craftingTableID)
 				{
 					//draw crafting recipes list.
 					IntRef tableCount = new IntRef();
@@ -225,7 +229,9 @@ public class CraftingTableTool
 	const int maxcraftingtablesize = 2000;
 	public Vector3IntRef[] GetTable(int posx, int posy, int posz, IntRef retCount)
 	{
-		Vector3IntRef[] l = new Vector3IntRef[2048];
+        int blockidCraftingtable = d_Data.GetBlockId("CraftingTable");
+
+        Vector3IntRef[] l = new Vector3IntRef[2048];
 		int lCount = 0;
 		Vector3IntRef[] todo = new Vector3IntRef[2048];
 		int todoCount = 0;
@@ -244,22 +250,22 @@ public class CraftingTableTool
 			}
 			l[lCount++] = p;
 			Vector3IntRef a = Vector3IntRef.Create(p.X + 1, p.Y, p.Z);
-			if (d_Map.GetBlock(a.X, a.Y, a.Z) == d_Data.BlockIdCraftingTable())
+			if (d_Map.GetBlock(a.X, a.Y, a.Z) == blockidCraftingtable)
 			{
 				todo[todoCount++] = a;
 			}
 			Vector3IntRef b = Vector3IntRef.Create(p.X - 1, p.Y, p.Z);
-			if (d_Map.GetBlock(b.X, b.Y, b.Z) == d_Data.BlockIdCraftingTable())
+			if (d_Map.GetBlock(b.X, b.Y, b.Z) == blockidCraftingtable)
 			{
 				todo[todoCount++] = b;
 			}
 			Vector3IntRef c = Vector3IntRef.Create(p.X, p.Y + 1, p.Z);
-			if (d_Map.GetBlock(c.X, c.Y, c.Z) == d_Data.BlockIdCraftingTable())
+			if (d_Map.GetBlock(c.X, c.Y, c.Z) == blockidCraftingtable)
 			{
 				todo[todoCount++] = c;
 			}
 			Vector3IntRef d = Vector3IntRef.Create(p.X, p.Y - 1, p.Z);
-			if (d_Map.GetBlock(d.X, d.Y, d.Z) == d_Data.BlockIdCraftingTable())
+			if (d_Map.GetBlock(d.X, d.Y, d.Z) == blockidCraftingtable)
 			{
 				todo[todoCount++] = d;
 			}
