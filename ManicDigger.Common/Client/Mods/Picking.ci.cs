@@ -196,7 +196,7 @@
 					if (game.map.IsValidPos(newtileX, newtileZ, newtileY))
 					{
 						int clonesource = game.map.GetBlock(newtileX, newtileZ, newtileY);
-						int clonesource2 = game.d_Data.WhenPlayerPlacesGetsConvertedTo()[clonesource];
+						int clonesource2 = game.blocktypes[clonesource].WhenPlacedGetsConvertedTo;
 						bool gotoDone = false;
 						//find this block in another right hand.
 						for (int i = 0; i < 10; i++)
@@ -244,7 +244,7 @@
 								}
 							}
 						}
-						string[] sound = game.d_Data.CloneSound()[clonesource];
+						string[] sound = game.blocktypes[clonesource].Sounds.Clone;
 						if (sound != null) // && sound.Length > 0)
 						{
 							game.AudioPlay(game.platform.StringFormat("{0}.ogg", sound[0])); //TODO: sound cycle
@@ -284,7 +284,7 @@
 								PickingEnd(left, right, middle, false);
 								return;
 							}
-							string[] sound = left ? game.d_Data.BreakSound()[blocktype] : game.d_Data.BuildSound()[blocktype];
+							string[] sound = left ? game.blocktypes[blocktype].Sounds.Break1 : game.blocktypes[blocktype].Sounds.Build;
 							if (sound != null) // && sound.Length > 0)
 							{
 								game.AudioPlay(game.platform.StringFormat("{0}.ogg", sound[0])); //TODO: sound cycle
@@ -429,7 +429,7 @@
 						{
 							fillarea.Set(f.X, f.Y, f.Z, game.map.GetBlock(f.X, f.Y, f.Z));
 						}
-						game.SetBlock(f.X, f.Y, f.Z, game.d_Data.BlockIdFillStart());
+						game.SetBlock(f.X, f.Y, f.Z, game.BlockIdFillStart);
 
 
 						FillFill(game, v, fillstart);
@@ -443,14 +443,14 @@
 					game.RedrawBlock(v.X, v.Y, v.Z);
 					return;
 				}
-				if (activeItem == game.d_Data.BlockIdFillStart())
+				if (activeItem == game.BlockIdFillStart)
 				{
 					ClearFillArea(game);
 					if (!game.IsFillBlock(game.map.GetBlock(v.X, v.Y, v.Z)))
 					{
 						fillarea.Set(v.X, v.Y, v.Z, game.map.GetBlock(v.X, v.Y, v.Z));
 					}
-					game.SetBlock(v.X, v.Y, v.Z, game.d_Data.BlockIdFillStart());
+					game.SetBlock(v.X, v.Y, v.Z, game.BlockIdFillStart);
 					fillstart = v;
 					fillend = null;
 					game.RedrawBlock(v.X, v.Y, v.Z);

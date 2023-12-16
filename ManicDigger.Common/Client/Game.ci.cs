@@ -189,7 +189,7 @@
 		terrainchunktesselator.game = this;
 
 		Packet_Inventory inventory = new Packet_Inventory();
-		inventory.Hud = new Packet_Item[10];
+		inventory.RightHand = new Packet_Item[10];
 		GameDataItemsClient dataItems = new GameDataItemsClient();
 		dataItems.game = this;
 		InventoryUtilClient inventoryUtil = new InventoryUtilClient();

@@ -727,18 +727,18 @@ namespace ManicDigger.Server
 					}
 				}
 				p.Inventory.MainArmor = ConvertItem(inv.Inventory.MainArmor);
-				p.Inventory.Hud = new Packet_Item[10];
+				p.Inventory.RightHand = new Packet_Item[10];
 				p.Inventory.RightHandCount = 10;
 				p.Inventory.RightHandLength = 10;
 				for (int i = 0; i < inv.Inventory.RightHand.Length; i++)
 				{
 					if (inv.Inventory.RightHand[i] == null)
 					{
-						p.Inventory.Hud[i] = new Packet_Item();
+						p.Inventory.RightHand[i] = new Packet_Item();
 					}
 					else
 					{
-						p.Inventory.Hud[i] = ConvertItem(inv.Inventory.RightHand[i]);
+						p.Inventory.RightHand[i] = ConvertItem(inv.Inventory.RightHand[i]);
 					}
 				}
 			}
