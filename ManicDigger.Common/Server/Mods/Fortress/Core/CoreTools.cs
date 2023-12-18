@@ -29,14 +29,14 @@
             int Pickaxe = m.GetToolType("Pickaxe");
             int Shears = m.GetToolType("Shears");
             
-            float baseAxeStrenght=4f;
-            float baseShovelStrenght=5f;
-            float baseSwordStrenght=3f;
-            float basePickaxeStrenght=3f;
+            float baseAxeStrenght=1f;
+            float baseShovelStrenght=1f;
+            float baseSwordStrenght=1f;
+            float basePickaxeStrenght=1f;
 
 
 
-            float diamondMod=4f;
+            float diamondMod= 8f;
             AddTool("Diamond Axe", new BlockType()
             {
                 ToolStrenght = baseAxeStrenght * diamondMod,
@@ -58,7 +58,7 @@
                 ToolTypeMask = Pickaxe
             });
 
-            float goldMod=5f;
+            float goldMod=12f;
             AddTool("Gold Axe", new BlockType()
             {
                 ToolStrenght = baseAxeStrenght * goldMod,
@@ -80,7 +80,7 @@
                 ToolTypeMask = Pickaxe
             });
 
-            float steelMod=3f;
+            float steelMod=6f;
             AddTool("Steel Axe", new BlockType()
             {
                 ToolStrenght = baseAxeStrenght * steelMod,
@@ -102,7 +102,7 @@
                 ToolTypeMask = Pickaxe
             });
 
-            float stoneMod=2f;
+            float stoneMod=4f;
             AddTool("Stone Axe", new BlockType()
             {
                 ToolStrenght = baseAxeStrenght * stoneMod,
@@ -124,7 +124,7 @@
                 ToolTypeMask = Pickaxe
             });
 
-            float woodMod=1f;
+            float woodMod=2f;
             AddTool("Wood Axe", new BlockType()
             {
                 ToolStrenght = baseAxeStrenght * woodMod,

@@ -38,10 +38,7 @@
 		if (item != null)
 		{
 			img = game.blocktypes[item.BlockId].Handimage;
-			if (game.IronSights)
-			{
-				img = game.blocktypes[item.BlockId].IronSightsImage;
-			}
+
 		}
 		return img;
 	}

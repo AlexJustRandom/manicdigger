@@ -222,7 +222,7 @@ namespace ManicDigger.Server
             var item = new Item();
             item.ItemClass = ItemClass.Block;
             item.BlockCount = amount;
-            item.BlockId = server.d_Data.WhenPlayerPlacesGetsConvertedTo()[block];
+            item.BlockId = server.d_Data.WhenPlayerPlacesGetsConvertedTo(block);
             server.GetInventoryUtil(inventory).GrabItem(item, 0);
         }
 
@@ -399,7 +399,7 @@ namespace ManicDigger.Server
 
         public void AddToStartInventory(string blocktype, int amount)
         {
-            server.d_Data.StartInventoryAmount()[GetBlockId(blocktype)] = amount;
+            server.d_Data.SetStartInventoryAmount(GetBlockId(blocktype), amount);
         }
 
         public long GetCurrentTick()

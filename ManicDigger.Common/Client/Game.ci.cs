@@ -55,7 +55,6 @@
 		LocalPlayerId = -1;
 		dialogs = new VisibleDialog[512];
 		dialogsCount = 512;
-		blockHealth = new DictionaryVector3Float();
 		playertexturedefault = -1;
 		a = new AnimationState();
 		constRotationSpeed = one * 180 / 20;
@@ -126,6 +125,7 @@
 		mouseSmoothing = false;
 
         rend = new  CoreRenderer();
+        whenStartedMining = -1;
     }
 
 	internal AssetList assets;
@@ -830,21 +830,10 @@
 
 	internal float currentfov()
 	{
-		if (IronSights)
-		{
-			Packet_Item item = d_Inventory.RightHand[ActiveHudIndex];
-			if (item != null && item.ItemClass == Packet_ItemClassEnum.Block)
-			{
-				if (DeserializeFloat(blocktypes[item.BlockId].IronSightsFovFloat) != 0)
-				{
-					return this.fov * DeserializeFloat(blocktypes[item.BlockId].IronSightsFovFloat);
-				}
-			}
-		}
+
 		return this.fov;
 	}
 
-	internal bool IronSights;
 
 	internal float DeserializeFloat(int value)
 	{
@@ -943,10 +932,7 @@
 			return 0;
 		}
 		float radius = (DeserializeFloat(blocktypes[item.BlockId].AimRadiusFloat) / 800) * Width();
-		if (IronSights)
-		{
-			radius = (DeserializeFloat(blocktypes[item.BlockId].IronSightsAimRadiusFloat) / 800) * Width();
-		}
+		
 		return radius + RadiusWhenMoving * radius * (MathCi.MinFloat(playervelocity.Length() / movespeed, 1));
 	}
 
@@ -1304,27 +1290,45 @@
 		}
 		return -1;
 	}
-
-	internal DictionaryVector3Float blockHealth;
-
-    internal float GetToolStrenght(int  blocktypetool,int blocktype)
+ 
+ 
+    internal float GetMiningTime(int blocktypetool, int blocktype)
     {
-        if (d_Data.ToolStrength()[blocktypetool] <= 1)//beter way? todo 
-            return 3;
-        bool getsBonus = (d_Data.ToolSpeedBonusMask()[blocktype] & d_Data.ToolTypeMask()[blocktypetool] )> 0;
-        return (getsBonus) ? d_Data.ToolStrength()[blocktypetool] : 3;
+        float SpeedMultiplayer=1;
+        bool getsBonus = d_Data.GetsSpeedBonus(blocktype,blocktypetool);
+        if (getsBonus)
+            SpeedMultiplayer = d_Data.ToolStrength(blocktypetool);
+
+        bool canHarvest = d_Data.IsHarvestableByTool(blocktype, blocktypetool);
+        if (!canHarvest)
+            SpeedMultiplayer = 1;
+
+
+        if (!isplayeronground)
+            SpeedMultiplayer /= 5;
+        //ifswiming TODO
+
+        float dmg = SpeedMultiplayer / d_Data.Hardness(blocktype);
+
+        if (canHarvest)
+            dmg /= 30;
+        else
+          dmg /= 100;
+
+        if (dmg > 1)
+            return 0;
+
+        int ticks = MathFloor(1 / dmg)+1;
+
+        float seconds = ticks / 20;
+
+        return seconds;
+
+
     }
+    public int whenStartedMining;
 
-    internal float GetCurrentBlockHealth(int x, int y, int z)
-	{
-		if (blockHealth.ContainsKey(x, y, z))
-		{
-			return blockHealth.Get(x, y, z);
-		}
-		int blocktype = map.GetBlock(x, y, z);
-		return d_Data.Strength()[blocktype] ; 
-	}
-
+ 
 	internal Vector3IntRef currentAttackedBlock;
 	internal int currentlyAttackedEntity;
 
@@ -1702,14 +1706,14 @@
 	{
 		int eyesBlock = GetPlayerEyesBlock();
 		if (eyesBlock == -1) { return true; }
-		return d_Data.WalkableType1()[eyesBlock] == Packet_WalkableTypeEnum.Fluid;
+		return d_Data.WalkableType1(eyesBlock) == Packet_WalkableTypeEnum.Fluid;
 	}
 
 	internal bool SwimmingBody()
 	{
 		int block = map.GetBlock(platform.FloatToInt(player.position.x), platform.FloatToInt(player.position.z), platform.FloatToInt(player.position.y + 1));
 		if (block == -1) { return true; }
-		return d_Data.WalkableType1()[block] == Packet_WalkableTypeEnum.Fluid;
+		return d_Data.WalkableType1(block) == Packet_WalkableTypeEnum.Fluid;
 	}
 
 	internal bool WaterSwimmingEyes()
@@ -1822,8 +1826,8 @@
 			int blockunderplayer = BlockUnderPlayer();
 			if (blockunderplayer != -1)
 			{
-				float floorSpeed = d_Data.WalkSpeed()[blockunderplayer];
-				if (floorSpeed != 0)
+				float floorSpeed = d_Data.WalkSpeed(blockunderplayer);
+                if (floorSpeed != 0)
 				{
 					movespeednow *= floorSpeed;
 				}
@@ -1842,14 +1846,7 @@
 			{
 				movespeednow *= itemSpeed;
 			}
-			if (IronSights)
-			{
-				float ironSightsSpeed = DeserializeFloat(blocktypes[item.BlockId].IronSightsMoveSpeedFloat);
-				if (ironSightsSpeed != 0)
-				{
-					movespeednow *= ironSightsSpeed;
-				}
-			}
+
 		}
 		return movespeednow;
 	}
@@ -2061,7 +2058,7 @@
 	internal void MapLoaded()
 	{
 		RedrawAllBlocks();
-		materialSlots = d_Data.DefaultHudSlots();
+		materialSlots = new int [d_Data.DefaultHudSlotCount()];
 		GuiStateBackToGame();
 
 		playerPositionSpawnX = player.position.x;

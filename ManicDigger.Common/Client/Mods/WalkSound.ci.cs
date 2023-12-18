@@ -58,9 +58,9 @@
 		int b = game.BlockUnderPlayer();
 		if (b != -1)
 		{
-			return game.d_Data.WalkSound()[b];
+			return game.d_Data.WalkSound(b);
 		}
-		return game.d_Data.WalkSound()[0];
+		return game.d_Data.WalkSound(0);
 	}
 
 	internal int GetSoundCount(string[] soundwalk)

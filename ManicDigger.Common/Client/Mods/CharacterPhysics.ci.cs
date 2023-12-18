@@ -91,7 +91,7 @@
 		// Slippery walk on ice and when swimming
 		{
 			int blockunderplayer = game.BlockUnderPlayer();
-			if ((blockunderplayer != -1 && game.d_Data.IsSlipperyWalk()[blockunderplayer]) || game.SwimmingBody())
+			if ((blockunderplayer != -1 && game.d_Data.IsSlipperyWalk(blockunderplayer)) || game.SwimmingBody())
 			{
 				acceleration.acceleration1 = 0.99f;
 				acceleration.acceleration2 = 0.2f;

@@ -265,7 +265,7 @@ message BlockType {
 	optional SoundSet sounds = 13;
 	optional int32 lightRadius = 14;
 	optional int32 startInventoryAmount = 15;
-	optional int32 strength = 16;
+	optional int32 hardness = 16;
 	optional string name = 17;
 	optional bool isBuildable = 18;
 	optional bool isUsable = 19;

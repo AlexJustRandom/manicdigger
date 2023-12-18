@@ -34,8 +34,8 @@
             blocktype.ToolSpeedBonusMask = Pickaxe;
             blocktype.HarvestabilityMask = Pickaxe;
 
-            if (blocktype.Strength == 10)
-                blocktype.Strength = 30;
+            if (blocktype.Hardness == 1)
+                blocktype.Hardness = 1.5f;
             m.SetBlockType(name, blocktype);
             m.AddToCreativeInventory(name);
         }
@@ -95,7 +95,8 @@
 				Sounds = solidSounds,
 				WhenPlayerPlacesGetsConvertedTo = 3,
                 ToolSpeedBonusMask = Shovel,
-			});
+                Hardness = 0.5f,
+            });
 			m.SetBlockType(3, "Dirt", new BlockType()
 			{
 				AllTextures = "Dirt",
@@ -103,6 +104,7 @@
 				WalkableType = WalkableType.Solid,
 				Sounds = solidSounds,
                 ToolSpeedBonusMask = Shovel,
+                Hardness =0.5f,
             });
  
 			m.SetBlockType(5, "OakWood", new BlockType()
@@ -111,7 +113,9 @@
 				DrawType = DrawType.Solid,
 				WalkableType = WalkableType.Solid,
 				Sounds = solidSounds,
-			});
+                Hardness = 2,
+
+            });
 			m.SetBlockType(6, "OakSapling", new BlockType()
 			{
 				AllTextures = "OakSapling",
@@ -386,7 +390,9 @@
 				DrawType = DrawType.Solid,
 				WalkableType = WalkableType.Solid,
 				Sounds = solidSounds,
-			});
+                Hardness = 2,
+
+            });
 			
 			m.SetBlockType(50, "Torch", new BlockType()
 			{
@@ -475,7 +481,9 @@
 				DrawType = DrawType.Solid,
 				WalkableType = WalkableType.Solid,
 				Sounds = solidSounds,
-			});
+                Hardness = 2,
+
+            });
 			m.SetBlockType(64, "SpruceTreeTrunk", new BlockType()
 			{
 				TopBottomTextures = "SpruceTreeTrunkTopBottom",
@@ -506,6 +514,8 @@
 				WalkableType = WalkableType.Solid,
 				Sounds = solidSounds,
                 ToolSpeedBonusMask = Axe,
+                Hardness = 2,
+
             });
 			m.SetBlockType(68, "HalfCobblestone", new BlockType()
 			{
@@ -533,7 +543,9 @@
 				DrawType = DrawType.HalfHeight,
 				WalkableType = WalkableType.Solid,
 				Sounds = solidSounds,
-			});
+                Hardness = 2,
+
+            });
 			m.SetBlockType(71, "HalfBirchWood", new BlockType()
 			{
 				TopBottomTextures = "BirchWood",
@@ -542,7 +554,9 @@
 				DrawType = DrawType.HalfHeight,
 				WalkableType = WalkableType.Solid,
 				Sounds = solidSounds,
-			});
+                Hardness = 2,
+
+            });
 			m.SetBlockType(72, "HalfSpruceWood", new BlockType()
 			{
 				TopBottomTextures = "SpruceWood",
@@ -551,7 +565,9 @@
 				DrawType = DrawType.HalfHeight,
 				WalkableType = WalkableType.Solid,
 				Sounds = solidSounds,
-			});
+                Hardness = 2,
+
+            });
 			m.SetBlockType(73, "HalfBrick", new BlockType()
 			{
 				TopBottomTextures = "Brick",
@@ -821,7 +837,9 @@
 				DrawType = DrawType.Solid,
 				WalkableType = WalkableType.Empty,
 				Sounds = solidSounds,
-			});
+                Hardness = 2,
+
+            });
 			m.SetBlockType(144, "WoodDesk", new BlockType()
 			{
 				TextureIdTop = "WoodBlock",
@@ -831,7 +849,9 @@
 				DrawType = DrawType.Transparent,
 				WalkableType = WalkableType.Solid,
 				Sounds = solidSounds,
-			});
+                Hardness = 2,
+
+            });
 			m.SetBlockType(145, "GlassDesk", new BlockType()
 			{
 				TextureIdTop = "Glass",

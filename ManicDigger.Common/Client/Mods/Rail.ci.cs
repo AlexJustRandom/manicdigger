@@ -126,7 +126,7 @@
 			}
 			else
 			{
-				int railunderplayer = game.d_Data.Rail()[game.map.GetBlock(currentrailblockX, currentrailblockY, currentrailblockZ)];
+				int railunderplayer = game.d_Data.Rail(game.map.GetBlock(currentrailblockX, currentrailblockY, currentrailblockZ));
 				railriding = true;
 				originalmodelheight = game.GetCharacterEyesHeight();
 				game.SetCharacterEyesHeight(minecartheight());
@@ -449,8 +449,8 @@
 		int possible_railsVehicleDirection12Flags = 0;
 		if (game.map.IsValidPos(enter.BlockPositionX, enter.BlockPositionY, enter.BlockPositionZ))
 		{
-			int newpositionrail = game.d_Data.Rail()[
-				game.map.GetBlock(enter.BlockPositionX, enter.BlockPositionY, enter.BlockPositionZ)];
+			int newpositionrail = game.d_Data.Rail(
+				game.map.GetBlock(enter.BlockPositionX, enter.BlockPositionY, enter.BlockPositionZ));
 			VehicleDirection12[] all_possible_rails = new VehicleDirection12[3];
 			int all_possible_railsCount = 0;
 			VehicleDirection12[] possibleRails3 = DirectionUtils.PossibleNewRails3(enter.EnterDirection);

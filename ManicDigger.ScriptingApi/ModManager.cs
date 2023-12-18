@@ -1266,7 +1266,7 @@ void VIPDEBUGTEST(string texr, int val);
 	public class BlockType
 	{
 		public BlockType() {
-            Strength = 10;
+            Hardness = 0.5f;
             IsBuildable = true;
         }
         [ProtoMember(1)]
@@ -1300,7 +1300,7 @@ void VIPDEBUGTEST(string texr, int val);
 		[ProtoMember(15)]
 		public int StartInventoryAmount;
 		[ProtoMember(16)]
-		public int Strength;
+		public float Hardness;
 		[ProtoMember(17)]
 		public string Name;
 		[ProtoMember(18)]

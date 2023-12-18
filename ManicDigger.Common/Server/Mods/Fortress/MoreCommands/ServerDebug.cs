@@ -26,11 +26,7 @@ namespace ManicDigger.Mods
 
 
         }
-
-
-
-
-
+ 
         bool TeleportToID(int player, string command, string argument)
         {
             if (command.Equals("SetModSpeed", StringComparison.InvariantCultureIgnoreCase))

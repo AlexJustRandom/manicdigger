@@ -39,11 +39,11 @@
 			block2 = game.map.GetBlock(game.platform.FloatToInt(pX), game.platform.FloatToInt(pZ), game.platform.FloatToInt(pY) - 1);
 		}
 
-		int damage = game.d_Data.DamageToPlayer()[block1] + game.d_Data.DamageToPlayer()[block2];
+		int damage = game.d_Data.DamageToPlayer(block1) + game.d_Data.DamageToPlayer(block2);
 		if (damage > 0)
 		{
 			int hurtingBlock = block1;  //Use block at eyeheight as source block
-			if (hurtingBlock == 0 || game.d_Data.DamageToPlayer()[hurtingBlock] == 0) { hurtingBlock = block2; }    //Fallback to block at feet if eyeheight block is air or doesn't deal damage
+			if (hurtingBlock == 0 || game.d_Data.DamageToPlayer(hurtingBlock) == 0) { hurtingBlock = block2; }    //Fallback to block at feet if eyeheight block is air or doesn't deal damage
 			int times = BlockDamageToPlayerTimer.Update(dt);
 			for (int i = 0; i < times; i++)
 			{

@@ -76,6 +76,7 @@
 		if (!left)
 		{
 			game.currentAttackedBlock = null;
+            game.whenStartedMining = -1;
 		}
 
 		Packet_Item item = game.d_Inventory.RightHand[game.ActiveHudIndex];
@@ -196,8 +197,8 @@
 					if (game.map.IsValidPos(newtileX, newtileZ, newtileY))
 					{
 						int clonesource = game.map.GetBlock(newtileX, newtileZ, newtileY);
-						int clonesource2 = game.d_Data.WhenPlayerPlacesGetsConvertedTo()[clonesource];
-						bool gotoDone = false;
+						int clonesource2 = game.d_Data.WhenPlayerPlacesGetsConvertedTo(clonesource);
+                        bool gotoDone = false;
 						//find this block in another right hand.
 						for (int i = 0; i < 10; i++)
 						{
@@ -244,7 +245,7 @@
 								}
 							}
 						}
-						string[] sound = game.d_Data.CloneSound()[clonesource];
+						string[] sound = game.d_Data.CloneSound(clonesource);
 						if (sound != null) // && sound.Length > 0)
 						{
 							game.AudioPlay(game.platform.StringFormat("{0}.ogg", sound[0])); //TODO: sound cycle
@@ -279,12 +280,13 @@
 							int blocktype;
 							if (left) { blocktype = game.map.GetBlock(newtileX, newtileZ, newtileY); }
 							else { blocktype = ((game.BlockInHand() == null) ? 1 : game.BlockInHand().value); }
+                            //Is ubrekable
 							if (left && blocktype == game.d_Data.BlockIdAdminium())
 							{
 								PickingEnd(left, right, middle, false);
 								return;
 							}
-							string[] sound = left ? game.d_Data.BreakSound()[blocktype] : game.d_Data.BuildSound()[blocktype];
+							string[] sound = left ? game.d_Data.BreakSound(blocktype) : game.d_Data.BuildSound(blocktype);
 							if (sound != null) // && sound.Length > 0)
 							{
 								game.AudioPlay(game.platform.StringFormat("{0}.ogg", sound[0])); //TODO: sound cycle
@@ -299,22 +301,21 @@
 							int posz = newtileY;
 
 							game.currentAttackedBlock = Vector3IntRef.Create(posx, posy, posz);
-							if (!game.blockHealth.ContainsKey(posx, posy, posz))
+
+							if (game.whenStartedMining==-1)
 							{
-								game.blockHealth.Set(posx, posy, posz, game.GetCurrentBlockHealth(posx, posy, posz));
-							}
-                            float toolStrenght = game.GetToolStrenght(item.BlockId, game.map.GetBlock(posx, posy, posz));
-                            game.blockHealth.Set(posx, posy, posz, game.blockHealth.Get(posx, posy, posz) - toolStrenght);
-                             
+                                game.whenStartedMining = game.platform.TimeMillisecondsFromStart();
+                            }
 
 
-                            float health = game.GetCurrentBlockHealth(posx, posy, posz);
-							if (health <= 0)
+
+                            int now = game.platform.TimeMillisecondsFromStart();
+                            int end = game.whenStartedMining + game.platform.FloatToInt((game.GetMiningTime(item.BlockId, game.map.GetBlock(posx, posy, posz)) * 1000));
+ 
+                            if (now  >= end)
 							{
-								if (game.currentAttackedBlock != null)
-								{
-									game.blockHealth.Remove(posx, posy, posz);
-								}
+                                game.whenStartedMining = -1;
+ 
 								game.currentAttackedBlock = null;
 								OnPick(game, game.platform.FloatToInt(newtileX), game.platform.FloatToInt(newtileZ), game.platform.FloatToInt(newtileY),
 									game.platform.FloatToInt(tile.Current()[0]), game.platform.FloatToInt(tile.Current()[2]), game.platform.FloatToInt(tile.Current()[1]),
@@ -384,8 +385,8 @@
 			{
 				dirnew = PickCorners(xfract, zfract);
 			}
-			int dir = game.d_Data.Rail()[game.map.GetBlock(blockposoldX, blockposoldY, blockposoldZ)];
-			if (dir != 0)
+			int dir = game.d_Data.Rail(game.map.GetBlock(blockposoldX, blockposoldY, blockposoldZ));
+            if (dir != 0)
 			{
 				blockposX = blockposoldX;
 				blockposY = blockposoldY;
