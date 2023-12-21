@@ -1,41 +1,16 @@
-﻿public class ScriptCharacterPhysics : EntityScript
+﻿public class ScriptCharacterPhysics : EntityEngine
 {
 	public ScriptCharacterPhysics()
 	{
-		movedz = 0;
-		curspeed = new Vector3Ref();
-		jumpacceleration = 0;
-		isplayeronground = false;
-		acceleration = new Acceleration();
-		jumpstartacceleration = 0;
-		jumpstartaccelerationhalf = 0;
-		movespeednow = 0;
+ 
 
-		tmpPlayerPosition = new float[3];
+        tmpPlayerPosition = new float[3];
 		tmpBlockingBlockType = new IntRef();
-
-		constGravity = 0.3f;
-		constWaterGravityMultiplier = 3;
-		constEnableAcceleration = true;
-		constJump = 2.1f;
+ 
 	}
 
 	internal Game game;
-
-	internal float movedz;
-	internal Vector3Ref curspeed;
-	internal float jumpacceleration;
-	internal bool isplayeronground;
-	internal Acceleration acceleration;
-	internal float jumpstartacceleration;
-	internal float jumpstartaccelerationhalf;
-	internal float movespeednow;
-
-	internal float constGravity;
-	internal float constWaterGravityMultiplier;
-	internal bool constEnableAcceleration;
-	internal float constJump;
-
+  
 	public override void OnNewFrameFixed(Game game_, int entity, float dt)
 	{
 		game = game_;
@@ -70,7 +45,7 @@
 		}
 
 		// No air control
-		if (!isplayeronground)
+		if (!isEntityonground)
 		{
 			acceleration.acceleration1 = 0.99f;
 			acceleration.acceleration2 = 0.2f;
@@ -81,7 +56,7 @@
 		{
 			int blockunderplayer = game.BlockUnderPlayer();
 			if (blockunderplayer != -1 && blockunderplayer == game.d_Data.BlockIdTrampoline()
-				&& (!isplayeronground) && !game.controls.shiftkeydown)
+				&& (!isEntityonground) && !game.controls.shiftkeydown)
 			{
 				game.controls.wantsjump = true;
 				jumpstartacceleration = 20.666f * constGravity;
@@ -121,9 +96,9 @@
 		diff1.Z += push.Z * dt;
 
 		bool loaded = false;
-		int cx = game.platform.FloatToInt(game.player.position.x / Game.chunksize);
-		int cy = game.platform.FloatToInt(game.player.position.z / Game.chunksize);
-		int cz = game.platform.FloatToInt(game.player.position.y / Game.chunksize);
+		int cx = game.platform.FloatToInt(stateplayerposition.x / Game.chunksize);
+		int cy = game.platform.FloatToInt(stateplayerposition.z / Game.chunksize);
+		int cz = game.platform.FloatToInt(stateplayerposition.y / Game.chunksize);
 		if (game.map.IsValidChunkPos(cx, cy, cz))
 		{
 			if (game.map.chunks[MapUtilCi.Index3d(cx, cy, cz,
@@ -234,12 +209,12 @@
 		}
 		if (!(move.freemove))
 		{
-			if ((isplayeronground) || game.SwimmingBody())
+			if ((isEntityonground) || game.SwimmingBody())
 			{
 				jumpacceleration = 0;
 				movedz = 0;
 			}
-			if ((move.wantsjump || move.wantsjumphalf) && (((jumpacceleration == 0 && isplayeronground) || game.SwimmingBody()) && loaded) && (!game.SwimmingEyes()))
+			if ((move.wantsjump || move.wantsjumphalf) && (((jumpacceleration == 0 && isEntityonground) || game.SwimmingBody()) && loaded) && (!game.SwimmingEyes()))
 			{
 				jumpacceleration = move.wantsjumphalf ? jumpstartaccelerationhalf : jumpstartacceleration;
 				soundnow.value = true;
@@ -247,7 +222,7 @@
 
 			if (jumpacceleration > 0)
 			{
-				isplayeronground = false;
+				isEntityonground = false;
 				jumpacceleration = jumpacceleration / 2;
 			}
 
@@ -258,9 +233,9 @@
 		}
 		else
 		{
-			isplayeronground = true;
+			isEntityonground = true;
 		}
-		game.isplayeronground = isplayeronground;
+		game.isplayeronground = isEntityonground;
 	}
 
 	public bool IsTileEmptyForPhysics(int x, int y, int z)
@@ -285,8 +260,8 @@
 		}
 		Packet_BlockType blocktype = game.blocktypes[block];
 		return blocktype.WalkableType == Packet_WalkableTypeEnum.Fluid
-			|| game.IsEmptyForPhysics(blocktype)
-			|| game.IsRail(blocktype);
+			|| game.d_Data.IsEmptyForPhysics(blocktype)
+			|| game.d_Data.IsRail(blocktype);
 	}
 
 	float[] tmpPlayerPosition;      //Temporarily stores the player's position. Used in WallSlide()
@@ -346,7 +321,7 @@
 			}
 		}
 
-		isplayeronground = (tmpPlayerPosition[1] == oldposition[1]) && (newposition[1] < oldposition[1]);
+		isEntityonground = (tmpPlayerPosition[1] == oldposition[1]) && (newposition[1] < oldposition[1]);
 
 		tmpPlayerPosition[1] -= game.constWallDistance; //Remove the temporary walldistance again
 		return tmpPlayerPosition;   //Return valid position

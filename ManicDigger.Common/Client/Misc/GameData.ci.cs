@@ -70,7 +70,7 @@
 
     public int DefaultHudSlotCount() { return mDefaultHudSlotCount; }
 
- 
+    public Packet_BlockType GetBlockType(int id) { return BlockTypes[id]; }
 
     //for now not inicilized outside server TODO
     public string[] tooltypes; //STUPID TODO
@@ -81,8 +81,7 @@
     public bool GetsSpeedBonus(int blockId, int toolID) {
         int bonusMask = ToolSpeedBonusMask(blockId);
         int toolmask = ToolTypeMask(toolID);
-        if (bonusMask == 0) return true;//if no data harvestable by all
-        return (bonusMask & toolmask) > 0;
+         return (bonusMask & toolmask) > 0;
     }
 
     public bool IsHarvestableByTool(int blockId, int toolID) {
@@ -254,5 +253,35 @@
     {
         float one = 1;
         return (one * p) / 32;
+    }
+
+
+    public bool IsEmptyForPhysics(Packet_BlockType block)
+    {
+        return (block.DrawType == Packet_DrawTypeEnum.Ladder)
+            || (block.WalkableType != Packet_WalkableTypeEnum.Solid && block.WalkableType != Packet_WalkableTypeEnum.Fluid);
+    }
+    public bool IsRail(Packet_BlockType block)
+    {
+        return block.Rail > 0;  //Does not include Rail0, but this can't be placed.
+    }
+    public float getblockheight(int id)
+    {
+        float one = 1.0f;
+        float RailHeight = one * 3 / 10;
+ 
+        if (BlockTypes[id].Rail != 0)
+        {
+            return RailHeight;
+        }
+        if (BlockTypes[id].DrawType == Packet_DrawTypeEnum.HalfHeight)
+        {
+            return one / 2;
+        }
+        if (BlockTypes[id].DrawType == Packet_DrawTypeEnum.Flat)
+        {
+            return one / 20;
+        }
+        return 1;
     }
 }

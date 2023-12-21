@@ -45,6 +45,22 @@ namespace ManicDigger.Server
             return -1;
             //throw new Exception("No Block id:" + name);
         }
+        #region Items
+
+        public void SetItemType(int id, string name, Item block) { 
+        
+        }
+
+        public void SetItemType(string name, Item block) { 
+        
+        }
+
+        public int GetItemId(string name) { 
+            return 0; 
+        }
+
+
+        #endregion
 
         public void AddToCreativeInventory(string blockType)
         {
@@ -1151,15 +1167,15 @@ namespace ManicDigger.Server
             server.DespawnEntity(id);
         }
         public void SpawnMonster(int x, int y, int z) {
-           
+           server.SendMessageToAll("SPAWNING MONSTER");
             server.d_Map.GetChunk(x, y, z).Monsters.Add(new Monster()
             {
                 X = x,
                 Y = y,
                 Z = z,
-                Id = 0,
+                Id = 1,
                 Health = 20,
-                MonsterType = 0
+                MonsterType = 1
             });
         }
 

@@ -31,7 +31,7 @@ namespace ManicDigger.Mods
                 IsUsable = true
             });
 
-            megg = m.GetBlockId("Monsteregg");
+            mEgg = m.GetBlockId("Monsteregg");
             m.AddToStartInventory("Monsteregg", 6);
             m.AddToCreativeInventory("Monsteregg");
 
@@ -39,15 +39,13 @@ namespace ManicDigger.Mods
     
         }
         ModManager m;
-        int megg;
-
-
-
+        int mEgg;
+ 
         private void UseTnt(int player, int x, int y, int z)
         {
-            if (m.GetBlock(x, y, z) == megg)
+            if (m.GetBlock(x, y, z) == mEgg)
             {
-                m.SpawnMonster(x, y, z);
+                m.SpawnMonster(x, y+2, z);
             }
         }
 

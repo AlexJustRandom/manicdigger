@@ -56,7 +56,6 @@ namespace ManicDigger.Server
 		public Server()
 		{
 			serverPlatform = new ServerPlatformNative();
-
 			server = new ServerCi();
 			systems = new ServerSystem[256];
 			// This ServerSystem should always be loaded first
@@ -761,6 +760,7 @@ namespace ManicDigger.Server
 			p.BlockId = item.BlockId;
 			p.ItemClass = (int)item.ItemClass;
 			p.ItemId = item.ItemId;
+            p.Durability = item.Durability;
 			return p;
 		}
 
@@ -882,9 +882,10 @@ namespace ManicDigger.Server
 			for (int i = 0; i < d_Data.StartInventoryLenght(); i++)
 			{
 				int amount = d_Data.GetStartInventoryAmount(i);
+
 				if (config.IsCreative)
 				{
-					if (amount > 0 || BlockTypes[i].IsBuildable)
+					//if (amount > 0 || BlockTypes[i].IsBuildable)
 					{
 						inv.Items.Add(new ProtoPoint(x, y), new Item() { ItemClass = ItemClass.Block, BlockId = i, BlockCount = 0 });
 						x++;
@@ -3685,7 +3686,7 @@ namespace ManicDigger.Server
 		public static Packet_BlockType GetBlockType(BlockType block)
 		{
 			Packet_BlockType p = new Packet_BlockType();
-			p.AimRadiusFloat = Server.SerializeFloat(block.AimRadius);
+			p.Durablility =block.Durablility;
 			p.HarvestabilityMask = block.HarvestabilityMask;
 			p.ToolSpeedBonusMask = block.ToolSpeedBonusMask;
 			p.ToolStrenghtFloat = Server.SerializeFloat(block.ToolStrenght);

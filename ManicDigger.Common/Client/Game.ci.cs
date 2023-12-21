@@ -404,16 +404,9 @@
 	internal Entity player;
 	internal float constWallDistance;
 
-	public bool IsRail(Packet_BlockType block)
-	{
-		return block.Rail > 0;  //Does not include Rail0, but this can't be placed.
-	}
 
-	public bool IsEmptyForPhysics(Packet_BlockType block)
-	{
-		return (block.DrawType == Packet_DrawTypeEnum.Ladder)
-			|| (block.WalkableType != Packet_WalkableTypeEnum.Solid && block.WalkableType != Packet_WalkableTypeEnum.Fluid);
-	}
+
+ 
 
 	public int blockheight(int x, int y, int z_)
 	{
@@ -931,7 +924,7 @@
 		{
 			return 0;
 		}
-		float radius = (DeserializeFloat(blocktypes[item.BlockId].AimRadiusFloat) / 800) * Width();
+		float radius = (1 / 800) * Width();
 		
 		return radius + RadiusWhenMoving * radius * (MathCi.MinFloat(playervelocity.Length() / movespeed, 1));
 	}
@@ -1140,7 +1133,7 @@
 	{
 		return IsTileEmptyForPhysics(x, y, z)
 			|| (map.IsValidPos(x, y, z) && blocktypes[map.GetBlock(x, y, z)].DrawType == Packet_DrawTypeEnum.HalfHeight)
-			|| (map.IsValidPos(x, y, z) && IsEmptyForPhysics(blocktypes[map.GetBlock(x, y, z)]));
+			|| (map.IsValidPos(x, y, z) && d_Data. IsEmptyForPhysics(blocktypes[map.GetBlock(x, y, z)]));
 	}
 
 	internal bool IsUsableBlock(int blocktype)
@@ -1296,31 +1289,28 @@
     {
         float SpeedMultiplayer=1;
         bool getsBonus = d_Data.GetsSpeedBonus(blocktype,blocktypetool);
+     
         if (getsBonus)
             SpeedMultiplayer = d_Data.ToolStrength(blocktypetool);
 
         bool canHarvest = d_Data.IsHarvestableByTool(blocktype, blocktypetool);
         if (!canHarvest)
             SpeedMultiplayer = 1;
-
-
+ 
         if (!isplayeronground)
             SpeedMultiplayer /= 5;
         //ifswiming TODO
 
         float dmg = SpeedMultiplayer / d_Data.Hardness(blocktype);
+        dmg /= (canHarvest) ? 30.0f : 100.0f;
 
-        if (canHarvest)
-            dmg /= 30;
-        else
-          dmg /= 100;
 
         if (dmg > 1)
             return 0;
 
-        int ticks = MathFloor(1 / dmg)+1;
+        float ticks = MathFloor(one / dmg)+1;
 
-        float seconds = ticks / 20;
+        float seconds = ticks / 20.0f;
 
         return seconds;
 

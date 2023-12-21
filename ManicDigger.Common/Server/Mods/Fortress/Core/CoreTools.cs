@@ -4,12 +4,11 @@
     {
         public void PreStart(ModManager m)
         {
-  
-
+ 
         }
         private void AddTool(string name,BlockType type) {
-            name = "default_tool_" + name.ToLower().Replace(" ",""); 
-            type.AllTextures =name;
+
+            type.AllTextures =  name.ToLower().Replace(" ", "_");
             type.DrawType = DrawType.Solid;
             type.WalkableType = WalkableType.Solid;
             type.IsBuildable = false;
@@ -33,9 +32,7 @@
             float baseShovelStrenght=1f;
             float baseSwordStrenght=1f;
             float basePickaxeStrenght=1f;
-
-
-
+ 
             float diamondMod= 8f;
             AddTool("Diamond Axe", new BlockType()
             {
@@ -146,11 +143,7 @@
                 ToolTypeMask = Pickaxe
             });
 
-            AddTool("Shears", new BlockType()
-            {
-                ToolStrenght = 5,
-                ToolTypeMask = Pickaxe
-            });
+
         }
         ModManager m;
     

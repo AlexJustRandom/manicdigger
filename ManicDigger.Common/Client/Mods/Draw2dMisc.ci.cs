@@ -9,8 +9,7 @@
 		if (game.guistate != GuiState.MapLoading)
 		{
 			DrawEnemyHealthBlock(game);
-			DrawAmmo(game);
-			DrawBlockInfo(game);
+ 			DrawBlockInfo(game);
 		}
 		DrawMouseCursor(game);
 		DrawDisconnected(game);
@@ -119,16 +118,19 @@
            bool isharvestable = (game.d_Data.IsHarvestableByTool(blockid, game.d_Inventory.RightHand[game.ActiveHudIndex].BlockId));
             int blockspeedmask = game.d_Data.ToolSpeedBonusMask(blockid);
             int toolspeedmask = game.d_Data.HarvestabilityMask(game.d_Inventory.RightHand[game.ActiveHudIndex].BlockId);
-            string val = game.platform.StringFormat3("Harvestable ? {0} | mask =  {1} | tool = {2}"
+            string val = game.platform.StringFormat4("Harvestable ? {0} | gets speedbonus =  {1} | toolStrenght = {2} | mining time : {3}"
                , isharvestable ? "yes " : "no"
-                , game.platform.IntToString(blockspeedmask)
-                , game.platform.IntToString(toolspeedmask));
+                , game.d_Data.GetsSpeedBonus(blockid, game.d_Inventory.RightHand[game.ActiveHudIndex].BlockId) ? "yes " : "no"
+                , game.platform.FloatToString(game.d_Data.ToolStrength(game.d_Inventory.RightHand[game.ActiveHudIndex].BlockId))
+                , game.platform.FloatToString(game.GetMiningTime(game.d_Inventory.RightHand[game.ActiveHudIndex].BlockId, blockid)*1000));
+
+
 
             // for(int i=0;i< game.d_Data.) i dont have tools mask names on client 
             // todo
 
             IntRef color = new IntRef();
-            if (isharvestable) //idk bugy with  ? : operator
+            if (!isharvestable) //idk bugy with  ? : operator
                 color.value = ColorCi.FromArgb(255, 200, 0, 0);
             else
                 color.value = ColorCi.FromArgb(255, 0, 200, 0);
@@ -160,35 +162,12 @@
 		if (game.CurrentAimRadius() > 1)
 		{
 			float fov_ = game.currentfov();
-			game.Circle3i(game.Width() / 2, game.Height() / 2, game.CurrentAimRadius() * game.fov / fov_);
+			game.Circle3i(game.Width() / 2, game.Height() / 2, 2 * game.fov / fov_);
 		}
 		game.Draw2dBitmapFile("target.png", game.Width() / 2 - aimwidth / 2, game.Height() / 2 - aimheight / 2, aimwidth, aimheight);
 	}
 
-	internal void DrawAmmo(Game game)
-	{
-		Packet_Item item = game.d_Inventory.RightHand[game.ActiveHudIndex];
-		if (item != null && item.ItemClass == Packet_ItemClassEnum.Block)
-		{
-			if (game.blocktypes[item.BlockId].IsPistol)
-			{
-				int loaded = game.LoadedAmmo[item.BlockId];
-				int total = game.TotalAmmo[item.BlockId];
-				string s = game.platform.StringFormat2("{0}/{1}", game.platform.IntToString(loaded), game.platform.IntToString(total - loaded));
-				FontCi font = new FontCi();
-				font.size = 18;
-				game.rend.Draw2dText(s, font, game.Width() - game.TextSizeWidth(s, font) - 50,
-					game.Height() - game.TextSizeHeight(s, font) - 50, loaded == 0 ? IntRef.Create(ColorCi.FromArgb(255, 255, 0, 0)) : IntRef.Create(ColorCi.FromArgb(255, 255, 255, 255)), false);
-				if (loaded == 0)
-				{
-					font.size = 14;
-					string pressR = "Press R to reload";
-					game.rend.Draw2dText(pressR, font, game.Width() - game.TextSizeWidth(pressR, font) - 50,
-						game.Height() - game.TextSizeHeight(s, font) - 80, IntRef.Create(ColorCi.FromArgb(255, 255, 0, 0)), false);
-				}
-			}
-		}
-	}
+ 
 
 	void DrawDisconnected(Game game)
 	{

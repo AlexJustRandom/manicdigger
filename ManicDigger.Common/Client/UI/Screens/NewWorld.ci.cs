@@ -281,7 +281,7 @@ public class NewWorld : MainMenuScreen
             {   contains = false;
                 for (int k = 0; k < savegamesCount_.value; k++)
                 {
-                    if (savegames[j] == menu.p.StringFormat2("{0} ({1})",name,menu.p.IntToString(j)))
+                    if (menu.p.FileName(savegames[k]) == menu.p.StringFormat2("{0} ({1})",name,menu.p.IntToString(j)))
                     {
                         contains = true;
                         break;

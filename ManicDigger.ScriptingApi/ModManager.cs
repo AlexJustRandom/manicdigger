@@ -31,12 +31,39 @@ namespace ManicDigger
 		/// <param name="block">BlockType to register</param>
 		void SetBlockType(string name, BlockType block);
 
-		/// <summary>
-		/// Get the ID of a certain BlockType
-		/// </summary>
-		/// <param name="name">Name of the BlockType</param>
-		/// <returns>ID of the BlockType</returns>
-		int GetBlockId(string name);
+        #region Items
+
+        /// <summary>
+        /// Set a new temType
+        /// </summary>
+        /// <param name="id">ID of the new BlockType (has to be unique)</param>
+        /// <param name="name">Name of the new block</param>
+        /// <param name="block">temType to register</param>
+        void SetItemType(int id, string name, Item block);
+
+        /// <summary>
+        /// Set a new ItemType and automatically assign the next free ID
+        /// </summary>
+        /// <param name="name">Name of the new block</param>
+        /// <param name="block">temType to register</param>
+        void SetItemType(string name, Item block);
+
+        /// <summary>
+        /// Get the ID of a certain ItemType
+        /// </summary>
+        /// <param name="name">Name of the ItemType</param>
+        /// <returns>ID of the ItemType</returns>
+        int GetItemId(string name);
+ 
+        #endregion
+
+
+        /// <summary>
+        /// Get the ID of a certain BlockType
+        /// </summary>
+        /// <param name="name">Name of the BlockType</param>
+        /// <returns>ID of the BlockType</returns>
+        int GetBlockId(string name);
 
 		/// <summary>
 		/// Add the given block to inventory in creative mode
@@ -872,7 +899,9 @@ void VIPDEBUGTEST(string texr, int val);
 		public int BlockId;
 		[ProtoMember(4, IsRequired = false)]
 		public int BlockCount = 1;
-	}
+        [ProtoMember(5, IsRequired = false)]
+        public int Durability = 1;
+    }
 
 	[ProtoContract]
 	public class Inventory
@@ -1314,7 +1343,7 @@ void VIPDEBUGTEST(string texr, int val);
 		[ProtoMember(22)]
 		public bool IsPistol;
 		[ProtoMember(23)]
-		public int AimRadius;
+		public int Durablility;
 		[ProtoMember(24)]
 		public float Recoil;
 		[ProtoMember(25)]

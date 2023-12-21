@@ -170,8 +170,7 @@
 			return;
 		}
 
-		if ((one * (game.platform.TimeMillisecondsFromStart() - lastbuildMilliseconds) / 1000) >= BuildDelay(game)
-			)
+		if ((one * (game.platform.TimeMillisecondsFromStart() - lastbuildMilliseconds) / 1000) >= BuildDelay(game) || (game.whenStartedMining != -1 && left))
 		{
 			if (left && game.d_Inventory.RightHand[game.ActiveHudIndex] == null)
 			{
@@ -306,9 +305,7 @@
 							{
                                 game.whenStartedMining = game.platform.TimeMillisecondsFromStart();
                             }
-
-
-
+ 
                             int now = game.platform.TimeMillisecondsFromStart();
                             int end = game.whenStartedMining + game.platform.FloatToInt((game.GetMiningTime(item.BlockId, game.map.GetBlock(posx, posy, posz)) * 1000));
  
@@ -348,7 +345,7 @@
 
 	internal float BuildDelay(Game game)
 	{
-		float default_ = (1f * 95 / 100) * (1 / game.basemovespeed);
+		float default_ = (1f * 95 / 110) * (1 / game.basemovespeed);
 		Packet_Item item = game.d_Inventory.RightHand[game.ActiveHudIndex];
 		if (item == null || item.ItemClass != Packet_ItemClassEnum.Block)
 		{
@@ -708,13 +705,7 @@
 			mouseY = game.mouseCurrentY;
 		}
 
-		PointFloatRef aim = GetAim(game);
-		if (ispistolshoot && (aim.X != 0 || aim.Y != 0))
-		{
-			mouseX += game.platform.FloatToInt(aim.X);
-			mouseY += game.platform.FloatToInt(aim.Y);
-		}
-
+ 
 		tempViewport[0] = 0;
 		tempViewport[1] = 0;
 		tempViewport[2] = game.Width();
@@ -744,27 +735,7 @@
 		retPick.End[2] = tempRayStartPoint[2] + raydirZ * pickDistance1;
 	}
 
-	internal PointFloatRef GetAim(Game game)
-	{
-		if (game.CurrentAimRadius() <= 1)
-		{
-			return PointFloatRef.Create(0, 0);
-		}
-		float half = 0.5f;
-		float x;
-		float y;
-		for (; ; )
-		{
-			x = (game.rnd.NextFloat() - half) * game.CurrentAimRadius() * 2;
-			y = (game.rnd.NextFloat() - half) * game.CurrentAimRadius() * 2;
-			float dist1 = game.platform.MathSqrt(x * x + y * y);
-			if (dist1 <= game.CurrentAimRadius())
-			{
-				break;
-			}
-		}
-		return PointFloatRef.Create(x, y);
-	}
+ 
 
 	float CurrentPickDistance(Game game)
 	{

@@ -272,7 +272,7 @@ message BlockType {
 	optional bool isTool = 20;
 	optional string handimage = 21;
 	optional bool isPistol = 22;
-	optional int32 aimRadiusFloat = 23;
+	optional int32 Durablility = 23;
 	optional int32 recoilFloat = 24;
 	optional int32 delayFloat = 25;
 	optional int32 toolStrenghtFloat = 26;
@@ -767,6 +767,7 @@ message Item {
 	optional string itemId = 2;
 	optional int32 blockId = 3;
 	optional int32 blockCount = 4;
+	optional int32 durability = 5;
 }
 
 enum ItemClass {

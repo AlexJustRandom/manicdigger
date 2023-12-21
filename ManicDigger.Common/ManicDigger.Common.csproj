@@ -285,6 +285,7 @@
     <Compile Include="Client\UI\MainMenu.ci.cs" />
     <Compile Include="Client\UI\Widgets\ModListWidget.ci.cs" />
     <Compile Include="Server\Mods\Fortress\TooMuchContent\TooManyBlocks.cs" />
+    <Compile Include="Client\Mods\EntityEngine.ci.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -19,10 +19,11 @@ namespace ManicDigger.Mods
 		void OnLoad()
 		{
 			m.RegisterTimer(f, 0.1);
-			ghost = m.AddBot("Ghost");
-		}
+            ghost = m.AddBot("Ghost");
 
-		bool enabled = false;
+        }
+
+        bool enabled = true;
 
 		ModManager m;
 		int ghost;
