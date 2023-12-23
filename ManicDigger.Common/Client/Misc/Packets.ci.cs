@@ -287,8 +287,8 @@
 			p.X = game.platform.FloatToInt(positionX * 32);
 			p.Y = game.platform.FloatToInt(positionY * 32);
 			p.Z = game.platform.FloatToInt(positionZ * 32);
-			p.Heading = game.platform.FloatToInt(Game.RadToAngle256(orientationY));
-			p.Pitch = game.platform.FloatToInt(Game.RadToAngle256(orientationX));
+			p.Heading = game.platform.FloatToInt(MathCi.RadToAngle256(orientationY));
+			p.Pitch = game.platform.FloatToInt(MathCi.RadToAngle256(orientationX));
 			p.Stance = stance;
 		}
 		Packet_Client pp = new Packet_Client();

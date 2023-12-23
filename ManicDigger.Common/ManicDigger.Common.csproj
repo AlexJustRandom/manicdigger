@@ -284,8 +284,8 @@
     <Compile Include="Client\Mods\CoreComands.ci.cs" />
     <Compile Include="Client\UI\MainMenu.ci.cs" />
     <Compile Include="Client\UI\Widgets\ModListWidget.ci.cs" />
-    <Compile Include="Server\Mods\Fortress\TooMuchContent\TooManyBlocks.cs" />
     <Compile Include="Client\Mods\EntityEngine.ci.cs" />
+    <Compile Include="Server\Mods\Fortress\EXPERIMENTS\ToManyBlocks.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -328,6 +328,7 @@
     <None Include="Server\Mods\Fortress\Unused\Fluids.cs" />
     <None Include="Server\Mods\Fortress\Upgrades\AdvancedWorldGenerator.cs" />
     <None Include="Server\Mods\Fortress\MoreCommands\ServerDebug.cs" />
+    <None Include="Server\Mods\Fortress\EXPERIMENTS\Frostwalk.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Packet.proto">
@@ -354,7 +355,7 @@
   <ItemGroup>
     <Folder Include="Server\Mods\Fortress\Core\" />
     <Folder Include="Server\Mods\Fortress\MoreCommands\" />
-    <Folder Include="Server\Mods\Fortress\TooMuchContent\" />
+    <Folder Include="Server\Mods\Fortress\EXPERIMENTS\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

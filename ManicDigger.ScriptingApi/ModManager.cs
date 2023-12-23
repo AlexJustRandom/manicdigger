@@ -77,11 +77,19 @@ namespace ManicDigger
 		/// <param name="f">Function to register. Required parameters: (int player, int x, int y, int z)</param>
 		void RegisterOnBlockBuild(ModDelegates.BlockBuild f);
 
-		/// <summary>
-		/// Registers a method to be called every time a player deletes a block
-		/// </summary>
-		/// <param name="f">Function to register. Required parameters: (int player, int x, int y, int z, int oldblock)</param>
-		void RegisterOnBlockDelete(ModDelegates.BlockDelete f);
+
+
+        /// <summary>
+        /// Registers a method to be called every time a player moves
+        /// </summary>
+        /// <param name="f">Function to register. Required parameters: (int player, int x, int y, int z)</param>
+        void RegisterOnPlayerMove(ModDelegates.PlayerMove a);
+
+        /// <summary>
+        /// Registers a method to be called every time a player deletes a block
+        /// </summary>
+        /// <param name="f">Function to register. Required parameters: (int player, int x, int y, int z, int oldblock)</param>
+        void RegisterOnBlockDelete(ModDelegates.BlockDelete f);
 
 		/// <summary>
 		/// Registers a method to be called every time a player uses a block
@@ -409,8 +417,8 @@ namespace ManicDigger
 		void SetWorldSize(int x, int y, int z);
 		void RegisterOnPlayerJoin(ModDelegates.PlayerJoin a);
 		void RegisterOnPlayerLeave(ModDelegates.PlayerLeave a);
-		void RegisterOnPlayerDisconnect(ModDelegates.PlayerDisconnect a);
-		void RegisterOnPlayerChat(ModDelegates.PlayerChat a);
+        void RegisterOnPlayerDisconnect(ModDelegates.PlayerDisconnect a);
+        void RegisterOnPlayerChat(ModDelegates.PlayerChat a);
 		void RegisterOnPlayerDeath(ModDelegates.PlayerDeath a);
 
 		/// <summary>
@@ -819,12 +827,14 @@ void VIPDEBUGTEST(string texr, int val);
 		public delegate void BlockUseWithTool(int player, int x, int y, int z, int tool);
 		public delegate void BlockUpdate(int x, int y, int z);
 		public delegate void WorldGenerator(int x, int y, int z, ushort[] chunk);
-		public delegate void PopulateChunk(int x, int y, int z);
-		public delegate bool Command(int player, string command, string argument);
+        public delegate void PopulateChunk(int x, int y, int z);
+        public delegate bool Command(int player, string command, string argument);
 		public delegate void PlayerJoin(int player);
 		public delegate void PlayerLeave(int player);
 		public delegate void PlayerDisconnect(int player);
-		public delegate string PlayerChat(int player, string message, bool toteam);
+        public delegate void PlayerMove(int player,int x, int y, int z);//potentialy expensive
+
+        public delegate string PlayerChat(int player, string message, bool toteam);
 		public delegate void PlayerDeath(int player, DeathReason reason, int sourceID);
 		public delegate void DialogClick(int player, string widgetId);
 		public delegate void WeaponHit(int sourcePlayer, int targetPlayer, int block, bool headshot);

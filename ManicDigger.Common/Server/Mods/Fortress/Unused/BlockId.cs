@@ -5,28 +5,31 @@ using System.IO;
 
 namespace ManicDigger.Mods
 {
-	public class BlockId : IMod
-	{
-		private ModManager m;
-		public static bool DEBUG = false;
+    public class BlockId : IMod
+    {
+        private ModManager m;
+        public static bool DEBUG = false;
 
-		public void PreStart(ModManager m)
-		{
-			// Add all modfiles here which contain block definitions.
-			m.RequireMod("CoreBlocks");
-			m.RequireMod("Doors");
-			m.RequireMod("Tnt");
-			m.RequireMod("PermissionBlock");
-			m.RequireMod("VandalFinder");
-
-		}
-		public void Start(ModManager manager)
-		{
-			m = manager;
-			m.RegisterOnLoad(OnLoad);
-            lastFreeId = -1;
+        public void PreStart(ModManager m)
+        {
+            // Add all modfiles here which contain block definitions.
+            m.RequireMod("CoreBlocks");
+            m.RequireMod("Doors");
+            m.RequireMod("Tnt");
+            m.RequireMod("PermissionBlock");
+            m.RequireMod("VandalFinder");
 
         }
+        public void Start(ModManager manager)
+        {
+            m = manager;
+            if (enabled) { 
+                m.RegisterOnLoad(OnLoad);
+                lastFreeId = -1;
+            }
+        }      
+        bool enabled = false;
+
         int lastFreeId;
 		public void OnLoad()
 		{

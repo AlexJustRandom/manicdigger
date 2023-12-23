@@ -48,8 +48,8 @@ public class ClientPacketHandlerEntitySpawn : ClientPacketHandler
 		p.x = (one * pos.X) / 32;
 		p.y = (one * pos.Y) / 32;
 		p.z = (one * pos.Z) / 32;
-		p.rotx = Game.Angle256ToRad(pos.Pitch);
-		p.roty = Game.Angle256ToRad(pos.Heading);
+		p.rotx = MathCi.Angle256ToRad(pos.Pitch);
+		p.roty = MathCi.Angle256ToRad(pos.Heading);
 		return p;
 	}
 

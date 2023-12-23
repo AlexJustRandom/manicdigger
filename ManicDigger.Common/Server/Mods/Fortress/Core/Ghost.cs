@@ -23,7 +23,7 @@ namespace ManicDigger.Mods
 
         }
 
-        bool enabled = true;
+        bool enabled = false;
 
 		ModManager m;
 		int ghost;
@@ -62,6 +62,7 @@ namespace ManicDigger.Mods
 			}
 			Pos p1 = history[0];
 			history.RemoveAt(0);
+
 			m.SetPlayerPosition(ghost, p1.x, p1.y, p1.z);
 			m.SetPlayerOrientation(ghost, p1.heading, p1.pitch, 0);
 		}

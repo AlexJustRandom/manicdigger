@@ -645,7 +645,10 @@ namespace ManicDigger.Server
         {
             server.modEventHandlers.onplayerdisconnect.Add(a);
         }
-
+        public void RegisterOnPlayerMove(ModDelegates.PlayerMove a)
+        {
+            server.modEventHandlers.onplayermove.Add(a);
+        }
         public void RegisterOnPlayerChat(ModDelegates.PlayerChat a)
         {
             server.modEventHandlers.onplayerchat.Add(a);

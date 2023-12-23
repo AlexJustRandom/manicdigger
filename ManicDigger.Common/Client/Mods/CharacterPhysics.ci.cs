@@ -452,12 +452,15 @@ public class Controls
 	internal bool shiftkeydown;
 	internal bool freemove;
 	internal bool noclip;
-
-	/// <summary>
-	/// Set player freemove mode to the given value
-	/// </summary>
-	/// <param name="level">Freemove mode as defined in FreemoveLevelEnum</param>
-	public void SetFreemove(int level)
+    public Controls() {
+        freemove = false;
+        noclip = false;
+    }
+    /// <summary>
+    /// Set player freemove mode to the given value
+    /// </summary>
+    /// <param name="level">Freemove mode as defined in FreemoveLevelEnum</param>
+    public void SetFreemove(int level)
 	{
 		if (level == FreemoveLevelEnum.None)
 		{

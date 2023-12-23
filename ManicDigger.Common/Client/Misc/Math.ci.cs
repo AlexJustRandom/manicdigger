@@ -103,4 +103,19 @@
 		}
 		return result;
 	}
+    public static float GetPi()
+    {
+        float a = 3141592;
+        return a / 1000000;
+    }
+    public static float Angle256ToRad(int value)
+    {
+        float one_ = 1;
+        return ((one_ * value) / 255) * GetPi() * 2;
+    }
+
+    public static float RadToAngle256(float value)
+    {
+        return (value / (2 * GetPi())) * 255;
+    }
 }

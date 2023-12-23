@@ -235,8 +235,19 @@ namespace ManicDigger.Server
 			}
 			return column[cz];
 		}
-
-		public void SetChunkValid(int cx, int cy, int cz, ServerChunk chunk)
+        public ServerChunk GetChunkValidSafe(int cx, int cy, int cz)
+        {
+            int index = MapUtilCi.Index2d(cx, cy, MapSizeX / chunksize);
+            if (index < 0 || index > (MapSizeX / chunksize) * (MapSizeY / chunksize))
+                return null;
+            ServerChunk[] column = chunks[index];
+            if (column == null)
+            {
+                return null;
+            }
+            return column[cz];
+        }
+        public void SetChunkValid(int cx, int cy, int cz, ServerChunk chunk)
 		{
 			ServerChunk[] column = chunks[MapUtilCi.Index2d(cx, cy, MapSizeX / chunksize)];
 			if (column == null)

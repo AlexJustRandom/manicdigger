@@ -1262,7 +1262,22 @@ namespace ManicDigger.Server
 						clients[clientid].PositionMul32GlZ = p.Z;
 						clients[clientid].positionheading = p.Heading;
 						clients[clientid].positionpitch = p.Pitch;
-						clients[clientid].stance = (byte)p.Stance;
+
+                        for (int i = 0; i < modEventHandlers.onplayermove.Count; i++)
+                        {
+                            try
+                            {
+                                modEventHandlers.onplayermove[i](clientid, p.X/32, p.Y/32, p.Z/32);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Mod exception: onplayermove");
+                                Console.WriteLine(ex.Message);
+                                Console.WriteLine(ex.StackTrace);
+                            }
+                        }
+
+                        clients[clientid].stance = (byte)p.Stance;
 					}
 					break;
 				case Packet_ClientIdEnum.Message:
@@ -3486,8 +3501,9 @@ namespace ManicDigger.Server
 		public List<ModDelegates.SpecialKey1> onspecialkey = new List<ModDelegates.SpecialKey1>();
 		public List<ModDelegates.PlayerJoin> onplayerjoin = new List<ModDelegates.PlayerJoin>();
 		public List<ModDelegates.PlayerLeave> onplayerleave = new List<ModDelegates.PlayerLeave>();
-		public List<ModDelegates.PlayerDisconnect> onplayerdisconnect = new List<ModDelegates.PlayerDisconnect>();
-		public List<ModDelegates.PlayerChat> onplayerchat = new List<ModDelegates.PlayerChat>();
+        public List<ModDelegates.PlayerDisconnect> onplayerdisconnect = new List<ModDelegates.PlayerDisconnect>();
+        public List<ModDelegates.PlayerMove> onplayermove = new List<ModDelegates.PlayerMove>();
+        public List<ModDelegates.PlayerChat> onplayerchat = new List<ModDelegates.PlayerChat>();
 		public List<ModDelegates.PlayerDeath> onplayerdeath = new List<ModDelegates.PlayerDeath>();
 		public List<ModDelegates.DialogClick> ondialogclick = new List<ModDelegates.DialogClick>();
 		public List<ModDelegates.DialogClick2> ondialogclick2 = new List<ModDelegates.DialogClick2>();

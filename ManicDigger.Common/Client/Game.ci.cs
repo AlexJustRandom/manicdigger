@@ -2118,8 +2118,25 @@
 			//TODO: what to do here?
 		}
 	}
+    internal void AddSpeculative(int blockid, int x, int y, int z)
+    {
+      
+            Speculative s_ = new Speculative();
+            s_.x = x;
+            s_.y = y;
+            s_.z = z;
+            s_.blocktype = map.GetBlock(x, y, z);
+            s_.timeMilliseconds = platform.TimeMillisecondsFromStart();
+            AddSpeculative(s_);
+            SetBlock(x, y, z, blockid);
+            RedrawBlock(x, y, z);
+    
+    }
 
-	void AddSpeculative(Speculative s_)
+
+
+
+    void AddSpeculative(Speculative s_)
 	{
 		for (int i = 0; i < speculativeCount; i++)
 		{
@@ -3262,17 +3279,8 @@
 	internal bool isNight;
 	internal bool fancySkysphere;
 
-	internal static float Angle256ToRad(int value)
-	{
-		float one_ = 1;
-		return ((one_ * value) / 255) * GetPi() * 2;
-	}
-
-	internal static float RadToAngle256(float value)
-	{
-		return (value / (2 * GetPi())) * 255;
-	}
-
+ 
+ 
 
 	internal bool isplayeronground;
     public CoreRenderer rend;
