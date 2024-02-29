@@ -71,6 +71,20 @@
     public int DefaultHudSlotCount() { return mDefaultHudSlotCount; }
 
     public Packet_BlockType GetBlockType(int id) { return BlockTypes[id]; }
+   
+     public int GetBlockId(string name)
+    {
+        for (int i = 0; i < BlocktypeCount; i++)
+        {
+            if (BlockTypes[i].Name == name)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+        //throw new Exception("No Block id:" + name);
+    }
 
     //for now not inicilized outside server TODO
     public string[] tooltypes; //STUPID TODO

@@ -179,7 +179,7 @@
     <Compile Include="Client\Mods\SendPosition.ci.cs" />
     <Compile Include="Client\Mods\SkySphereAnimated.ci.cs" />
     <Compile Include="Client\Mods\GuiTouchButtons.ci.cs" />
-    <Compile Include="Client\Mods\WalkSound.ci.cs" />
+    <Compile Include="Client\Mods\ModFrost.ci.cs" />
     <Compile Include="Client\Misc\NetworkTcpClient.ci.cs" />
     <Compile Include="Client\Misc\QueryClient.ci.cs" />
     <Compile Include="Client\Server.ci.cs" />
@@ -286,6 +286,7 @@
     <Compile Include="Client\UI\Widgets\ModListWidget.ci.cs" />
     <Compile Include="Client\Mods\EntityEngine.ci.cs" />
     <Compile Include="Server\Mods\Fortress\EXPERIMENTS\ToManyBlocks.cs" />
+    <Compile Include="Client\Mods\WalkSound.ci.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

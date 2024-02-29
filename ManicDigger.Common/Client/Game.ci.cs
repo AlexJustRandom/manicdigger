@@ -245,13 +245,14 @@
 		AddMod(new ModDrawText());
 		AddMod(new ModDrawParticleEffectBlockBreak());
 		AddMod(new ModDrawSprites());
-		AddMod(new ModDrawMinecarts());
-		AddMod(new ModDrawHand2d());
+        AddMod(new ModDrawMinecarts());
+        AddMod(new ModDrawHand2d());
 		AddMod(new ModDrawHand3d());
 		AddMod(new ModGuiCrafting());
 		AddMod(new ModDialog());
 		AddMod(new ModPicking());
-		AddMod(new ModClearInactivePlayersDrawInfo());
+        AddMod(new ModFrost());
+        AddMod(new ModClearInactivePlayersDrawInfo());
 		AddMod(new ModCameraKeys());
 		AddMod(new ModSendActiveMaterial());
 		AddMod(new ModCamera());
@@ -835,19 +836,21 @@
 
 	internal int BlockUnderPlayer()
 	{
-		if (!map.IsValidPos(platform.FloatToInt(player.position.x),
-			platform.FloatToInt(player.position.z),
-			platform.FloatToInt(player.position.y) - 1))
-		{
-			return -1;
-		}
-		int blockunderplayer = map.GetBlock(platform.FloatToInt(player.position.x),
-			platform.FloatToInt(player.position.z),
-			platform.FloatToInt(player.position.y) - 1);
-		return blockunderplayer;
+		return GetBlockSafe(platform.FloatToInt(player.position.x),
+            platform.FloatToInt(player.position.z),
+            platform.FloatToInt(player.position.y) - 1);
 	}
+    internal int GetBlockSafe(int x,int y,int z)
+    {
+        if (!map.IsValidPos(x,y,z))
+        {
+            return -1;
+        }
+        int blockunderplayer = map.GetBlock(x,y,z);
+        return blockunderplayer;
+    }
 
-	internal CameraType cameratype;
+    internal CameraType cameratype;
 	internal bool ENABLE_TPP_VIEW;
 
 	internal Vector3Ref playerdestination;
@@ -2103,22 +2106,15 @@
 			{
 				blockid = SpecialBlockId.Empty;
 			}
-			Speculative s_ = new Speculative();
-			s_.x = x;
-			s_.y = y;
-			s_.z = z;
-			s_.blocktype = map.GetBlock(x, y, z);
-			s_.timeMilliseconds = platform.TimeMillisecondsFromStart();
-			AddSpeculative(s_);
-			SetBlock(x, y, z, blockid);
-			RedrawBlock(x, y, z);
-		}
+            AddSpeculativeOnPos(blockid, x, y, z);
+
+        }
 		else
 		{
 			//TODO: what to do here?
 		}
 	}
-    internal void AddSpeculative(int blockid, int x, int y, int z)
+    internal void AddSpeculativeOnPos(int blockid, int x, int y, int z)
     {
       
             Speculative s_ = new Speculative();
