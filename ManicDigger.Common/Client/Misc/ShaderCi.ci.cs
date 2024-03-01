@@ -75,12 +75,22 @@
 		p.GlUseProgram(null);
 	}
 
-	/// <summary>
-	/// Get location of specified uniform variable.
-	/// </summary>
-	/// <param name="name">Uniform variable name</param>
-	/// <returns>Uniform variable location</returns>
-	public int GetUniformLocation(string name)
+
+    /// <summary>
+    /// TODO dumentationm?
+    /// </summary>
+
+    public void GLBindAttribLocation(int index,string name)
+    {
+        p.GLBindAttribLocation(programId, index, name);
+    }
+
+    /// <summary>
+    /// Get location of specified uniform variable.
+    /// </summary>
+    /// <param name="name">Uniform variable name</param>
+    /// <returns>Uniform variable location</returns>
+    public int GetUniformLocation(string name)
 	{
 		return p.GlGetUniformLocation(programId, name);
 	}
@@ -106,6 +116,31 @@
 		}
 		isLinked = true;
 	}
+
+    //todo its stupid
+    public void setBool(string name, bool value)
+    {
+        if(value)
+            p.GlUniform1i(GetUniformLocation(name),  1);
+        else
+            p.GlUniform1i(GetUniformLocation(name), 0);
+    }
+
+    public void setInt(string name, int value) 
+    {
+        p.GlUniform1i(GetUniformLocation(name), value);
+
+    }
+    public void setFloat(string name, float value) 
+    {
+        p.GlUniform1f(GetUniformLocation(name), value);
+
+    }
+
+    public void setMat4(string name, float[] value)
+    {
+        p.GlUniformMatrix4(GetUniformLocation(name), value);
+    }
 }
 
 public class ShaderSources
@@ -179,17 +214,18 @@ public class ShaderSources
         "#version 330 core\n" +
 
         "layout(location = 0) in vec3 aPos;" +
-        "layout(location = 1) in vec3 aColor;" +
+        "layout(location = 1) in vec4 aColor;" +
         "layout(location = 2) in vec2 aTexCoord;" +
 
-        "uniform mat4 ModelViewProjectionMatrix;"+
+        "uniform mat4 MV;"+
+                "uniform mat4 P;" +
 
         "out vec3 ourColor;" +
         "out vec2 TexCoord;" +
 
         "void main()" +
         "{" +
-            "gl_Position = ModelViewProjectionMatrix * vec4(aPos, 1.0);" +
+            "gl_Position = P * MV * vec4(aPos, 1.0);" +
             " ourColor = aColor;"+
             "TexCoord = aTexCoord;"+
         "}";

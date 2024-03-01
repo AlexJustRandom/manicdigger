@@ -52,8 +52,7 @@
         this.platform = platform_;
         textColorRenderer = new TextColorRenderer();
         textColorRenderer.platform = platform;
-        CreateTerrainShader(platform_);
-    }
+     }
 
     int whitetexture;
     public int WhiteTexture()
@@ -321,10 +320,17 @@
         SetMatrixUniformModelView();
         platform.DrawModel(model);
     }
+
     public void DrawModels(Model[] model, int count)
     {
         SetMatrixUniformModelView();
+
         platform.DrawModels(model, count);
+    }
+    public void DrawModels2(Model[] model, int count)
+    {
+        platform.DrawModels2(model, count);
+
     }
     public void DrawModelData(ModelData data)
     {
@@ -368,7 +374,24 @@
     public void SetMatrixUniformModelView()
     {
         platform.SetMatrixUniformModelView(mvMatrix.Peek());
+        
     }
+    public float[] GetMatrixUniformProjection()
+    {
+      return pMatrix.Peek();
+    }
+
+    public float[] GetMatrixUniformModelView()
+    {
+         return mvMatrix.Peek();
+
+
+    }
+
+
+
+
+
 
     public void GLLoadMatrix(float[] m)
     {
@@ -561,19 +584,7 @@
 
     ShaderCi GenerateTextureshader;
 
-    public ShaderCi TerrainTexture;
-    public void CreateTerrainShader(GamePlatform platform_) {
-        platform_.ConsoleWriteLine("Compiling terrain shaders - Started");
 
-        TerrainTexture = new ShaderCi();
-        TerrainTexture.Init(platform_);
-        if (!TerrainTexture.Compile(ShaderSources.TerrainVertex, ShaderType.VertexShader)) return;
-        if (!TerrainTexture.Compile(ShaderSources.TerrainFragment, ShaderType.FragmentShader)) return;
-        TerrainTexture.Link();
-
-        platform_.ConsoleWriteLine("Compiling terrain shaders - Completed");
-
-    }
 
     public void GenerateTexture(Game game, int tileType, int id2, int id3) {
          game.platform.GenerateTextureStart();

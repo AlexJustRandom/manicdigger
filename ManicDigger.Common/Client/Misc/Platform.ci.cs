@@ -185,15 +185,21 @@
 	public abstract void GlShadeModelSmooth();
 	public abstract void GlDisableFog();
 	public abstract void BindTexture2d(int texture);
-	public abstract Model CreateModel(ModelData modelData);
-	public abstract void DrawModel(Model model);
-	public abstract void InitShaders();
+    public abstract Model CreateModel(ModelData modelData);
+    public abstract Model CreateModel2(ModelData modelData);
+    public abstract void DrawModel(Model model);
+    public abstract void DrawModel2(Model model);
+
+    public abstract void InitShaders();
 	public abstract void SetMatrixUniformProjection(float[] pMatrix);
 	public abstract void SetMatrixUniformModelView(float[] mvMatrix);
 	public abstract void DrawModels(Model[] model, int count);
-	public abstract void DrawModelData(ModelData data);
-	public abstract void DeleteModel(Model model);
-	public abstract int LoadTextureFromBitmap(BitmapCi bmp);
+    public abstract void DrawModels2(Model[] model, int count);
+
+    public abstract void DrawModelData(ModelData data);
+    public abstract void DeleteModel(Model model);
+    public abstract void DeleteModel2(Model model);
+    public abstract int LoadTextureFromBitmap(BitmapCi bmp);
 	public abstract void GlActiveTexture(int textureUnit);
 	public abstract GlProgram GlCreateProgram();
 	public abstract void GlDeleteProgram(GlProgram program);
@@ -204,7 +210,8 @@
 	public abstract string GlGetShaderInfoLog(GlShader shader);
 	public abstract void GlAttachShader(GlProgram program, GlShader shader);
 	public abstract void GlUseProgram(GlProgram program);
-	public abstract int GlGetUniformLocation(GlProgram program, string name);
+    public abstract void GLBindAttribLocation(GlProgram program, int index, string name);
+    public abstract int GlGetUniformLocation(GlProgram program, string name);
 	public abstract void GlLinkProgram(GlProgram program);
 	public abstract bool GlGetProgramLinkStatus(GlProgram program);
 	public abstract string GlGetProgramInfoLog(GlProgram program);
@@ -215,7 +222,7 @@
 	public abstract void GlUniform3f(int location, float v0, float v1, float v2);
 	public abstract void GlUniform4f(int location, float v0, float v1, float v2, float v3);
 	public abstract void GlUniformArray1f(int location, int count, float[] values);
-
+    public abstract void GlUniformMatrix4(int location, float[] matrix);
     public abstract void GenerateTextureStart();
     public abstract void GenerateTextureEnd(int faces, int alocationStart);
 

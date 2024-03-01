@@ -33,9 +33,9 @@ public class ModelData
 	internal int verticesMax;
 	internal int indicesMax;
 
-    public Vertex[] vertices;
-    public int VAO ;
-    public int Shader ;
+
+
+ 
 }
 
 public class ModelDataTool
@@ -98,27 +98,7 @@ public class ModelDataTool
         model.indices[model.indicesCount++] = index;
     }
   
-    public static void CreateVAO(ModelData model,Platform platform)
-    {
-        Vertex[] vertices = new Vertex[model.verticesCount];
-
-        for (int i = 0; i < model.verticesCount; i++) {
-            vertices[i].x = model.getXyz()[i*3 + 0];
-            vertices[i].y = model.getXyz()[i*3 + 1];
-            vertices[i].z = model.getXyz()[i*3 + 2];
-
-            vertices[i].r = model.getRgba()[i*4 + 0];
-            vertices[i].g = model.getRgba()[i*4 + 1];
-            vertices[i].b = model.getRgba()[i*4 + 2];
-            vertices[i].a = model.getRgba()[i*4 + 2];
-
-            vertices[i].u = model.getUv()[i * 2 + 0];
-            vertices[i].v = model.getUv()[i * 2 + 1];
-
-        }
-
-
-    }
+   
 
 }
 public class Vertex

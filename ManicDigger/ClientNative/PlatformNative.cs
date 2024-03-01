@@ -1414,12 +1414,23 @@ namespace ManicDigger.ClientNative
             int id = GL.GenLists(1);
 
             GL.NewList(id, ListMode.Compile);
-
             DrawModelData(data);
 
             GL.EndList();
             DisplayListModel m = new DisplayListModel();
             m.listId = id;
+           
+            return m;
+        }
+
+        public override Model CreateModel2(ModelData data)
+        {
+            
+            int id = GLModelDataToVAO(data);
+
+            VAOModel m = new VAOModel();
+            m.vao = id;
+            m.count = data.GetIndicesCount();
             return m;
         }
 
@@ -1488,15 +1499,28 @@ namespace ManicDigger.ClientNative
             GL.DisableClientState(ArrayCap.TextureCoordArray);
             GL.Disable(EnableCap.Texture2D);
         }
-
         class DisplayListModel : Model
         {
             public int listId;
         }
 
+        class VAOModel : Model
+        {
+            public int vao;
+            public int count;
+        }
+
         public override void DrawModel(Model model)
         {
             GL.CallList(((DisplayListModel)model).listId);
+        }
+
+        public override void DrawModel2(Model model)
+        {
+
+            GL.BindVertexArray(((VAOModel)model).vao);
+            GL.DrawElements(BeginMode.Triangles, ((VAOModel)model).count, DrawElementsType.UnsignedInt, 0);
+            GL.BindVertexArray(0);
         }
 
         int[] lists = new int[1024];
@@ -1512,6 +1536,17 @@ namespace ManicDigger.ClientNative
                 lists[i] = ((DisplayListModel)model[i]).listId;
             }
             GL.CallLists(count, ListNameType.Int, lists);
+        }
+        public override void DrawModels2(Model[] model, int count)
+        {
+            if (lists.Length < count)
+            {
+                lists = new int[count * 2];
+            }
+            for (int i = 0; i < count; i++)
+            {
+                DrawModel2(model[i]);
+            }
         }
 
         public override void InitShaders()
@@ -1627,11 +1662,16 @@ namespace ManicDigger.ClientNative
         {
             GL.Enable(EnableCap.CullFace);
         }
-
         public override void DeleteModel(Model model)
         {
             DisplayListModel m = (DisplayListModel)model;
             GL.DeleteLists(m.listId, 1);
+        }
+
+        public override void DeleteModel2(Model model)
+        {
+            VAOModel m = (VAOModel)model;
+            GL.DeleteVertexArray(m.vao);
         }
 
         public override void GlEnableTexture2d()
@@ -1852,11 +1892,18 @@ namespace ManicDigger.ClientNative
             GL.UseProgram(p.id);
         }
 
+        public override void GLBindAttribLocation(GlProgram program,int index,string name)
+        {
+            GlProgramNative p = (GlProgramNative)program;
+            GL.BindAttribLocation(p.id, index, name);
+
+        }
+
         public override int GlGetUniformLocation(GlProgram program, string name)
         {
             GlProgramNative p = (GlProgramNative)program;
             return GL.GetUniformLocation(p.id, name);
-        }
+         }
 
         public override void GlLinkProgram(GlProgram program)
         {
@@ -1912,6 +1959,11 @@ namespace ManicDigger.ClientNative
         {
             GL.Uniform2(location, count, values);
         }
+        public override void GlUniformMatrix4(int location,float[] matrix)
+        {
+            GL.UniformMatrix4(location, 1,false, matrix);
+        }
+
         FrameBuffer1 frameBuffer;
         bool scissor;
         bool depth;
@@ -2408,30 +2460,46 @@ namespace ManicDigger.ClientNative
         #region OpenGLRewrite
 
         public override int GLModelDataToVAO(ModelData data) {
-            int VAO;
-            VAO = GL.GenVertexArray();
+            //int VAO;
+            //VAO = GL.GenVertexArray();
 
-            // 1. bind Vertex Array Object
-            GL.BindVertexArray(VAO);
+            //// 1. bind Vertex Array Object
+            //GL.BindVertexArray(VAO);
 
-            int VBO;
-            VBO = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
+            //int VBO;
+            //VBO = GL.GenBuffer();
+            //GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
 
-            GL.BufferData(BufferTarget.ArrayBuffer, data.GetVerticesCount() * sizeof(float) * 5, data.getXyz(), BufferUsageHint.StaticDraw);
+            //GL.BufferData(BufferTarget.ArrayBuffer, data.GetVerticesCount() * sizeof(float) * 5 + data.GetVerticesCount()* sizeof(byte)*4, data.getXyz(), BufferUsageHint.StaticDraw);
+            //int stride = sizeof(float)*5 + sizeof(byte)*4;
+            //GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, stride, 0);
+            //GL.VertexAttribPointer(1, 4, VertexAttribPointerType.Byte, false, stride, 0);
+            //GL.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, stride, 0);
 
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+            //int EBO;
+            //EBO = GL.GenBuffer();
+            //GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO);
 
-            int EBO;
-            EBO = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO);
+            //GL.BufferData(BufferTarget.ElementArrayBuffer, data.GetIndicesCount() * sizeof(int) * 5, data.getIndices(), BufferUsageHint.StaticDraw);
 
-            GL.BufferData(BufferTarget.ElementArrayBuffer, data.GetIndicesCount() * sizeof(int) * 5, data.getIndices(), BufferUsageHint.StaticDraw);
+            //GL.EnableVertexAttribArray(0);
+ 
+            int vao;
+            vao = GL.GenVertexArray();
+            GL.BindVertexArray(vao);
 
+            int VBOVertex;
+            VBOVertex = GL.GenBuffer();
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, VBOVertex);
+
+            GL.BufferData(BufferTarget.ArrayBuffer, data.GetVerticesCount() * sizeof(float) *3, data.getXyz(), BufferUsageHint.StaticDraw);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, sizeof(float) * 3, 0);
             GL.EnableVertexAttribArray(0);
+ 
 
 
-            return 0;
+            return vao;
         }
         public override void DrawVAO(int vao, int shader, int count) {
             GL.UseProgram(shader);

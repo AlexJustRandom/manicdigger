@@ -17,6 +17,8 @@
 		lastPerformanceInfoupdateMilliseconds = 0;
 		lastchunkupdates = 0;
 		started = false;
+
+
 	}
 
 	internal Game game;
@@ -39,21 +41,29 @@
 	}
 #endif
 
-	public override void OnNewFrameDraw3d(Game game_, float deltaTime)
+   
+    public override void Start(ClientModManager modmanager) {
+
+    }
+
+    public override void OnNewFrameDraw3d(Game game_, float deltaTime)
 	{
 		game = game_;
 		if (!started)
 		{
 			started = true;
+            
 		}
 		if (game.shouldRedrawAllBlocks)
 		{
 			game.shouldRedrawAllBlocks = false;
 			RedrawAllBlocks();
 		}
+
 		DrawTerrain();
 		UpdatePerformanceInfo(deltaTime);
 	}
+
 
 	internal void UpdatePerformanceInfo(float dt)
 	{
@@ -80,6 +90,8 @@
 		game.d_TerrainChunkTesselator.Start();
 		terrainRendererStarted = true;
 		chunksize = Game.chunksize;
+
+         
 	}
 
 	int chunksize;
