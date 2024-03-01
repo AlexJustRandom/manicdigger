@@ -32,65 +32,105 @@ public class ModelData
 
 	internal int verticesMax;
 	internal int indicesMax;
+
+    public Vertex[] vertices;
+    public int VAO ;
+    public int Shader ;
 }
 
 public class ModelDataTool
 {
-	public static void AddVertex(ModelData model, float x, float y, float z, float u, float v, int color)
-	{
-		if (model.verticesCount >= model.verticesMax)
-		{
-			int xyzCount = model.GetXyzCount();
-			float[] xyz = new float[xyzCount * 2];
-			for (int i = 0; i < xyzCount; i++)
-			{
-				xyz[i] = model.xyz[i];
-			}
+    public static void AddVertex(ModelData model, float x, float y, float z, float u, float v, int color)
+    {
+        if (model.verticesCount >= model.verticesMax)
+        {
+            int xyzCount = model.GetXyzCount();
+            float[] xyz = new float[xyzCount * 2];
+            for (int i = 0; i < xyzCount; i++)
+            {
+                xyz[i] = model.xyz[i];
+            }
 
-			int uvCount = model.GetUvCount();
-			float[] uv = new float[uvCount * 2];
-			for (int i = 0; i < uvCount; i++)
-			{
-				uv[i] = model.uv[i];
-			}
+            int uvCount = model.GetUvCount();
+            float[] uv = new float[uvCount * 2];
+            for (int i = 0; i < uvCount; i++)
+            {
+                uv[i] = model.uv[i];
+            }
 
-			int rgbaCount = model.GetRgbaCount();
-			byte[] rgba = new byte[rgbaCount * 2];
-			for (int i = 0; i < rgbaCount; i++)
-			{
-				rgba[i] = model.rgba[i];
-			}
+            int rgbaCount = model.GetRgbaCount();
+            byte[] rgba = new byte[rgbaCount * 2];
+            for (int i = 0; i < rgbaCount; i++)
+            {
+                rgba[i] = model.rgba[i];
+            }
 
-			model.xyz = xyz;
-			model.uv = uv;
-			model.rgba = rgba;
-			model.verticesMax = model.verticesMax * 2;
-		}
-		model.xyz[model.GetXyzCount() + 0] = x;
-		model.xyz[model.GetXyzCount() + 1] = y;
-		model.xyz[model.GetXyzCount() + 2] = z;
-		model.uv[model.GetUvCount() + 0] = u;
-		model.uv[model.GetUvCount() + 1] = v;
-		model.rgba[model.GetRgbaCount() + 0] = ConvertCi.IntToByte(ColorCi.ExtractR(color));
-		model.rgba[model.GetRgbaCount() + 1] = ConvertCi.IntToByte(ColorCi.ExtractG(color));
-		model.rgba[model.GetRgbaCount() + 2] = ConvertCi.IntToByte(ColorCi.ExtractB(color));
-		model.rgba[model.GetRgbaCount() + 3] = ConvertCi.IntToByte(ColorCi.ExtractA(color));
-		model.verticesCount++;
-	}
+            model.xyz = xyz;
+            model.uv = uv;
+            model.rgba = rgba;
+            model.verticesMax = model.verticesMax * 2;
+        }
+        model.xyz[model.GetXyzCount() + 0] = x;
+        model.xyz[model.GetXyzCount() + 1] = y;
+        model.xyz[model.GetXyzCount() + 2] = z;
+        model.uv[model.GetUvCount() + 0] = u;
+        model.uv[model.GetUvCount() + 1] = v;
+        model.rgba[model.GetRgbaCount() + 0] = ConvertCi.IntToByte(ColorCi.ExtractR(color));
+        model.rgba[model.GetRgbaCount() + 1] = ConvertCi.IntToByte(ColorCi.ExtractG(color));
+        model.rgba[model.GetRgbaCount() + 2] = ConvertCi.IntToByte(ColorCi.ExtractB(color));
+        model.rgba[model.GetRgbaCount() + 3] = ConvertCi.IntToByte(ColorCi.ExtractA(color));
+        model.verticesCount++;
+    }
 
-	internal static void AddIndex(ModelData model, int index)
-	{
-		if (model.indicesCount >= model.indicesMax)
-		{
-			int indicesCount = model.indicesCount;
-			int[] indices = new int[indicesCount * 2];
-			for (int i = 0; i < indicesCount; i++)
-			{
-				indices[i] = model.indices[i];
-			}
-			model.indices = indices;
-			model.indicesMax = model.indicesMax * 2;
-		}
-		model.indices[model.indicesCount++] = index;
-	}
+    internal static void AddIndex(ModelData model, int index)
+    {
+        if (model.indicesCount >= model.indicesMax)
+        {
+            int indicesCount = model.indicesCount;
+            int[] indices = new int[indicesCount * 2];
+            for (int i = 0; i < indicesCount; i++)
+            {
+                indices[i] = model.indices[i];
+            }
+            model.indices = indices;
+            model.indicesMax = model.indicesMax * 2;
+        }
+        model.indices[model.indicesCount++] = index;
+    }
+  
+    public static void CreateVAO(ModelData model,Platform platform)
+    {
+        Vertex[] vertices = new Vertex[model.verticesCount];
+
+        for (int i = 0; i < model.verticesCount; i++) {
+            vertices[i].x = model.getXyz()[i*3 + 0];
+            vertices[i].y = model.getXyz()[i*3 + 1];
+            vertices[i].z = model.getXyz()[i*3 + 2];
+
+            vertices[i].r = model.getRgba()[i*4 + 0];
+            vertices[i].g = model.getRgba()[i*4 + 1];
+            vertices[i].b = model.getRgba()[i*4 + 2];
+            vertices[i].a = model.getRgba()[i*4 + 2];
+
+            vertices[i].u = model.getUv()[i * 2 + 0];
+            vertices[i].v = model.getUv()[i * 2 + 1];
+
+        }
+
+
+    }
+
+}
+public class Vertex
+{
+    public float x;
+    public float y;
+    public float z;
+    public byte r;
+    public byte g;
+    public byte b;
+    public byte a;
+    public float u;
+    public float v;
+
 }

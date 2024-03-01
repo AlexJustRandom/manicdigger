@@ -31,6 +31,7 @@
         {
             cachedTextTextures[i] = null;
         }
+
     }
     internal GetCameraMatrix CameraMatrix;
 
@@ -51,7 +52,7 @@
         this.platform = platform_;
         textColorRenderer = new TextColorRenderer();
         textColorRenderer.platform = platform;
-
+        CreateTerrainShader(platform_);
     }
 
     int whitetexture;
@@ -560,8 +561,22 @@
 
     ShaderCi GenerateTextureshader;
 
+    public ShaderCi TerrainTexture;
+    public void CreateTerrainShader(GamePlatform platform_) {
+        platform_.ConsoleWriteLine("Compiling terrain shaders - Started");
+
+        TerrainTexture = new ShaderCi();
+        TerrainTexture.Init(platform_);
+        if (!TerrainTexture.Compile(ShaderSources.TerrainVertex, ShaderType.VertexShader)) return;
+        if (!TerrainTexture.Compile(ShaderSources.TerrainFragment, ShaderType.FragmentShader)) return;
+        TerrainTexture.Link();
+
+        platform_.ConsoleWriteLine("Compiling terrain shaders - Completed");
+
+    }
+
     public void GenerateTexture(Game game, int tileType, int id2, int id3) {
-        game.platform.GenerateTextureStart();
+         game.platform.GenerateTextureStart();
 
         float[] perspective = new float[16];
         Mat4.Perspective(perspective, 0.013f, 1, 64, 256);

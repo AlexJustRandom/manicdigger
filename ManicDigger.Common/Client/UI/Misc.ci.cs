@@ -86,4 +86,5 @@ public class DrawModeEnum
 {
 	public const int Triangles = 0;
 	public const int Lines = 1;
+    public const int VAO = 2;
 }

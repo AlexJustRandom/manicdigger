@@ -62,8 +62,8 @@ public class ModSkySphereShader : ClientMod
 
 			// initialize shader
 			shader.Init(game.platform);
-			shader.Compile(ShaderSources.VertexSkysphere, ShaderType.VertexShader);
-			shader.Compile(ShaderSources.FragmentSkysphere, ShaderType.FragmentShader);
+            if (!shader.Compile(ShaderSources.VertexSkysphere, ShaderType.VertexShader))return;
+            if (!shader.Compile(ShaderSources.FragmentSkysphere, ShaderType.FragmentShader))return;
 			shader.Link();
 		}
 

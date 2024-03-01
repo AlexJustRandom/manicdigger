@@ -231,6 +231,10 @@
   	// Translation
 	public abstract bool LanguageNativeAvailable();
 	public abstract Language GetLanguageHandler();
+
+    //OpenGL rewrite
+    public abstract int GLModelDataToVAO(ModelData data);
+    public abstract void DrawVAO(int vao, int shader, int count);
 }
 public class Modinfo
 {
