@@ -95,6 +95,9 @@ public class MainMenu
 		viewportHeight = p.GetCanvasHeight();
 		DrawScene(args.GetDt());
 		loginClient.Update(p);
+
+
+     
 	}
 
 	public void HandleMouseDown(MouseEventArgs e)

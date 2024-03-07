@@ -218,16 +218,18 @@ public class ShaderSources
         "layout(location = 2) in vec2 aTexCoord;" +
 
         "uniform mat4 MV;"+
-                "uniform mat4 P;" +
+        "uniform mat4 P;" +
 
         "out vec3 ourColor;" +
         "out vec2 TexCoord;" +
+         "out vec3 pos;" +
 
         "void main()" +
         "{" +
-            "gl_Position = P * MV * vec4(aPos, 1.0);" +
+            "gl_Position =  MV * P * vec4(aPos, 1.0);" +
             " ourColor = aColor;"+
-            "TexCoord = aTexCoord;"+
+          "TexCoord = aTexCoord;" +
+          "pos = aTexCoord;" +
         "}";
     public const string TerrainFragment =
     "#version 330 core\n" +
@@ -235,11 +237,12 @@ public class ShaderSources
  
     "in vec3 ourColor;"+
     "in vec2 TexCoord;"+
-    "uniform sampler2D ourTexture;"+
+        "in vec3 pos;" +
+    "uniform sampler2D ourTexture;" +
 
     "void main()"+
     "{"+
-        "FragColor = texture(ourTexture, TexCoord);"+
+        "FragColor = vec4(255,255,1,1);"+
     "}";
 
  

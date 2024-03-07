@@ -1426,11 +1426,13 @@ namespace ManicDigger.ClientNative
         public override Model CreateModel2(ModelData data)
         {
             
-            int id = GLModelDataToVAO(data);
+            int id = 0;
 
             VAOModel m = new VAOModel();
             m.vao = id;
             m.count = data.GetIndicesCount();
+            m.uploded = false;
+            m.data = data;
             return m;
         }
 
@@ -1497,7 +1499,10 @@ namespace ManicDigger.ClientNative
             GL.DisableClientState(ArrayCap.VertexArray);
             GL.DisableClientState(ArrayCap.ColorArray);
             GL.DisableClientState(ArrayCap.TextureCoordArray);
-            GL.Disable(EnableCap.Texture2D);
+            if (data.getMode() == DrawModeEnum.Triangles)
+            {
+                GL.Disable(EnableCap.Texture2D);
+            }
         }
         class DisplayListModel : Model
         {
@@ -1507,7 +1512,9 @@ namespace ManicDigger.ClientNative
         class VAOModel : Model
         {
             public int vao;
+            public ModelData data;
             public int count;
+            public bool uploded;
         }
 
         public override void DrawModel(Model model)
@@ -1517,10 +1524,11 @@ namespace ManicDigger.ClientNative
 
         public override void DrawModel2(Model model)
         {
-
+            Console.WriteLine("DRAWMODEL@");
             GL.BindVertexArray(((VAOModel)model).vao);
             GL.DrawElements(BeginMode.Triangles, ((VAOModel)model).count, DrawElementsType.UnsignedInt, 0);
             GL.BindVertexArray(0);
+ 
         }
 
         int[] lists = new int[1024];
@@ -1545,6 +1553,12 @@ namespace ManicDigger.ClientNative
             }
             for (int i = 0; i < count; i++)
             {
+                if(!((VAOModel)model[i]).uploded)
+                {
+                    ((VAOModel)model[i]).vao= GLModelDataToVAO(((VAOModel)model[i]).data);
+                    ((VAOModel)model[i]).uploded = true;
+
+                }
                 DrawModel2(model[i]);
             }
         }
@@ -1662,16 +1676,18 @@ namespace ManicDigger.ClientNative
         {
             GL.Enable(EnableCap.CullFace);
         }
+        //TODO LETS GO MEMORY LEAKS\
+
         public override void DeleteModel(Model model)
         {
-            DisplayListModel m = (DisplayListModel)model;
-            GL.DeleteLists(m.listId, 1);
+       //     DisplayListModel m = (DisplayListModel)model;
+         //   GL.DeleteLists(m.listId, 1);
         }
 
         public override void DeleteModel2(Model model)
         {
-            VAOModel m = (VAOModel)model;
-            GL.DeleteVertexArray(m.vao);
+           // VAOModel m = (VAOModel)model;
+           // GL.DeleteVertexArray(m.vao);
         }
 
         public override void GlEnableTexture2d()
@@ -2460,29 +2476,8 @@ namespace ManicDigger.ClientNative
         #region OpenGLRewrite
 
         public override int GLModelDataToVAO(ModelData data) {
-            //int VAO;
-            //VAO = GL.GenVertexArray();
+ 
 
-            //// 1. bind Vertex Array Object
-            //GL.BindVertexArray(VAO);
-
-            //int VBO;
-            //VBO = GL.GenBuffer();
-            //GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
-
-            //GL.BufferData(BufferTarget.ArrayBuffer, data.GetVerticesCount() * sizeof(float) * 5 + data.GetVerticesCount()* sizeof(byte)*4, data.getXyz(), BufferUsageHint.StaticDraw);
-            //int stride = sizeof(float)*5 + sizeof(byte)*4;
-            //GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, stride, 0);
-            //GL.VertexAttribPointer(1, 4, VertexAttribPointerType.Byte, false, stride, 0);
-            //GL.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, stride, 0);
-
-            //int EBO;
-            //EBO = GL.GenBuffer();
-            //GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO);
-
-            //GL.BufferData(BufferTarget.ElementArrayBuffer, data.GetIndicesCount() * sizeof(int) * 5, data.getIndices(), BufferUsageHint.StaticDraw);
-
-            //GL.EnableVertexAttribArray(0);
  
             int vao;
             vao = GL.GenVertexArray();
@@ -2494,18 +2489,87 @@ namespace ManicDigger.ClientNative
             GL.BindBuffer(BufferTarget.ArrayBuffer, VBOVertex);
 
             GL.BufferData(BufferTarget.ArrayBuffer, data.GetVerticesCount() * sizeof(float) *3, data.getXyz(), BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, sizeof(float) * 3, 0);
-            GL.EnableVertexAttribArray(0);
+          
+
+            int VBORgba;
+            VBORgba = GL.GenBuffer();
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, VBORgba);
+
+            GL.BufferData(BufferTarget.ArrayBuffer, data.GetVerticesCount() * sizeof(byte) * 4, data.getRgba(), BufferUsageHint.StaticDraw);
+          
+       
+
+            int VBOuv;
+            VBOuv = GL.GenBuffer();
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, VBOuv);
+            GL.BufferData(BufferTarget.ArrayBuffer, data.GetVerticesCount() * sizeof(float) * 2, data.getUv(), BufferUsageHint.StaticDraw);
  
+            int EBO;
+            EBO = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO);
+
+            GL.BufferData(BufferTarget.ElementArrayBuffer, data.GetIndicesCount() * sizeof(int) * 1, data.getIndices(), BufferUsageHint.StaticDraw);
 
 
-            return vao;
+
+
+            GL.EnableVertexAttribArray(0);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, sizeof(float) * 3, 0);
+            GL.EnableVertexAttribArray(1);
+            GL.VertexAttribPointer(1, 4, VertexAttribPointerType.UnsignedByte, false, sizeof(byte) * 4, 0);
+            GL.EnableVertexAttribArray(2);
+            GL.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, sizeof(float) * 2, 0);
+        
+
+
+
+            GL.BindVertexArray(0);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
+
+
+            //    float[] _vertices =
+            //{
+            //    -0.5f, -0.5f, 0.0f, // Bottom-left vertex
+            //     0.5f, -0.5f, 0.0f, // Bottom-right vertex
+            //     0.0f,  0.5f, 0.0f  // Top vertex
+            //};
+
+
+            //int _vertexBufferObject;
+
+            //int _vertexArrayObject;
+
+
+            //_vertexBufferObject = GL.GenBuffer();
+
+
+            //GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
+
+
+            //GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
+
+
+            //_vertexArrayObject = GL.GenVertexArray();
+            //GL.BindVertexArray(_vertexArrayObject);
+
+
+            //GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+
+            //// Enable variable 0 in the shader.
+            //GL.EnableVertexAttribArray(0);
+             return vao;
         }
         public override void DrawVAO(int vao, int shader, int count) {
+            Console.WriteLine("DrawVAO start");
+
             GL.UseProgram(shader);
             GL.BindVertexArray(vao);
             GL.DrawElements(BeginMode.Triangles, count, DrawElementsType.UnsignedInt, 0);
             GL.BindVertexArray(0);
+            Console.WriteLine("DrawVAO Complete");
+
         }
 
 

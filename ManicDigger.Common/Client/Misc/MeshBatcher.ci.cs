@@ -56,9 +56,10 @@
 			id = modelsCount;
 			modelsCount++;
 		}
+ 
 
-		Model model = game.platform.CreateModel(modelData);
-        Model model2 = game.platform.CreateModel2(modelData);
+        Model model = game.platform.CreateModel2(modelData);
+   //     Model model2 = game.platform.CreateModel2(modelData);
 
         ListInfo li = models[id];
 		li.indicescount = modelData.GetIndicesCount();
@@ -76,7 +77,7 @@
 
 	public void Remove(int id)
 	{
-		game.platform.DeleteModel(models[id].model);
+		//game.platform.DeleteModel(models[id].model);
 		models[id].empty = true;
 		empty[emptyCount++] = id;
 	}
@@ -100,7 +101,7 @@
 
 				game.platform.BindTexture2d(glTextures[i]);
 			}
-			game.rend.DrawModels(tocallSolid[i].Lists, tocallSolid[i].Count);
+			game.rend.DrawModels2(tocallSolid[i].Lists, tocallSolid[i].Count);
 		}
 		game.platform.GlDisableCullFace(); // for water.
 		for (int i = 0; i < texturesCount; i++)
@@ -110,7 +111,7 @@
 			{
 				game.platform.BindTexture2d(glTextures[i]);
 			}
-			game.rend.DrawModels(tocallTransparent[i].Lists, tocallTransparent[i].Count);
+			game.rend.DrawModels2(tocallTransparent[i].Lists, tocallTransparent[i].Count);
 		}
 		game.platform.GlEnableCullFace();
         TerrainShader.EndUse();
