@@ -87,6 +87,10 @@ public class NewWorld : MainMenuScreen
        wlst_SettingList.AddElement(setting[j]);
 
 
+        wtbx_name = new LabeledTextBoxWidget();
+        AddWidget(wtbx_name);
+
+
         AddWidget(wlst_SettingList);
         newWorldPage = NewWorldPages.Default;
  
@@ -94,6 +98,10 @@ public class NewWorld : MainMenuScreen
 
         wlst_SettingList.visible = false;
         wlst_modList.visible = false;
+
+        wt_ModDesc = new ModDescriptionWidget();
+        AddWidget(wt_ModDesc);
+
     }
 
 
@@ -112,9 +120,10 @@ public class NewWorld : MainMenuScreen
     NewWorldPages newWorldPage;
     bool loaded;
 
+    ModDescriptionWidget wt_ModDesc;
 
+    ModInformation[] modinfos;
 
-   
 
 
     public override void LoadTranslations()
@@ -136,14 +145,18 @@ public class NewWorld : MainMenuScreen
             loaded = true;
 
             IntRef lenght = new IntRef();
-            Modinfo[] modinfos = menu.GetModinfo(lenght);
+             modinfos = menu.GetModinfo(lenght);
             for (int m = 0; m < lenght.GetValue(); m++)
             {
                 ListEntry entry = new ListEntry();
-                entry.textTopLeft = modinfos[m].ModName;
+                if (modinfos[m] == null) continue;
+                if (modinfos[m].Name!=null)
+                    entry.textTopLeft = modinfos[m].Name;
                 entry.textTopRight = "Active";
-                entry.textBottomLeft = modinfos[m].Description;
-                entry.textBottomRight = modinfos[m].Category;
+                if (modinfos[m].Description != null)
+                    entry.textBottomLeft = modinfos[m].Description;
+                if (modinfos[m].Category != null)
+                    entry.textBottomRight = modinfos[m].Category;
 
                 wlst_modList.AddElement(entry);
                 
@@ -156,18 +169,19 @@ public class NewWorld : MainMenuScreen
         float leftx = gamePlatform.GetCanvasWidth() / 2 - 128 * scale;
         float y = gamePlatform.GetCanvasHeight() / 2 + 0 * scale;
 
+        float wlst_SettingListPading= 100 *scale;
 
-  
-        wlst_SettingList.x = 100 * scale;
-        wlst_SettingList.y = 100 * scale;
-        wlst_SettingList.sizex = gamePlatform.GetCanvasWidth() - 200 * scale;
-        wlst_SettingList.sizey = gamePlatform.GetCanvasHeight() - 200 * scale;
+        wlst_SettingList.x = wlst_SettingListPading;
+        wlst_SettingList.y = wlst_SettingListPading;
+        wlst_SettingList.sizex = gamePlatform.GetCanvasWidth() - wlst_SettingListPading*2;
+        wlst_SettingList.sizey = gamePlatform.GetCanvasHeight() - wlst_SettingListPading*2;
 
 
-        wlst_modList.x = 100 * scale;
-        wlst_modList.y = 100 * scale;
-        wlst_modList.sizex = gamePlatform.GetCanvasWidth() - 200 * scale;
-        wlst_modList.sizey = gamePlatform.GetCanvasHeight() - 200 * scale;
+        float wlst_modListPading = 50 * scale;
+        wlst_modList.x = wlst_modListPading;
+        wlst_modList.y = wlst_modListPading;
+        wlst_modList.sizex = gamePlatform.GetCanvasWidth()*3/5 - wlst_modListPading*2;
+        wlst_modList.sizey = gamePlatform.GetCanvasHeight() - wlst_modListPading*4;
 
 
         wtbx_name.x = leftx-128*scale;
@@ -196,9 +210,13 @@ public class NewWorld : MainMenuScreen
         wbtn_back.sizex = 256 * scale;
         wbtn_back.sizey = 64 * scale;
 
-    
 
-        // TODO: Implement savegame handling in game menu
+        wt_ModDesc.x = wlst_modList.x + wlst_modList.sizex;
+        wt_ModDesc.y = wlst_modListPading;
+        wt_ModDesc.sizex = gamePlatform.GetCanvasWidth() * 2 / 5 ;
+        wt_ModDesc.sizey = gamePlatform.GetCanvasHeight()  - wlst_modListPading * 4;
+        wt_ModDesc.SetPaddingX(0);
+        wt_ModDesc.SetPaddingY(0);
 
         DrawWidgets(dt);
 
@@ -212,7 +230,13 @@ public class NewWorld : MainMenuScreen
   
     public override void OnButton(AbstractMenuWidget w)
     {
-        
+        wt_ModDesc.SetModinfo(modinfos[1]);
+        if (w == wlst_modList) {
+            int index = wlst_modList.GetIndexSelected();
+            
+            if (index != -1)
+                wt_ModDesc.SetModinfo(modinfos[index]);
+        }
 
         if (w == wbtn_back)
         {
@@ -246,12 +270,14 @@ public class NewWorld : MainMenuScreen
 
             wlst_SettingList.visible = false;
             wlst_modList.visible = false;
+            wt_ModDesc.visible = false;
 
             switch (newWorldPage)
             {
                 case NewWorldPages.Mods:
                     wbtn_serverModOptions.SetText("World Options");
                     wlst_modList.visible = true;
+                    wt_ModDesc.visible = true;
                     wtxt_title.SetText("Mod settings");//TODO LANG
 
                     break;

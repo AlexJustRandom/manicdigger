@@ -231,19 +231,21 @@
   	// Translation
 	public abstract bool LanguageNativeAvailable();
 	public abstract Language GetLanguageHandler();
+    //Setting up Serve
+    public abstract ModInformation[] GetModlist(IntRef length);
 }
-public class Modinfo
+public class ModInformation
 {
     public string Version;
     public string ModID;
     public string[] IncompatibleIds;
     public string[] ModDependencies;
     public string Category;
-    public string ModName;
+    public string Name;
     public string Description;
     public string[] KnownIssues;
-    public string CreatorName;
-    public string CreatorContact;
+    public string Author;
+    public string AuthorContact;
     public string Image;
 }
 

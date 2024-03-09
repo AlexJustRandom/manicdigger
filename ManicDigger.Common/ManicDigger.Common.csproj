@@ -287,6 +287,7 @@
     <Compile Include="Client\Mods\EntityEngine.ci.cs" />
     <Compile Include="Server\Mods\Fortress\EXPERIMENTS\ToManyBlocks.cs" />
     <Compile Include="Client\Mods\WalkSound.ci.cs" />
+    <Compile Include="Client\UI\Widgets\ModDescriptionWidget.ci.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

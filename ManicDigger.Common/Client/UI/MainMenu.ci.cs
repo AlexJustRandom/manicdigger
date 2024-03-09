@@ -203,18 +203,11 @@ public class MainMenu
 
 
 
-    internal Modinfo[] GetModinfo(IntRef length)
+    internal ModInformation[] GetModinfo(IntRef length)
     {
-        Modinfo[] modinfos = new Modinfo[2];
-        modinfos[0] = new Modinfo();
-        modinfos[0].ModName = "core";
-        modinfos[0].Description = "core stuff";
-
-        modinfos[1] = new Modinfo();
-        modinfos[1].ModName = "More comands";
-        modinfos[1].Description = "More comands";
-
-        length.SetValue(2);
+        ModInformation[] modinfos = p.GetModlist(length);
+        p.ConsoleWriteLine("count of mods");
+        p.ConsoleWriteLine(p.IntToString(length.value));
         return modinfos;
     }
 
