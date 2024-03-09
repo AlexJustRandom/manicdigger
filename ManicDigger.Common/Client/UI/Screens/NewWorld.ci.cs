@@ -93,14 +93,17 @@ public class NewWorld : MainMenuScreen
 
         AddWidget(wlst_SettingList);
         newWorldPage = NewWorldPages.Default;
- 
+
+        wt_ModDesc = new ModDescriptionWidget();
+        AddWidget(wt_ModDesc);
+
         wtbx_name.visible = true;
 
         wlst_SettingList.visible = false;
         wlst_modList.visible = false;
+        wt_ModDesc.visible = false;
+        wt_ModDesc.SetFont(fontDefault);
 
-        wt_ModDesc = new ModDescriptionWidget();
-        AddWidget(wt_ModDesc);
 
     }
 
@@ -215,8 +218,8 @@ public class NewWorld : MainMenuScreen
         wt_ModDesc.y = wlst_modListPading;
         wt_ModDesc.sizex = gamePlatform.GetCanvasWidth() * 2 / 5 ;
         wt_ModDesc.sizey = gamePlatform.GetCanvasHeight()  - wlst_modListPading * 4;
-        wt_ModDesc.SetPaddingX(0);
-        wt_ModDesc.SetPaddingY(0);
+        wt_ModDesc.SetPaddingX(25*scale);
+        wt_ModDesc.SetPaddingY(25*scale);
 
         DrawWidgets(dt);
 

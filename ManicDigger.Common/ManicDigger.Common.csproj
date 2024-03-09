@@ -288,6 +288,7 @@
     <Compile Include="Server\Mods\Fortress\EXPERIMENTS\ToManyBlocks.cs" />
     <Compile Include="Client\Mods\WalkSound.ci.cs" />
     <Compile Include="Client\UI\Widgets\ModDescriptionWidget.ci.cs" />
+    <Compile Include="Client\UI\Widgets\LabeledTextWidget.ci.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
