@@ -247,6 +247,7 @@ public class ModInformation
     public string Author;
     public string AuthorContact;
     public string Image;
+    public string SrcFolder;
 }
 
 

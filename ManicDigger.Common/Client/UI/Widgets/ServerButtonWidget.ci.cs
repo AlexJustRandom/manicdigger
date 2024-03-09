@@ -90,10 +90,10 @@
 		// highlight text if button is selected
 		if (hasKeyboardFocus)
 		{
-			_textHeading.SetText(StringTools.StringAppend(renderer.GetPlatform(), "&2", _name));
-			_textGamemode.SetText(StringTools.StringAppend(renderer.GetPlatform(), "&2", _gamemode));
-			_textPlayercount.SetText(StringTools.StringAppend(renderer.GetPlatform(), "&2", _playercount));
-			_textDescription.SetText(StringTools.StringAppend(renderer.GetPlatform(), "&2", _motd));
+			_textHeading.SetText(StringTools.StringAppend(renderer.GetPlatform(), "&3", _name));
+			_textGamemode.SetText(StringTools.StringAppend(renderer.GetPlatform(), "&3", _gamemode));
+			_textPlayercount.SetText(StringTools.StringAppend(renderer.GetPlatform(), "&3", _playercount));
+			_textDescription.SetText(StringTools.StringAppend(renderer.GetPlatform(), "&3", _motd));
 		}
 		else
 		{

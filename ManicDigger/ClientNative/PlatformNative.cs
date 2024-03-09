@@ -2408,78 +2408,7 @@ namespace ManicDigger.ClientNative
 
 
         public override ModInformation[] GetModlist(IntRef length) {
-            string gamemode = "";
- 
-                string[] modpaths = new[] { Path.Combine(Path.Combine(Path.Combine(Path.Combine(Path.Combine("..", ".."), ".."), "ManicDigger.Common"), "Server"), "Mods"), "Mods" };
-
-                for (int i = 0; i < modpaths.Length; i++)
-                {
-                    if (File.Exists(Path.Combine(modpaths[i], "current.txt")))
-                    {
-                    gamemode = File.ReadAllText(Path.Combine(modpaths[i], "current.txt")).Trim();
-                    }
-                    else if (Directory.Exists(modpaths[i]))
-                    {
-                        try
-                        {
-                            File.WriteAllText(Path.Combine(modpaths[i], "current.txt"), gamemode);
-                        }
-                        catch
-                        {
-                        }
-                    }
-                    modpaths[i] = Path.Combine(modpaths[i], gamemode);
-                }
-
-
-            List<JObject> modinfoDict = new List<JObject>();
-            foreach (string modpath in modpaths)
-            {
-                if (!Directory.Exists(modpath))
-                {
-                    continue;
-                }
- 
-                string[] directories = Directory.GetDirectories(modpath);
-
-                foreach (string d in directories)
-                {
-                    string[] files = Directory.GetFiles(d);
-
-                    foreach (string s in files)
-                    {
-                        if (!GameStorePath.IsValidName(Path.GetFileNameWithoutExtension(s)))
-                        {
-                            continue;
-                        }
-                        if (!(Path.GetExtension(s).Equals(".json", StringComparison.InvariantCultureIgnoreCase)))
-                        {
-                            continue;
-                        }
-                         using (StreamReader file = File.OpenText(s))
-                        using (JsonTextReader reader = new JsonTextReader(file))
-                        {
-                             modinfoDict.Add( (JObject)JToken.ReadFrom(reader));
-                        }
-                      
-                    }
-                }
-
-
-            }
-
-            ModInformation[] modinfos=new ModInformation[modinfoDict.Count];
-
-            for(int i=0;i< modinfoDict.Count; i++) {
-                modinfos[i] = modinfoDict[i].ToObject<ModInformation>();
-        
-               
-
-            }
-            length.SetValue ( modinfoDict.Count);
-            return modinfos;
-
-
+            return ModLodingUtil.GetModlist(length);
 
            }
 
