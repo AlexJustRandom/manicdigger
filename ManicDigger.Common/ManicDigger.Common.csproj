@@ -302,7 +302,6 @@
     <None Include="Server\Mods\Fortress\Core\CoreEvents.cs" />
     <None Include="Server\Mods\Fortress\Core\Default.cs" />
     <None Include="Server\Mods\Fortress\Core\Doors.cs" />
-    <None Include="Server\Mods\Fortress\Core\EntitySigns.cs" />
     <None Include="Server\Mods\Fortress\Core\Food.cs" />
     <None Include="Server\Mods\Fortress\Core\Ghost.cs" />
     <None Include="Server\Mods\Fortress\Core\HttpStats.cs" />
@@ -330,9 +329,12 @@
     <None Include="Server\Mods\Fortress\Unused\BlockId.cs" />
     <None Include="Server\Mods\Fortress\Unused\PermissionBlock.cs" />
     <None Include="Server\Mods\Fortress\Unused\Fluids.cs" />
-    <None Include="Server\Mods\Fortress\Upgrades\AdvancedWorldGenerator.cs" />
     <None Include="Server\Mods\Fortress\MoreCommands\ServerDebug.cs" />
     <None Include="Server\Mods\Fortress\EXPERIMENTS\Frostwalk.cs" />
+    <None Include="Server\Mods\Fortress\Core\Modinfo.json" />
+    <None Include="Server\Mods\Fortress\MoreCommands\Modinfo.json" />
+    <None Include="Server\Mods\Fortress\Core\AdvancedWorldGenerator.cs" />
+    <None Include="Server\Mods\Fortress\MoreCommands\EntitySigns.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Packet.proto">
@@ -360,6 +362,7 @@
     <Folder Include="Server\Mods\Fortress\Core\" />
     <Folder Include="Server\Mods\Fortress\MoreCommands\" />
     <Folder Include="Server\Mods\Fortress\EXPERIMENTS\" />
+    <Folder Include="Server\Mods\Fortress\Upgrades\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -2383,6 +2383,7 @@ namespace ManicDigger.Server
 				}
 				return true;
 			}
+ 
 			if (cmd.Mode == Packet_BlockSetModeEnum.Create
 				&& d_Data.Rail(cmd.BlockType) != 0)
 			{

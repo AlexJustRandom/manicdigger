@@ -26,6 +26,7 @@ public class ModDescriptionWidget : AbstractMenuWidget
 
         modAuthor = new LabeledTextWidget();
         modAuthor.SetLabel("Author:");
+
         modAuthorContact = new LabeledTextWidget();
         modAuthorContact.SetLabel("Author Contact:");
 

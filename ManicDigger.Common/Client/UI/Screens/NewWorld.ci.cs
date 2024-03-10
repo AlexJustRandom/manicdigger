@@ -395,6 +395,24 @@ public class NewWorld : MainMenuScreen
             ServerInitSettings serverInitSettings =new ServerInitSettings();
             serverInitSettings.filename = wordname;
             serverInitSettings.settingsOverride = wlst_SettingList.GetAllElements();
+
+            int activemods = 0;
+            for(int m = 0; m < modinfosLenght.value; m++) {
+                if (modState[m] != true) continue;
+                activemods++;
+            }
+            ModInformation[] activemod = new ModInformation[activemods];
+            int activemodIndex=0;
+            for (int m = 0; m < modinfosLenght.value; m++)
+            {
+                if (modState[m] != true) continue;
+                activemod[activemodIndex] = modinfos[m];
+                activemodIndex++;
+            }
+
+            serverInitSettings.mods = activemod;
+            serverInitSettings.ModCount = activemods;
+
             menu.StartGame(true, serverInitSettings, null);
 
         }

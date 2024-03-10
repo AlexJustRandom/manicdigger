@@ -45,32 +45,33 @@
             tooltypes = new string[count];
     }
 
-    public int WhenPlayerPlacesGetsConvertedTo(int blockid) { return (BlockTypes[blockid].WhenPlacedGetsConvertedTo==0) ? blockid: BlockTypes[blockid].WhenPlacedGetsConvertedTo; }
-    public bool IsFlower(int blockid) { return BlockTypes[blockid].DrawType == Packet_DrawTypeEnum.Plant; }
-    public int Rail(int blockid) { return BlockTypes[blockid].Rail; }
-    public float WalkSpeed(int blockid) { return DeserializeFloat(BlockTypes[blockid].WalkSpeedWhenUsedFloat); }
-    public bool IsSlipperyWalk(int blockid) { return BlockTypes[blockid].IsSlipperyWalk; }
-    public string[] WalkSound(int blockid) { return BlockTypes[blockid].Sounds.Walk; }
-    public string[] BreakSound(int blockid) { return BlockTypes[blockid].Sounds.Break1; }
-    public string[] BuildSound(int blockid) { return BlockTypes[blockid].Sounds.Build; }
-    public string[] CloneSound(int blockid) { return BlockTypes[blockid].Sounds.Clone; }
-    public int LightRadius(int blockid) { return BlockTypes[blockid].LightRadius; }
+    public int WhenPlayerPlacesGetsConvertedTo(int blockid) { return (GetBlockType(blockid).WhenPlacedGetsConvertedTo==0) ? blockid: GetBlockType(blockid).WhenPlacedGetsConvertedTo; }
+    public bool IsFlower(int blockid) { return GetBlockType(blockid).DrawType == Packet_DrawTypeEnum.Plant; }
+    public int Rail(int blockid) { return GetBlockType(blockid).Rail; }
+    public float WalkSpeed(int blockid) { return DeserializeFloat(GetBlockType(blockid).WalkSpeedWhenUsedFloat); }
+    public bool IsSlipperyWalk(int blockid) { return GetBlockType(blockid).IsSlipperyWalk; }
+    public string[] WalkSound(int blockid) { return GetBlockType(blockid).Sounds.Walk; }
+    public string[] BreakSound(int blockid) { return GetBlockType(blockid).Sounds.Break1; }
+    public string[] BuildSound(int blockid) { return GetBlockType(blockid).Sounds.Build; }
+    public string[] CloneSound(int blockid) { return GetBlockType(blockid).Sounds.Clone; }
+    public int LightRadius(int blockid) { return GetBlockType(blockid).LightRadius; }
 
     public int StartInventoryLenght() { return BlocktypeCount; }
-    public int GetStartInventoryAmount(int blockid) { return BlockTypes[blockid].StartInventoryAmount; }
-    public void SetStartInventoryAmount(int blockid,int value) {   BlockTypes[blockid].StartInventoryAmount=value; }
+    public int GetStartInventoryAmount(int blockid) { return GetBlockType(blockid).StartInventoryAmount; }
+    public void SetStartInventoryAmount(int blockid,int value) {   GetBlockType(blockid).StartInventoryAmount=value; }
 
-    public float Hardness(int blockid) { return DeserializeFloat(BlockTypes[blockid].Hardness); }
-    public float ToolStrength(int blockid) { return DeserializeFloat(BlockTypes[blockid].ToolStrenghtFloat); }
-    public int DamageToPlayer(int blockid) { return BlockTypes[blockid].DamageToPlayer; }
-    public int WalkableType1(int blockid) { return BlockTypes[blockid].WalkableType; }
-    public int HarvestabilityMask(int blockid) { return BlockTypes[blockid].HarvestabilityMask; }
-    public int ToolSpeedBonusMask(int blockid) { return BlockTypes[blockid].ToolSpeedBonusMask; }
-    public int ToolTypeMask(int blockid) { return BlockTypes[blockid].ToolTypeMask; }
+    public float Hardness(int blockid) { return DeserializeFloat(GetBlockType(blockid).Hardness); }
+    public float ToolStrength(int blockid) { return DeserializeFloat(GetBlockType(blockid).ToolStrenghtFloat); }
+    public int DamageToPlayer(int blockid) { return GetBlockType(blockid).DamageToPlayer; }
+    public int WalkableType1(int blockid) { return GetBlockType(blockid).WalkableType; }
+    public int HarvestabilityMask(int blockid) { return GetBlockType(blockid).HarvestabilityMask; }
+    public int ToolSpeedBonusMask(int blockid) { return GetBlockType(blockid).ToolSpeedBonusMask; }
+    public int ToolTypeMask(int blockid) { return GetBlockType(blockid).ToolTypeMask; }
 
     public int DefaultHudSlotCount() { return mDefaultHudSlotCount; }
 
-    public Packet_BlockType GetBlockType(int id) { return BlockTypes[id]; }
+    public Packet_BlockType GetBlockType(int id) { 
+     return BlockTypes[id]; }
    
      public int GetBlockId(string name)
     {
@@ -205,7 +206,7 @@
     {
         return id >= BlockIdRailstart() && id < BlockIdRailstart() + 64;
     }
-    Packet_BlockType[] BlockTypes;
+    public Packet_BlockType[] BlockTypes;
 
     public void UseBlockTypes(Packet_BlockType[] blocktypes, int count)
     {
