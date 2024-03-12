@@ -25,7 +25,7 @@ namespace ManicDigger.Mods
 	{
 		public void PreStart(ModManager m)
 		{
-			m.RequireMod("CoreBlocks");
+			//m.RequireMod("CoreBlocks");
 		}
 		public void Start(ModManager manager)
 		{

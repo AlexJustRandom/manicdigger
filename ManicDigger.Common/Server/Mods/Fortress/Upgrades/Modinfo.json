@@ -1,6 +1,6 @@
 {
-    "ModID": "Experiments",
-    "name": "Experiments Mod",
+    "ModID": "upgrades",
+    "name": "upgrades Mod",
     "author": "Alex",
     "description": "Testing some stuff...",
     "version": "0.0.0",

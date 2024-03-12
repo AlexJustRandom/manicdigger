@@ -72,21 +72,13 @@ namespace ManicDigger.Server
                 for(int index = 0; index < server.serverInitSettings.ModCount;index++) {
                     modsources.Add(new Tuple<ModInformation, Dictionary<string, string>>(server.serverInitSettings.mods[index], ModLodingUtil.GetScriptSources(server.serverInitSettings.mods[index].SrcFolder)));
                 }
-                Console.WriteLine(string.Format("Mods to load: {0}", modsources.Count));
+                Console.WriteLine(string.Format("Server Mods to load: {0}", modsources.Count));
                 for(int index = 0; index < modsources.Count; index++)
                 {
                     CompileMod(modsources, index);
                 }
-
-                Console.WriteLine(string.Format("Loaded {0} blocks", server.BlockTypes.Length));
-                foreach(var block in server.BlockTypes) {
-                    Console.WriteLine(string.Format("Loaded {0} block", block.Name));
-
-                }
+ 
             }
-
-
-
  
         }
 
@@ -179,7 +171,7 @@ namespace ManicDigger.Server
             }
 
             //created locally, this allows the debugger to find the .pdb
-            parms.OutputAssembly = Path.Combine(new DirectoryInfo(new FileInfo(GetType().Assembly.Location).DirectoryName).FullName, "Mods.dll");
+            parms.OutputAssembly = Path.Combine(new DirectoryInfo(new FileInfo(GetType().Assembly.Location).DirectoryName).FullName,String.Format("{0}-Mod.dll",modID));
 
             //generatet .cs files are stored here
             //they are rather important for this debug session, since the .pdb link to them
@@ -256,11 +248,7 @@ namespace ManicDigger.Server
                     Console.WriteLine("-----------------------------------------------------------------------------");
 
                 }
-                foreach(var mname in mods) {
-                    Console.WriteLine("MODS INCLUDE" + mname.Key);
-                }
-                Console.WriteLine("MODS to add" + modID);
-
+ 
                 mods.Add(modID, new Dictionary<string, IMod>());
                 if (errorCount == 0)
                 {
@@ -314,12 +302,13 @@ namespace ManicDigger.Server
         void Use(CompilerResults results,string id)
         {
             CompiledAssemblies.Add(results.PathToAssembly);
+            Console.WriteLine("CompiledAssemblies.Add : {0} : {1}", id, results.PathToAssembly);
             foreach (Type t in results.CompiledAssembly.GetTypes())
             {
                 if (typeof(IMod).IsAssignableFrom(t))
                 {
                     mods[id][t.Name] = (IMod)results.CompiledAssembly.CreateInstance(t.FullName);
-                    Console.WriteLine("Loaded file : {0}", t.Name);
+                    Console.WriteLine("Loaded file from : {0} : {1}",id, t.Name);
 
                 }
             }

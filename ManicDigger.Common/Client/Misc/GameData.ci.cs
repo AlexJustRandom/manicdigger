@@ -71,7 +71,8 @@
     public int DefaultHudSlotCount() { return mDefaultHudSlotCount; }
 
     public Packet_BlockType GetBlockType(int id) { 
-     return BlockTypes[id]; }
+ 
+    return BlockTypes[id]; }
    
      public int GetBlockId(string name)
     {

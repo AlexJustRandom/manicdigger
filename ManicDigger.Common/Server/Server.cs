@@ -49,7 +49,11 @@ namespace ManicDigger.Server
 
 }
     }*/
+    public class IDBlocktype {
+        public int id;
+        public BlockType type;
 
+    }
 
     public partial class Server : ICurrentTime, IDropItem
 	{
@@ -81,13 +85,16 @@ namespace ManicDigger.Server
 			//Load translations
 			language = new LanguageNative();
 			language.LoadTranslations();
-		}
+
+
+        }
 
         void SaveBlockstoJson() {
-            List<BlockType> blocktypes= new List<BlockType>();
+            List<IDBlocktype> blocktypes= new List<IDBlocktype>();
             for(int i = 0; i < 1024; i++) {
-                if (BlockTypes[i] != null)
-                    blocktypes.Add(BlockTypes[i]);
+                if (string.IsNullOrEmpty(BlockTypes[i].Name)) continue;
+                if (BlockTypes[i] == null) continue;
+                    blocktypes.Add(new IDBlocktype {type = BlockTypes[i],id=i });
             }
             var opts = new JsonSerializerSettings()
             {
@@ -226,8 +233,11 @@ namespace ManicDigger.Server
 				//Do server stuff
 				ProcessMain();
 
-				//When a value of 0 or less is given, don't restart
-				if (config.AutoRestartCycle > 0 && serverUptime.Elapsed.TotalHours >= config.AutoRestartCycle)
+                SaveBlockstoJson();
+
+
+                //When a value of 0 or less is given, don't restart
+                if (config.AutoRestartCycle > 0 && serverUptime.Elapsed.TotalHours >= config.AutoRestartCycle)
 				{
 					//Restart interval elapsed
 					Restart();

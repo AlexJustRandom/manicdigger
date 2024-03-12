@@ -1,4 +1,7 @@
-﻿namespace ManicDigger.Mods
+﻿using System;
+using System.IO;
+
+namespace ManicDigger.Mods
 {
     /// <summary>
     /// This class contains all block definitions
@@ -25,12 +28,11 @@
 
         }
 
-         
-
         public void Start(ModManager manager)
         {
             m = manager;
 
+            Console.WriteLine("BASALT  MODDDDDDDDDDDDDDDDDDDDD");
 
             Axe = m.GetToolType("Axe");
             Shovel = m.GetToolType("Shovel");
@@ -38,9 +40,6 @@
             Sword = m.GetToolType("Sword");
             Pickaxe = m.GetToolType("Pickaxe");
             Shears = m.GetToolType("Shears");
-
-       
-
 
             //Initialize sounds
             noSound = new SoundSet();
@@ -69,10 +68,10 @@
                 DrawType = DrawType.Solid,
                 WalkableType = WalkableType.Solid,
                 Sounds = solidSounds,
-                 ToolSpeedBonusMask = Pickaxe,
+                ToolSpeedBonusMask = Pickaxe,
                 HarvestabilityMask = Pickaxe,
-        });
-            m.SetBlockType( "Ice", new BlockType()
+            });
+            m.SetBlockType("Ice", new BlockType()
             {
                 AllTextures = "Ice",
                 DrawType = DrawType.Solid,
@@ -81,10 +80,15 @@
                 ToolSpeedBonusMask = Pickaxe,
                 Hardness = 0.5f,
                 IsSlipperyWalk = true,
-                WalkSpeed =6f,
+                WalkSpeed = 6f,
             });
 
-
+            Console.WriteLine("BASALT ID ID ID ID " + m.GetBlockId("Basalt"));
+            Console.WriteLine("BASALT ID ID ID ID " + m.GetBlockId("Basalt"));
+            Console.WriteLine("BASALT ID ID ID ID " + m.GetBlockId("Basalt"));
+            Console.WriteLine("BASALT ID ID ID ID " + m.GetBlockId("Basalt"));
+            Console.WriteLine("BASALT ID ID ID ID " + m.GetBlockId("Basalt"));
+            Console.WriteLine("BASALT ID ID ID ID " + m.GetBlockId("Basalt"));
             #region Start inventory
             m.AddToCreativeInventory("Basalt");
 
@@ -92,6 +96,6 @@
             #endregion
         }
 
-       
+
     }
 }

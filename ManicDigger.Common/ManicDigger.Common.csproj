@@ -333,8 +333,10 @@
     <None Include="Server\Mods\Fortress\EXPERIMENTS\Frostwalk.cs" />
     <None Include="Server\Mods\Fortress\Core\Modinfo.json" />
     <None Include="Server\Mods\Fortress\MoreCommands\Modinfo.json" />
-    <None Include="Server\Mods\Fortress\Core\AdvancedWorldGenerator.cs" />
     <None Include="Server\Mods\Fortress\MoreCommands\EntitySigns.cs" />
+    <None Include="Server\Mods\Fortress\EXPERIMENTS\Modinfo.json" />
+    <None Include="Server\Mods\Fortress\Upgrades\Modinfo.json" />
+    <None Include="Server\Mods\Fortress\Upgrades\AdvancedWorldGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Packet.proto">

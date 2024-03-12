@@ -8,7 +8,7 @@
      public override void OnNewFrameFixed(Game game, NewFrameEventArgs args)
     {
         enabled = false;
-        if (enabled) return;
+        if (!enabled) return;
 
 
          FrostwalkpowerX = 3;
