@@ -6,6 +6,7 @@ using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ManicDigger.Common;
 
 namespace ManicDigger.Server
 {
@@ -1222,19 +1223,15 @@ namespace ManicDigger.Server
 
 
         public void LoadBlocks(string path) {
-            Console.WriteLine(string.Format("Loading blocks from:{0}", path));
+            IntRef dummy = new IntRef();
+            var blocks =ModLodingUtil.LoadBlocks(path, dummy);
 
-
-            using (StreamReader file = File.OpenText(path))
-             {
-                var Blocks = JsonConvert.DeserializeObject<List<IDBlocktype>>(file.ReadToEnd());
-                foreach (var block in Blocks) {
-                    if (block.id != 0)
-                        SetBlockType(block.id, block.type.Name, block.type);
-                    else
-                        SetBlockType(block.type.Name, block.type);
-                }
-                Console.WriteLine("Blocks loaded: {0}", Blocks.Count);
+            foreach (var block in blocks)
+            {
+                if (block.id != 0)
+                    SetBlockType(block.id, block.type.Name, block.type);
+                else
+                    SetBlockType(block.type.Name, block.type);
             }
 
         }

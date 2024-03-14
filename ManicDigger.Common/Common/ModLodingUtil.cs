@@ -6,6 +6,13 @@ using Newtonsoft.Json.Linq;
 
 namespace ManicDigger.Common
 {
+    public class IDBlocktype
+    {
+        public int id;
+        public BlockType type;
+
+    }
+
     public class ModLodingUtil
     {
         public ModLodingUtil()
@@ -135,7 +142,50 @@ namespace ManicDigger.Common
             length.SetValue(modinfoDict.Count);
             return modinfos;
 
+           
 
+
+
+        }
+
+
+        public static string[] FindBlockDefinitions(string path, IntRef lenght)
+        {
+            List<string> blockdef = new List<string>();
+
+            string[] directories = Directory.GetDirectories(path);
+
+            foreach (string d in directories)
+            {
+                string[] files = Directory.GetFiles(d);
+
+                foreach (string s in files)
+                {
+                    if (!GameStorePath.IsValidName(Path.GetFileNameWithoutExtension(s))) continue;
+                    if (!s.ToLower().Contains("block")) continue;
+                    if (!(Path.GetExtension(s).Equals(".json", StringComparison.InvariantCultureIgnoreCase))) continue;
+
+                    blockdef.Add(s);
+                }
+            }
+            lenght.SetValue(blockdef.Count);
+            return blockdef.ToArray();
+
+        }
+
+        public static IDBlocktype[] LoadBlocks(string path,IntRef lenght)
+        {
+            Console.WriteLine(string.Format("Loading blocks from:{0}", path));
+
+
+            using (StreamReader file = File.OpenText(path))
+            {
+                var Blocks = JsonConvert.DeserializeObject<List<IDBlocktype>>(file.ReadToEnd());
+            
+                Console.WriteLine("Blocks loaded: {0}", Blocks.Count);
+                lenght.SetValue(Blocks.Count);
+                return Blocks.ToArray();
+            }
 
         }
     }

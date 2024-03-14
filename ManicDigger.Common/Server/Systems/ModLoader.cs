@@ -118,8 +118,10 @@ namespace ManicDigger.Server
 
             }
             if (modlodingDebug) Console.WriteLine(string.Format("Starting compilation of {0}", modsources[index].Item1.ModID));
-           //REAL COMPILE
+           
+
             CompileScripts(modsources[index].Item1.ModID, modsources[index].Item2, false);
+            //Load all json as blocks in subfolder
             LoadBlocks(modsources[index].Item1);
 
             Start(server.modManager, server.modManager.required, modsources[index].Item1.ModID);
@@ -128,28 +130,14 @@ namespace ManicDigger.Server
         }
 
         public void LoadBlocks(ModInformation modinfo) {
-                
 
-                string[] directories = Directory.GetDirectories(modinfo.SrcFolder);
-
-                foreach (string d in directories)
-                {
-                    string[] files = Directory.GetFiles(d);
-
-                    foreach (string s in files)
-                    {
-                        if (!GameStorePath.IsValidName(Path.GetFileNameWithoutExtension(s)))continue;
-                        if (!s.ToLower().Contains("block")) continue;
-                        if (!(Path.GetExtension(s).Equals(".json", StringComparison.InvariantCultureIgnoreCase)))continue;
-
-                        server.modManager.LoadBlocks(s);
-                    }
-                }
-                
+            IntRef dummy=new IntRef();
+            var files = ModLodingUtil.FindBlockDefinitions(modinfo.SrcFolder, dummy);
+            foreach(var file in files) {
+                server.modManager.LoadBlocks(file);
             }
-
-
-
+        }
+ 
         Jint.JintEngine jintEngine = new Jint.JintEngine();
         Dictionary<string, string> javascriptScripts = new Dictionary<string, string>();
         public void CompileScripts(string modID,Dictionary<string, string> scripts, bool restart)

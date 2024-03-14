@@ -49,11 +49,7 @@ namespace ManicDigger.Server
 
 }
     }*/
-    public class IDBlocktype {
-        public int id;
-        public BlockType type;
 
-    }
 
     public partial class Server : ICurrentTime, IDropItem
 	{
