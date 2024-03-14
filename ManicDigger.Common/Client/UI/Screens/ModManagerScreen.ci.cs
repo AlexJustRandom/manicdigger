@@ -23,8 +23,7 @@
 
         wbtn_configmod = new ButtonWidget();
         AddWidget(wbtn_configmod);
-
-
+         
         wtxt_title = new TextWidget();
         wtxt_title.SetFont(fontTitle);
         AddWidget(wtxt_title);

@@ -67,24 +67,24 @@ namespace ManicDigger.Common
 
             string[] modpaths = new[] { Path.Combine(Path.Combine(Path.Combine(Path.Combine(Path.Combine("..", ".."), ".."), "ManicDigger.Common"), "Server"), "Mods"), "Mods" };
 
-            for (int i = 0; i < modpaths.Length; i++)
-            {
-                if (File.Exists(Path.Combine(modpaths[i], "current.txt")))
-                {
-                    gamemode = File.ReadAllText(Path.Combine(modpaths[i], "current.txt")).Trim();
-                }
-                else if (Directory.Exists(modpaths[i]))
-                {
-                    try
-                    {
-                        File.WriteAllText(Path.Combine(modpaths[i], "current.txt"), gamemode);
-                    }
-                    catch
-                    {
-                    }
-                }
-                modpaths[i] = Path.Combine(modpaths[i], gamemode);
-            }
+            //for (int i = 0; i < modpaths.Length; i++)
+            //{
+            //    if (File.Exists(Path.Combine(modpaths[i], "current.txt")))
+            //    {
+            //        gamemode = File.ReadAllText(Path.Combine(modpaths[i], "current.txt")).Trim();
+            //    }
+            //    else if (Directory.Exists(modpaths[i]))
+            //    {
+            //        try
+            //        {
+            //            File.WriteAllText(Path.Combine(modpaths[i], "current.txt"), gamemode);
+            //        }
+            //        catch
+            //        {
+            //        }
+            //    }
+            //    modpaths[i] = Path.Combine(modpaths[i], gamemode);
+            //}
 
 
             List<Tuple<JObject, string>> modinfoDict = new List<Tuple<JObject, string>>();
