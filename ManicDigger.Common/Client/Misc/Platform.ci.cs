@@ -234,6 +234,7 @@
     //Setting up Serve
     public abstract ModInformation[] GetModlist(IntRef length);
 }
+
 public class ModInformation
 {
     public string Version;

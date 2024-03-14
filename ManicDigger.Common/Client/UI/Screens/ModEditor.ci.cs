@@ -1,6 +1,6 @@
-﻿public class ScreenModEditor : MainMenuScreen
+﻿public class ScreenBlockEditor : MainMenuScreen
 {
-	public ScreenModEditor()
+	public ScreenBlockEditor()
 	{
         wbtn_blocks = new ButtonWidget();
         AddWidget(wbtn_blocks);

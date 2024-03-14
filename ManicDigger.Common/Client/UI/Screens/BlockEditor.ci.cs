@@ -1,6 +1,6 @@
-﻿public class ModManagerScreen : MainMenuScreen
+﻿public class BlockEditor : MainMenuScreen
 {
-    public ModManagerScreen()
+    public BlockEditor()
     {
         // initialize widgets
 
@@ -147,16 +147,17 @@
         wbtn_configmod.sizex = wbtn_switchactive.sizex;
         wbtn_configmod.sizey = wbtn_switchactive.sizey;
 
-        if (editActive) {
+        if (editActive)
+        {
             wbtn_editmod.x = wbtn_configmod.x + wbtn_switchactive.sizex + spacebetween;
             wbtn_editmod.y = wbtn_switchactive.y;
             wbtn_editmod.sizex = wbtn_switchactive.sizex;
             wbtn_editmod.sizey = wbtn_switchactive.sizey;
         }
- 
-        int index =0;
-  
-        wbtn_back.x = offsetfromborder+ (index * (buttonwidth + spacebetween));
+
+        int index = 0;
+
+        wbtn_back.x = offsetfromborder + (index * (buttonwidth + spacebetween));
         wbtn_back.y = gamePlatform.GetCanvasHeight() - offsetfromborder - buttonheight;
         wbtn_back.sizex = buttonwidth;
         wbtn_back.sizey = buttonheight;
@@ -189,7 +190,7 @@
         if (w == wbtn_editmod)
         {
             if (index == -1) index = 0;
-                menu.StartModEdit(modinfos[index].ModID);
+            menu.StartModEdit(modinfos[index].ModID);
         }
         if (w == wbtn_modmanageroptions)
         {

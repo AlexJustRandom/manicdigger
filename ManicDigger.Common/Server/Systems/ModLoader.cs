@@ -140,6 +140,7 @@ namespace ManicDigger.Server
  
         Jint.JintEngine jintEngine = new Jint.JintEngine();
         Dictionary<string, string> javascriptScripts = new Dictionary<string, string>();
+
         public void CompileScripts(string modID,Dictionary<string, string> scripts, bool restart)
         {
             CSharpCodeProvider compiler = new CSharpCodeProvider(new Dictionary<String, String> { { "CompilerVersion", "v4.0" } });
