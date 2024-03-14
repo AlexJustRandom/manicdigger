@@ -14,10 +14,19 @@
 		wimg_logo = new ImageWidget();
 		wimg_logo.SetTextureName("logo.png");
 		AddWidget(wimg_logo);
+
 		wbtn_singleplayer = new ButtonWidget();
 		AddWidget(wbtn_singleplayer);
-		wbtn_multiplayer = new ButtonWidget();
+
+        wbtn_Options = new ButtonWidget();
+        AddWidget(wbtn_Options);
+
+        wbtn_ModManger = new ButtonWidget();
+        AddWidget(wbtn_ModManger);
+
+        wbtn_multiplayer = new ButtonWidget();
 		AddWidget(wbtn_multiplayer);
+
 		wbtn_exit = new ButtonWidget();
 		AddWidget(wbtn_exit);
 	}
@@ -25,8 +34,10 @@
 	TextWidget wtxt_loading;
 	ImageWidget wimg_logo;
 	ButtonWidget wbtn_singleplayer;
-	ButtonWidget wbtn_multiplayer;
-	ButtonWidget wbtn_exit;
+    ButtonWidget wbtn_multiplayer;
+    ButtonWidget wbtn_Options;
+    ButtonWidget wbtn_ModManger;
+    ButtonWidget wbtn_exit;
 	internal float windowX;
 	internal float windowY;
 	bool queryStringChecked;
@@ -37,7 +48,10 @@
 	{
 		wbtn_singleplayer.SetText(menu.lang.Get("MainMenu_Singleplayer"));
 		wbtn_multiplayer.SetText(menu.lang.Get("MainMenu_Multiplayer"));
-		wbtn_exit.SetText(menu.lang.Get("MainMenu_Quit"));
+        wbtn_Options.SetText("Options");
+        wbtn_ModManger.SetText(menu.lang.Get("Mod Manger"));
+
+        wbtn_exit.SetText(menu.lang.Get("MainMenu_Quit"));
 	}
 
 	public override void Render(float dt)
@@ -76,6 +90,7 @@
 		float buttonwidth = 256 * scale;
 		float spacebetween = 5 * scale;
 		float offsetfromborder = 50 * scale;
+        int index = 5;
 
 		wimg_logo.sizex = 1024 * scale;
 		wimg_logo.sizey = 256 * scale;
@@ -83,18 +98,32 @@
 		wimg_logo.y = 50 * scale;
 
 		wbtn_singleplayer.x = windowX / 2 - (buttonwidth / 2);
-		wbtn_singleplayer.y = windowY - (3 * (buttonheight + spacebetween)) - offsetfromborder;
+		wbtn_singleplayer.y = windowY - (index * (buttonheight + spacebetween)) - offsetfromborder;
 		wbtn_singleplayer.sizex = buttonwidth;
 		wbtn_singleplayer.sizey = buttonheight;
+        index--;
 
-		wbtn_multiplayer.x = windowX / 2 - (buttonwidth / 2);
-		wbtn_multiplayer.y = windowY - (2 * (buttonheight + spacebetween)) - offsetfromborder;
-		wbtn_multiplayer.sizex = buttonwidth;
-		wbtn_multiplayer.sizey = buttonheight;
+        wbtn_multiplayer.x = windowX / 2 - (buttonwidth / 2);
+        wbtn_multiplayer.y = windowY - (index * (buttonheight + spacebetween)) - offsetfromborder;
+        wbtn_multiplayer.sizex = buttonwidth;
+        wbtn_multiplayer.sizey = buttonheight;
+        index--;
 
-		wbtn_exit.visible = menu.p.ExitAvailable();
+        wbtn_Options.x = windowX / 2 - (buttonwidth / 2);
+        wbtn_Options.y = windowY - (index * (buttonheight + spacebetween)) - offsetfromborder;
+        wbtn_Options.sizex = buttonwidth;
+        wbtn_Options.sizey = buttonheight;
+        index--;
+
+        wbtn_ModManger.x = windowX / 2 - (buttonwidth / 2);
+        wbtn_ModManger.y = windowY - (index * (buttonheight + spacebetween)) - offsetfromborder;
+        wbtn_ModManger.sizex = buttonwidth;
+        wbtn_ModManger.sizey = buttonheight;
+        index--;
+
+        wbtn_exit.visible = menu.p.ExitAvailable();
 		wbtn_exit.x = windowX / 2 - (buttonwidth / 2);
-		wbtn_exit.y = windowY - (1 * (buttonheight + spacebetween)) - offsetfromborder;
+		wbtn_exit.y = windowY - (index * (buttonheight + spacebetween)) - offsetfromborder;
 		wbtn_exit.sizex = buttonwidth;
 		wbtn_exit.sizey = buttonheight;
 
@@ -111,7 +140,15 @@
 		{
 			menu.StartMultiplayer();
 		}
-		if (w == wbtn_exit)
+        if (w == wbtn_Options)
+        {
+            menu.StartOptions();
+        }
+        if (w == wbtn_ModManger)
+        {
+            menu.StartModManager();
+        }
+        if (w == wbtn_exit)
 		{
 			menu.Exit();
 		}

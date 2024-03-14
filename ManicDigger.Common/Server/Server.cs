@@ -105,8 +105,7 @@ namespace ManicDigger.Server
             string json = JsonConvert.SerializeObject(blocktypes, opts);
             File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"" + "Blocktypes.json",
                   json);
-            Console.WriteLine("blocktypes.Count " + blocktypes.Count);
-        }
+         }
 
         internal ServerCi server;
 		internal ServerSystem[] systems;

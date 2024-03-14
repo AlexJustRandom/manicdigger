@@ -137,6 +137,7 @@ public class NewWorld : MainMenuScreen
     ButtonWidget wbtn_switchactive;
     ButtonWidget wbtn_configmod;
     //ButtonWidget wbtn_;
+    ModDescriptionWidget wt_ModDesc;
 
 
 
@@ -144,7 +145,6 @@ public class NewWorld : MainMenuScreen
     NewWorldPages newWorldPage;
     bool loaded;
 
-    ModDescriptionWidget wt_ModDesc;
 
     ModInformation[] modinfos;
     bool[] modState;

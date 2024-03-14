@@ -232,7 +232,7 @@
         //public bool[] IsEmptyForPhysics { get { return mIsEmptyForPhysics; } }
   
         BlockTypes[id] = b;
- 
+        BlockTypes[id].Sounds = new Packet_SoundSet();
         BlockTypes[id].Sounds.Walk = new string[SoundCount];
         BlockTypes[id].Sounds.Break1 = new string[SoundCount];
         BlockTypes[id].Sounds.Build = new string[SoundCount];

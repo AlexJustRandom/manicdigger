@@ -1222,14 +1222,19 @@ namespace ManicDigger.Server
 
 
         public void LoadBlocks(string path) {
+            Console.WriteLine(string.Format("Loading blocks from:{0}", path));
 
 
             using (StreamReader file = File.OpenText(path))
              {
-                var Blocks = JsonConvert.DeserializeObject<List<BlockType>>(file.ReadToEnd());
-                foreach (var block in Blocks) { 
-                      
+                var Blocks = JsonConvert.DeserializeObject<List<IDBlocktype>>(file.ReadToEnd());
+                foreach (var block in Blocks) {
+                    if (block.id != 0)
+                        SetBlockType(block.id, block.type.Name, block.type);
+                    else
+                        SetBlockType(block.type.Name, block.type);
                 }
+                Console.WriteLine("Blocks loaded: {0}", Blocks.Count);
             }
 
         }
