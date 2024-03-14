@@ -253,15 +253,7 @@ public class MainMenu
         screen = new ModManagerScreen();
         screen.Init(this, uiRenderer);
     }
-    internal void StartModEdit(string modID)
-    {
-        ScreenModEditor screenModeditor = new ScreenModEditor();
-        screen = screenModeditor;
-        screen.Init(this, uiRenderer);
-        screenModeditor.SetModID(modID);
-
-
-    }
+ 
     internal void StartModifyWorld()
 	{
 	}

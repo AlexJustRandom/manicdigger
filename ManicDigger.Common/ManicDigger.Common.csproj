@@ -291,8 +291,6 @@
     <Compile Include="Client\UI\Widgets\LabeledTextWidget.ci.cs" />
     <Compile Include="Common\ModLodingUtil.cs" />
     <Compile Include="Client\UI\Screens\ModManagerScreen.ci.cs" />
-    <Compile Include="Client\UI\Screens\ModEditor.ci.cs" />
-    <Compile Include="Client\UI\Screens\BlockEditor.ci.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

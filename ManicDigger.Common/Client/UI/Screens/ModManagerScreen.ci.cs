@@ -24,8 +24,6 @@
         wbtn_configmod = new ButtonWidget();
         AddWidget(wbtn_configmod);
 
-        wbtn_editmod = new ButtonWidget();
-        AddWidget(wbtn_editmod);
 
         wtxt_title = new TextWidget();
         wtxt_title.SetFont(fontTitle);
@@ -38,7 +36,6 @@
     ModDescriptionWidget wt_ModDesc;
     ButtonWidget wbtn_switchactive;
     ButtonWidget wbtn_configmod;
-    ButtonWidget wbtn_editmod;
 
     ButtonWidget wbtn_modmanageroptions;
 
@@ -52,7 +49,6 @@
     bool[] modState;
     IntRef modinfosLenght;
 
-    bool editActive;
     bool loaded;
 
     public override void LoadTranslations()
@@ -62,8 +58,7 @@
         wbtn_modmanageroptions.SetText("Mod Manager Options");
         wbtn_switchactive.SetText("Deactivate"); //TODO LANG
         wbtn_configmod.SetText("Configure"); //TODO LANG
-        wbtn_editmod.SetText("Edit"); //TODO LANG
-        editActive = true;
+
     }
 
     public override void Render(float dt)
@@ -134,7 +129,6 @@
 
         int ModDescButtonCount = 2;
 
-        if (editActive) ModDescButtonCount++;
 
         wbtn_switchactive.x = wt_ModDesc.x + spacebetween;
         wbtn_switchactive.y = wt_ModDesc.y + wt_ModDesc.sizey + spacebetween;
@@ -146,13 +140,6 @@
         wbtn_configmod.y = wbtn_switchactive.y;
         wbtn_configmod.sizex = wbtn_switchactive.sizex;
         wbtn_configmod.sizey = wbtn_switchactive.sizey;
-
-        if (editActive) {
-            wbtn_editmod.x = wbtn_configmod.x + wbtn_switchactive.sizex + spacebetween;
-            wbtn_editmod.y = wbtn_switchactive.y;
-            wbtn_editmod.sizex = wbtn_switchactive.sizex;
-            wbtn_editmod.sizey = wbtn_switchactive.sizey;
-        }
  
         int index =0;
   
@@ -186,11 +173,7 @@
             if (index != -1)
                 wt_ModDesc.SetModinfo(modinfos[index]);
         }
-        if (w == wbtn_editmod)
-        {
-            if (index == -1) index = 0;
-                menu.StartModEdit(modinfos[index].ModID);
-        }
+
         if (w == wbtn_modmanageroptions)
         {
             OnBackPressed();
