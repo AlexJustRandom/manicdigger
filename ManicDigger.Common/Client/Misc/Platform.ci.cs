@@ -233,6 +233,12 @@
 	public abstract Language GetLanguageHandler();
     //Setting up Serve
     public abstract ModInformation[] GetModlist(IntRef length);
+    public abstract string[] GetModpacks(IntRef length);
+    public abstract string GetCurrentModpack();
+    public abstract void SetCurrentModpack(string name);
+    public abstract void SaveModpack(string name,string[] mods);
+    public abstract string[] GetMods(string name, IntRef lengt);
+
 }
 
 public class ModInformation

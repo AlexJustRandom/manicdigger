@@ -60,11 +60,106 @@ namespace ManicDigger.Common
             return scripts;
         }
 
+        public static string[] GetListOfModpacks(IntRef  lenght) {
+
+            string path =  GameStorePath.GetModpacksPath();
+            string[] files = Directory.GetFiles(path);
+
+            List<string> modpacks = new List<string>();
+            foreach (string s in files)
+            {
+                if (!(Path.GetExtension(s).Equals(".mp", StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    continue;
+                }
+                modpacks.Add(Path.GetFileName(s));
+            }
+            if (modpacks.Count == 0) {
+                modpacks.Add("Default");
+            }
+            lenght.SetValue(modpacks.Count);
+            return modpacks.ToArray();
+        }
+
+        public static void SaveModpack(string name,string[] activeMods) {
+            string path = GameStorePath.GetModpacksPath();
+            File.WriteAllText(Path.Combine(path, name+ ".mp"), string.Join("\n", activeMods));
+        }
+
+        public static void SetCurrentModpack(string value) {
+            string[] modpaths = new[] { Path.Combine(Path.Combine(Path.Combine(Path.Combine(Path.Combine("..", ".."), ".."), "ManicDigger.Common"), "Server"), "Mods"), "Mods" };
+            for (int i = 0; i < modpaths.Length; i++)
+            {
+                if (File.Exists(Path.Combine(modpaths[i], "current.txt")))
+                {
+                    File.WriteAllText(Path.Combine(modpaths[i], "current.txt"), value);
+                     
+                }
+                else if (Directory.Exists(modpaths[i]))
+                {
+                    File.WriteAllText(Path.Combine(modpaths[i], "current.txt"), value);
+
+                }
+            }
+        }
+
+        public static string[] GetMods(string name,IntRef lenght)
+        {
+            string path = GameStorePath.GetModpacksPath();
+            string[] files = Directory.GetFiles(path);
+
+             foreach (string s in files)
+            {
+                if (!(Path.GetExtension(s).Equals(".mp", StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    continue;
+                }
+                if (Path.GetFileName(s) != name) continue;
+                string content = File.ReadAllText(s);
+                 string[] mods = content.Split('\n');
+                lenght.SetValue(mods.Length);
+                return mods;
+            }
+            Console.WriteLine("CRITICAL ERROR :; Are u tring to break the game? or did you ran out of storage space?");
+            throw new Exception("");
+         //   return new string[0];
+        }
+
+        public static string GetCurrentModpack() {
+            string[] modpaths = new[] { Path.Combine(Path.Combine(Path.Combine(Path.Combine(Path.Combine("..", ".."), ".."), "ManicDigger.Common"), "Server"), "Mods"), "Mods" };
+
+            for (int i = 0; i < modpaths.Length; i++)
+            {
+                if (File.Exists(Path.Combine(modpaths[i], "current.txt")))
+                {
+                    string modpackname = File.ReadAllText(Path.Combine(modpaths[i], "current.txt")).Trim(); ;
+                    IntRef dummy = new IntRef();
+                    var modpacks = GetListOfModpacks(dummy);
+                    if (Array.IndexOf(modpacks, modpackname) == -1)
+                        return "Default";
+                    return modpackname;
+                }
+                else if (Directory.Exists(modpaths[i]))
+                {
+                    try
+                    {
+                        string modpackname = "Default";//something frong TODO im not sober enought to find what
+                        File.WriteAllText(Path.Combine(modpaths[i], "current.txt"), modpackname);
+                        return modpackname;
+                    }
+                    catch
+                    {
+                    }
+                }
+ 
+            }
+            return "Default";
+        }
+
 
         public static ModInformation[] GetModlist(IntRef length)
         {
-            string gamemode = "";
-
+ 
             string[] modpaths = new[] { Path.Combine(Path.Combine(Path.Combine(Path.Combine(Path.Combine("..", ".."), ".."), "ManicDigger.Common"), "Server"), "Mods"), "Mods" };
 
             //for (int i = 0; i < modpaths.Length; i++)

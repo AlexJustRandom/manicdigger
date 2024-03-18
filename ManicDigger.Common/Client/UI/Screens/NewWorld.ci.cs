@@ -396,22 +396,22 @@ public class NewWorld : MainMenuScreen
             serverInitSettings.filename = wordname;
             serverInitSettings.settingsOverride = wlst_SettingList.GetAllElements();
 
-            int activemods = 0;
+            int activeModCount = 0;
             for(int m = 0; m < modinfosLenght.value; m++) {
                 if (modState[m] != true) continue;
-                activemods++;
+                activeModCount++;
             }
-            ModInformation[] activemod = new ModInformation[activemods];
+            ModInformation[] activeMods = new ModInformation[activeModCount];
             int activemodIndex=0;
             for (int m = 0; m < modinfosLenght.value; m++)
             {
                 if (modState[m] != true) continue;
-                activemod[activemodIndex] = modinfos[m];
+                activeMods[activemodIndex] = modinfos[m];
                 activemodIndex++;
             }
 
-            serverInitSettings.mods = activemod;
-            serverInitSettings.ModCount = activemods;
+            serverInitSettings.mods = activeMods;
+            serverInitSettings.ModCount = activeModCount;
 
             menu.StartGame(true, serverInitSettings, null);
 

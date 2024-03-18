@@ -15,6 +15,16 @@ namespace ManicDigger.Common
             Console.WriteLine("Game name CHANGEDDDDDDDDDDDDDDDDD");
             GameName = name;
         }
+        public static string GetModpacksPath() {
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Games/MCIC/Modpacks");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            return path;
+        }
+
+
         public static string GetStorePath()
         {
             var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"Games/MCIC");

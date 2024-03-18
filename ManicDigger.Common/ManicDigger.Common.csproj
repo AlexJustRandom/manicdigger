@@ -289,8 +289,10 @@
     <Compile Include="Client\UI\Widgets\ModDescriptionWidget.ci.cs" />
     <Compile Include="Client\UI\Widgets\LabeledTextWidget.ci.cs" />
     <Compile Include="Common\ModLodingUtil.cs" />
-    <Compile Include="Client\UI\Screens\ModManagerScreen.ci.cs" />
     <Compile Include="Server\Mods\EXPERIMENTS\ToManyBlocks.cs" />
+    <Compile Include="Client\UI\Widgets\SelectWidget.ci.cs" />
+    <Compile Include="Client\SimpleServer\ModManagerScreen.ci.cs" />
+    <Compile Include="Client\UI\Widgets\ModManagerWidget.ci.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
