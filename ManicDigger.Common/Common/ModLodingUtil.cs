@@ -66,17 +66,17 @@ namespace ManicDigger.Common
             string[] files = Directory.GetFiles(path);
 
             List<string> modpacks = new List<string>();
+            modpacks.Add("Default");
+
             foreach (string s in files)
             {
                 if (!(Path.GetExtension(s).Equals(".mp", StringComparison.InvariantCultureIgnoreCase)))
                 {
                     continue;
                 }
-                modpacks.Add(Path.GetFileName(s));
+                modpacks.Add(Path.GetFileNameWithoutExtension(s));
             }
-            if (modpacks.Count == 0) {
-                modpacks.Add("Default");
-            }
+ 
             lenght.SetValue(modpacks.Count);
             return modpacks.ToArray();
         }
@@ -105,6 +105,17 @@ namespace ManicDigger.Common
 
         public static string[] GetMods(string name,IntRef lenght)
         {
+            if(name == "Default") {//Hardcoded? what else TODO
+                List<string> defaultModpacks =new List<string>();
+                defaultModpacks.Add("core");
+                defaultModpacks.Add("morecomands");
+                defaultModpacks.Add("upgrades"); 
+                lenght.SetValue(defaultModpacks.Count);
+                return defaultModpacks.ToArray();
+            }
+
+
+
             string path = GameStorePath.GetModpacksPath();
             string[] files = Directory.GetFiles(path);
 
@@ -114,15 +125,15 @@ namespace ManicDigger.Common
                 {
                     continue;
                 }
-                if (Path.GetFileName(s) != name) continue;
+                if (Path.GetFileNameWithoutExtension(s).ToLower() != name.ToLower()) continue;
                 string content = File.ReadAllText(s);
                  string[] mods = content.Split('\n');
                 lenght.SetValue(mods.Length);
                 return mods;
             }
             Console.WriteLine("CRITICAL ERROR :; Are u tring to break the game? or did you ran out of storage space?");
-            throw new Exception("");
-         //   return new string[0];
+            lenght.SetValue(0);
+            return new string[0];
         }
 
         public static string GetCurrentModpack() {

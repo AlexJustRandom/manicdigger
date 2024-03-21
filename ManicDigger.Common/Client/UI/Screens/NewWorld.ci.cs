@@ -154,13 +154,13 @@ public class NewWorld : MainMenuScreen
     public override void LoadTranslations()
     {
         wbtn_back.SetText(menu.lang.Get("MainMenu_ButtonBack"));
-        wbtn_create.SetText("Create"); //TODO LANG
+        wbtn_create.SetText(menu.lang.Get("MainMenu_CreateWorld")); 
         wtxt_title.SetText(menu.lang.Get("MainMenu_Singleplayer"));
-        wbtn_serveroptions.SetText("Server Options"); //TODO LANG
-        wbtn_serverModOptions.SetText("Mod Options"); //TODO LANG
+        wbtn_serveroptions.SetText(menu.lang.Get("MainMenu_ServerOptions"));  
+        wbtn_serverModOptions.SetText(menu.lang.Get("MainMenu_ModOptions"));  
 
-        wbtn_switchactive.SetText("Deactivate"); //TODO LANG
-        wbtn_configmod.SetText("Configure"); //TODO LANG
+        wbtn_switchactive.SetText(menu.lang.Get("Deactivate"));  
+        wbtn_configmod.SetText(menu.lang.Get("Modloder_Configure"));  
     }
 
     public override void Render(float dt)
@@ -173,7 +173,7 @@ public class NewWorld : MainMenuScreen
             loaded = true;
 
             modinfosLenght = new IntRef();
-            modinfos = menu.GetModinfo(modinfosLenght);
+            modinfos = menu.p.GetModlist(modinfosLenght);
             modState = new bool[modinfosLenght.value];
 
             for (int m = 0; m < modinfosLenght.GetValue(); m++)
@@ -329,8 +329,8 @@ public class NewWorld : MainMenuScreen
                     break;
             }
 
-            wbtn_serverModOptions.SetText("Mod Options"); //TODO LANG
-            wbtn_serveroptions.SetText("Server Options"); //TODO LANG
+            wbtn_serveroptions.SetText(menu.lang.Get("MainMenu_ServerOptions"));
+            wbtn_serverModOptions.SetText(menu.lang.Get("MainMenu_ModOptions"));
 
             wtbx_name.visible = false;
 
@@ -343,22 +343,22 @@ public class NewWorld : MainMenuScreen
             switch (newWorldPage)
             {
                 case NewWorldPages.Mods:
-                    wbtn_serverModOptions.SetText("World Options");
+                    wbtn_serverModOptions.SetText(menu.lang.Get("MainMenu_WorldOptions"));
                     wlst_modList.visible = true;
                     wt_ModDesc.visible = true;
                     wbtn_switchactive.visible = true;
                     wbtn_configmod.visible = true;
-                    wtxt_title.SetText("Mod settings");//TODO LANG
+                    wtxt_title.SetText(menu.lang.Get("MainMenu_ModOptions"));
 
                     break;
                 case NewWorldPages.ServerSettings:
-                    wbtn_serveroptions.SetText("World Options"); //TODO LANG
-                    wtxt_title.SetText("Server settings"); //TODO LANG
+                    wbtn_serveroptions.SetText(menu.lang.Get("MainMenu_WorldOptions"));
+                    wtxt_title.SetText(menu.lang.Get("MainMenu_ServerOptions"));
 
                     wlst_SettingList.visible = true; //TODO LANG
                     break;
                 case NewWorldPages.Default:
-                    wtxt_title.SetText("World settings"); //TODO LANG
+                    wtxt_title.SetText(menu.lang.Get("MainMenu_WorldOptions"));
 
                     wtbx_name.visible = true;
                     break;

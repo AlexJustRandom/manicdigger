@@ -293,6 +293,7 @@
     <Compile Include="Client\UI\Widgets\SelectWidget.ci.cs" />
     <Compile Include="Client\SimpleServer\ModManagerScreen.ci.cs" />
     <Compile Include="Client\UI\Widgets\ModManagerWidget.ci.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -198,19 +198,7 @@ public class MainMenu
 			loginResult.value = LoginResult.Ok;
 		}
 	}
-
-
-
-
-
-    internal ModInformation[] GetModinfo(IntRef length)
-    {
-        ModInformation[] modinfos = p.GetModlist(length);
-        p.ConsoleWriteLine("count of mods");
-        p.ConsoleWriteLine(p.IntToString(length.value));
-        return modinfos;
-    }
-
+ 
     internal string[] GetSavegames(IntRef length)
 	{
     		string[] files = p.DirectoryGetFiles(p.PathSavegames(), length);

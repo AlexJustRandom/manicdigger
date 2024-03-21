@@ -11,6 +11,7 @@
 
     public bool selectionOpen;
     public string[] selectWidgetValues;
+    int displayedValue;
 
     public SelectWidget()
     {
@@ -28,6 +29,7 @@
         clickable = true;
         focusable = true;
         selected = -1;
+        displayedValue = 0;
     }
 
     public int GetOptionSize()
@@ -73,8 +75,17 @@
 
 
     }
+    public int GetDisplayedValueIndex()
+    {
+        return displayedValue;
+    }
+    public string GetDisplayedValue()
+    {
+        return selectWidgetValues[displayedValue];
+    }
 
     public void SetDisplayedValue(int i) {
+        displayedValue = i;
         _text.SetText(selectWidgetValues[i]);
     }
 
@@ -88,6 +99,7 @@
 
         }
     }
+    //ToDO remove this stupid chack 
     bool ClickedOveride;
     public override bool HasBeenClicked(MouseEventArgs args)
     {

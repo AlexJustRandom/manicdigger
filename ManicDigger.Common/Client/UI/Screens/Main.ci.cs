@@ -48,8 +48,8 @@
 	{
 		wbtn_singleplayer.SetText(menu.lang.Get("MainMenu_Singleplayer"));
 		wbtn_multiplayer.SetText(menu.lang.Get("MainMenu_Multiplayer"));
-        wbtn_Options.SetText("Options");
-        wbtn_ModManger.SetText(menu.lang.Get("Mod Manger"));
+        wbtn_Options.SetText(menu.lang.Get("MainMenu_Options"));
+        wbtn_ModManger.SetText(menu.lang.Get("MainMenu_ModManger"));
 
         wbtn_exit.SetText(menu.lang.Get("MainMenu_Quit"));
 	}
@@ -61,9 +61,9 @@
 
 		if (!assetsLoaded)
 		{
-			if (menu.uiRenderer.GetAssetLoadProgress().value != 1)
-			{
-				string s = menu.p.StringFormat(menu.lang.Get("MainMenu_AssetsLoadProgress"), menu.p.FloatToString(menu.p.FloatToInt(menu.uiRenderer.GetAssetLoadProgress().value * 100)));
+             if (menu.uiRenderer.GetAssetLoadProgress().value != 1)
+             {
+                string s = menu.p.StringFormat(menu.lang.Get("MainMenu_AssetsLoadProgress"), menu.p.FloatToString(menu.p.FloatToInt(menu.uiRenderer.GetAssetLoadProgress().value * 100)));
 				wtxt_loading.SetX(windowX / 2);
 				wtxt_loading.SetY(windowY / 2);
 				wtxt_loading.SetText(s);

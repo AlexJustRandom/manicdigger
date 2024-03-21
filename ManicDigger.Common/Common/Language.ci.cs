@@ -367,9 +367,36 @@
 		Add("en", "Server_CommandFillLimitGroupSuccess", "{0}Fill area limit of group {1} set to {2}.");
 		Add("en", "Server_CommandFillLimitPlayerSuccess", "{0}Fill area limit of player {1} set to {2}.");
 		Add("en", "Server_CommandInvalidType", "Invalid type.");
-	}
+        //This is  separated becous that ITS NEW so im orginal creator and im sure i fucked something up :D 
 
-	public abstract void Add(string language, string id, string translated);
+        Add("en", "Modloder_Accept", "Accept");
+        Add("en", "Modloder_Cancel", "Cancel");
+        Add("en", "Modloader_ModManagerOptions", "Mod Manager Options");
+        Add("en", "Modloder_ModTurnOff", "Deactivate");
+        Add("en", "Modloder_ModTurnOn", "Activate");
+        Add("en", "Modloder_Configure", "Configure");
+        Add("en", "Modloder_Accept", "Accept");
+        Add("en", "Modloder_Cancel", "Cancel");
+        Add("en", "Modloder_DeleteModpack", "Delete Modpack");
+        Add("en", "Modloder_SaveChanges", "Save Changes");
+        Add("en", "Modloder_ReverseChanges", "Reverse Changes");
+        Add("en", "Modloder_ModpackDelete", "Modpack Delete");
+        Add("en", "Modloder_ModpackDeleteValidation", "Im Sure");
+
+        Add("en", "MainMenu_CreateWorld", "Create");
+        Add("en", "MainMenu_Options", "Options");
+        Add("en", "MainMenu_ModOptions", "Mod Options");
+        Add("en", "MainMenu_WorldOptions", "World Options");
+        Add("en", "MainMenu_ServerOptions", "Server Options");
+        Add("en", "MainMenu_ModifyWorld", "Modify World");
+        Add("en", "MainMenu_PlaySelectedWorld", "Play Selecte");
+        Add("en", "MainMenu_NewWorld", "New World");
+        Add("en", "MainMenu_ModManger", "Mod Manger");
+
+
+    }
+
+    public abstract void Add(string language, string id, string translated);
 	public abstract void Override(string language, string id, string translated);
 	public abstract string Get(string id);
 	public abstract string GetUsedLanguage();
