@@ -29,8 +29,7 @@ public class NewWorld : MainMenuScreen
         wtxt_title.SetFont(fontTitle);
         AddWidget(wtxt_title);
 
-        wlst_modList = new ListWidget();
-        AddWidget(wlst_modList);
+
 
         wlst_SettingList = new SettingsListWidget();
          setting=new SettingListEntry[7];
@@ -94,62 +93,40 @@ public class NewWorld : MainMenuScreen
         AddWidget(wlst_SettingList);
         newWorldPage = NewWorldPages.Default;
 
-        wt_ModDesc = new ModDescriptionWidget();
-        AddWidget(wt_ModDesc);
 
-
-        wbtn_switchactive = new ButtonWidget();
-        AddWidget(wbtn_switchactive);
-
-        wbtn_configmod = new ButtonWidget();
-        AddWidget(wbtn_configmod);
- 
- 
+        wmm_ModManager = new ModManagerWidget();
+        AddWidget(wmm_ModManager);
 
         wtbx_name.visible = true;
 
         wlst_SettingList.visible = false;
-        wlst_modList.visible = false;
+        wmm_ModManager.visible = false;
 
-        wt_ModDesc.visible = false;
 
-        wbtn_switchactive.visible = false;
-        wbtn_configmod.visible = false;
 
-        wt_ModDesc.SetFont(fontDefault);
- 
+
     }
+    ModManagerWidget wmm_ModManager;
 
 
 
-    SettingListEntry [] setting;
+    SettingListEntry[] setting;
     LabeledTextBoxWidget wtbx_name;
     ButtonWidget wbtn_back; 
 
     SettingsListWidget wlst_SettingList;
-    ListWidget wlst_modList;
+ 
 
     ButtonWidget wbtn_serveroptions;
     ButtonWidget wbtn_serverModOptions;
     ButtonWidget wbtn_create;
  
-
-    ButtonWidget wbtn_switchactive;
-    ButtonWidget wbtn_configmod;
-    //ButtonWidget wbtn_;
-    ModDescriptionWidget wt_ModDesc;
-
-
-
     TextWidget wtxt_title;
     NewWorldPages newWorldPage;
     bool loaded;
 
 
-    ModInformation[] modinfos;
-    bool[] modState;
-    IntRef modinfosLenght;
-
+     
 
     public override void LoadTranslations()
     {
@@ -157,10 +134,10 @@ public class NewWorld : MainMenuScreen
         wbtn_create.SetText(menu.lang.Get("MainMenu_CreateWorld")); 
         wtxt_title.SetText(menu.lang.Get("MainMenu_Singleplayer"));
         wbtn_serveroptions.SetText(menu.lang.Get("MainMenu_ServerOptions"));  
-        wbtn_serverModOptions.SetText(menu.lang.Get("MainMenu_ModOptions"));  
+        wbtn_serverModOptions.SetText(menu.lang.Get("MainMenu_ModOptions"));
 
-        wbtn_switchactive.SetText(menu.lang.Get("Deactivate"));  
-        wbtn_configmod.SetText(menu.lang.Get("Modloder_Configure"));  
+        wmm_ModManager.LoadTranslationsandMods(gamePlatform, menu);
+
     }
 
     public override void Render(float dt)
@@ -172,38 +149,17 @@ public class NewWorld : MainMenuScreen
             wtbx_name.SetContent(gamePlatform,"New World");
             loaded = true;
 
-            modinfosLenght = new IntRef();
-            modinfos = menu.p.GetModlist(modinfosLenght);
-            modState = new bool[modinfosLenght.value];
-
-            for (int m = 0; m < modinfosLenght.GetValue(); m++)
-            {
-                ListEntry entry = new ListEntry();
-                if (modinfos[m] == null) continue;
-                modState[m] = true;
-
-                if (modinfos[m].Name!=null)
-                    entry.textTopLeft = modinfos[m].Name;
-
-                entry.textTopRight = "&2Active";
-                if (modinfos[m].Description != null)
-                
-                entry.textBottomLeft = modinfos[m].Description;
-                if (modinfos[m].Category != null)
-                    entry.textBottomRight = modinfos[m].Category;
-
-                wlst_modList.AddElement(entry);
-                
-            }
-            //wbtn_serveroptions.SetText(menu.p.StringFormat("Server Options{0}",menu.p.IntToString(lenght.GetValue())));
-
-
+ 
         }
+
+
         float scale = menu.uiRenderer.GetScale();
         float leftx = gamePlatform.GetCanvasWidth() / 2 - 128 * scale;
-        float y = gamePlatform.GetCanvasHeight() / 2 + 0 * scale;
+        float y = gamePlatform.GetCanvasHeight() / 2 ;
 
         float wlst_SettingListPading= 100 *scale;
+
+        wtxt_title.SetX(gamePlatform.GetCanvasWidth() / 2 - wtxt_title.sizex/2);
 
         wlst_SettingList.x = wlst_SettingListPading;
         wlst_SettingList.y = wlst_SettingListPading;
@@ -239,36 +195,13 @@ public class NewWorld : MainMenuScreen
 
 
 
-        //Modlist / options
-        float wlst_modListPading = 50 * scale;
-        wlst_modList.x = wlst_modListPading;
-        wlst_modList.y = wlst_modListPading;
-        wlst_modList.sizex = gamePlatform.GetCanvasWidth() * 3 / 5 - wlst_modListPading * 2;
-        wlst_modList.sizey = gamePlatform.GetCanvasHeight() - wlst_modListPading * 4;
+        float offsetfromborder = 50 * scale;
 
 
-        wt_ModDesc.x = wlst_modList.x + wlst_modList.sizex;
-        wt_ModDesc.y = wlst_modListPading;
-        wt_ModDesc.sizex = gamePlatform.GetCanvasWidth() * 2 / 5 ;
-        wt_ModDesc.sizey = gamePlatform.GetCanvasHeight()  - wlst_modListPading * 6;
-        wt_ModDesc.SetPaddingX(25*scale);
-        wt_ModDesc.SetPaddingY(25*scale);
-
-
-
-        float buttonPadding = 5 * scale;
-        wbtn_switchactive.x = wt_ModDesc.x + buttonPadding;
-        wbtn_switchactive.y = wt_ModDesc.y + wt_ModDesc.sizey + buttonPadding;
-
-        wbtn_switchactive.sizex = wt_ModDesc.sizex / 2 - buttonPadding *2;
-        wbtn_switchactive.sizey = 64 * scale;
-
-
-        wbtn_configmod.x = wbtn_switchactive.x +wbtn_switchactive .sizex+ buttonPadding;
-        wbtn_configmod.y = wbtn_switchactive.y;
-
-        wbtn_configmod.sizex = wbtn_switchactive.sizex;
-        wbtn_configmod.sizey = wbtn_switchactive.sizey;
+        wmm_ModManager.x = offsetfromborder;
+        wmm_ModManager.y = 0;
+        wmm_ModManager.sizex = gamePlatform.GetCanvasWidth() - offsetfromborder * 2;
+        wmm_ModManager.sizey = gamePlatform.GetCanvasHeight() - offsetfromborder;
 
 
         DrawWidgets(dt);
@@ -283,26 +216,8 @@ public class NewWorld : MainMenuScreen
   
     public override void OnButton(AbstractMenuWidget w)
     {
-        int index = wlst_modList.GetIndexSelected();
+       
 
-        if (w == wlst_modList) {
-
-            if (index != -1)
-                wt_ModDesc.SetModinfo(modinfos[index]);
-        }
-
-         if(w == wbtn_switchactive) { 
-            if (index>-1 && index < modinfosLenght.value) {
-                modState[index] = !modState[index];
-
-                if (modState[index])
-                    wlst_modList.GetElement(index).textTopRight = "&2Active";//TODO lang
-                else
-                    wlst_modList.GetElement(index).textTopRight = "&4Inactive";//TODO lang
-            }
- 
-        }
- 
 
         if (w == wbtn_back)
         {
@@ -333,21 +248,16 @@ public class NewWorld : MainMenuScreen
             wbtn_serverModOptions.SetText(menu.lang.Get("MainMenu_ModOptions"));
 
             wtbx_name.visible = false;
-
+            wmm_ModManager.visible = false;
             wlst_SettingList.visible = false;
-            wlst_modList.visible = false;
-            wt_ModDesc.visible = false;
-            wbtn_switchactive.visible = false;
-            wbtn_configmod.visible = false;
+  
 
             switch (newWorldPage)
             {
                 case NewWorldPages.Mods:
                     wbtn_serverModOptions.SetText(menu.lang.Get("MainMenu_WorldOptions"));
-                    wlst_modList.visible = true;
-                    wt_ModDesc.visible = true;
-                    wbtn_switchactive.visible = true;
-                    wbtn_configmod.visible = true;
+                    wmm_ModManager.visible = true;
+  
                     wtxt_title.SetText(menu.lang.Get("MainMenu_ModOptions"));
 
                     break;
@@ -396,22 +306,10 @@ public class NewWorld : MainMenuScreen
             serverInitSettings.filename = wordname;
             serverInitSettings.settingsOverride = wlst_SettingList.GetAllElements();
 
-            int activeModCount = 0;
-            for(int m = 0; m < modinfosLenght.value; m++) {
-                if (modState[m] != true) continue;
-                activeModCount++;
-            }
-            ModInformation[] activeMods = new ModInformation[activeModCount];
-            int activemodIndex=0;
-            for (int m = 0; m < modinfosLenght.value; m++)
-            {
-                if (modState[m] != true) continue;
-                activeMods[activemodIndex] = modinfos[m];
-                activemodIndex++;
-            }
+            IntRef activeModslLenght=new IntRef();
 
-            serverInitSettings.mods = activeMods;
-            serverInitSettings.ModCount = activeModCount;
+            serverInitSettings.mods = wmm_ModManager.GetActiveMods(activeModslLenght);
+            serverInitSettings.ModCount = activeModslLenght.GetValue();
 
             menu.StartGame(true, serverInitSettings, null);
 

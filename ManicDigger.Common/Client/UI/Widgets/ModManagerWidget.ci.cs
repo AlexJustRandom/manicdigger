@@ -254,7 +254,7 @@
 
         wbtn_deleteModpack.OnMouseDown(p, args);
         wbtn_notDeleteModpack.OnMouseDown(p, args);
-
+ 
         if (wbtn_deleteModpack.HasBeenClicked(args)) 
         {
             if (!deleteModpackActive)
@@ -410,7 +410,8 @@
 
     public override void Draw(float dt, UiRenderer renderer)
     {
- 
+        if (!visible) return;
+
         float scale = renderer.GetScale();
  
         float buttonheight = 64 * scale;
