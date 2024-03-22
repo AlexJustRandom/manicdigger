@@ -1,4 +1,4 @@
-﻿public abstract class GamePlatform
+public abstract class GamePlatform
 {
 	// Primitive
 	public abstract int FloatToInt(float value);
@@ -238,24 +238,37 @@
   	// Translation
 	public abstract bool LanguageNativeAvailable();
 	public abstract Language GetLanguageHandler();
+ 
+    //Modmanagment related stuf
+    public abstract ModInformation[] GetModlist(IntRef length);
+    public abstract string[] GetModpacks(IntRef length);
+    public abstract string GetCurrentModpack();
+    public abstract void SetCurrentModpack(string name);
+    public abstract void DeleteModpack(string name);
+    public abstract void SaveModpack(string name,string[] mods);
+    public abstract string[] GetMods(string name, IntRef lengt);
 
+ 
     //OpenGL rewrite
     public abstract int GLModelDataToVAO(ModelData data);
     public abstract void DrawVAO(int vao, int shader, int count);
+ 
 }
-public class Modinfo
+
+public class ModInformation
 {
     public string Version;
     public string ModID;
     public string[] IncompatibleIds;
     public string[] ModDependencies;
     public string Category;
-    public string ModName;
+    public string Name;
     public string Description;
     public string[] KnownIssues;
-    public string CreatorName;
-    public string CreatorContact;
+    public string Author;
+    public string AuthorContact;
     public string Image;
+    public string SrcFolder;
 }
 
 

@@ -201,26 +201,7 @@ public class MainMenu
 			loginResult.value = LoginResult.Ok;
 		}
 	}
-
-
-
-
-
-    internal Modinfo[] GetModinfo(IntRef length)
-    {
-        Modinfo[] modinfos = new Modinfo[2];
-        modinfos[0] = new Modinfo();
-        modinfos[0].ModName = "core";
-        modinfos[0].Description = "core stuff";
-
-        modinfos[1] = new Modinfo();
-        modinfos[1].ModName = "More comands";
-        modinfos[1].Description = "More comands";
-
-        length.SetValue(2);
-        return modinfos;
-    }
-
+ 
     internal string[] GetSavegames(IntRef length)
 	{
     		string[] files = p.DirectoryGetFiles(p.PathSavegames(), length);
@@ -254,8 +235,17 @@ public class MainMenu
         screen = new NewWorld();
         screen.Init(this, uiRenderer);
     }
+    internal void StartOptions()
+    {
 
-	internal void StartModifyWorld()
+    }
+    internal void StartModManager()
+    {
+        screen = new ModManagerScreen();
+        screen.Init(this, uiRenderer);
+    }
+ 
+    internal void StartModifyWorld()
 	{
 	}
 

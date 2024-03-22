@@ -73,12 +73,12 @@
 			}
 		}
 	}
-	public bool IsCursorInside(MouseEventArgs args)
+	public virtual bool IsCursorInside(MouseEventArgs args)
 	{
 		return (args.GetX() >= x && args.GetX() <= x + sizex &&
 			args.GetY() >= y && args.GetY() <= y + sizey);
 	}
-	public bool HasBeenClicked(MouseEventArgs args)
+	public virtual bool HasBeenClicked(MouseEventArgs args)
 	{
 		return (visible && clickable && IsCursorInside(args));
 	}

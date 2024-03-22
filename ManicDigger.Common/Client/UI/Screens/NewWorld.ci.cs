@@ -29,8 +29,7 @@ public class NewWorld : MainMenuScreen
         wtxt_title.SetFont(fontTitle);
         AddWidget(wtxt_title);
 
-        wlst_modList = new ListWidget();
-        AddWidget(wlst_modList);
+
 
         wlst_SettingList = new SettingsListWidget();
          setting=new SettingListEntry[7];
@@ -87,43 +86,58 @@ public class NewWorld : MainMenuScreen
        wlst_SettingList.AddElement(setting[j]);
 
 
+        wtbx_name = new LabeledTextBoxWidget();
+        AddWidget(wtbx_name);
+
+
         AddWidget(wlst_SettingList);
         newWorldPage = NewWorldPages.Default;
- 
+
+
+        wmm_ModManager = new ModManagerWidget();
+        AddWidget(wmm_ModManager);
+
         wtbx_name.visible = true;
 
         wlst_SettingList.visible = false;
-        wlst_modList.visible = false;
+        wmm_ModManager.visible = false;
+
+
+
+
     }
+    ModManagerWidget wmm_ModManager;
 
 
 
-    SettingListEntry [] setting;
+    SettingListEntry[] setting;
     LabeledTextBoxWidget wtbx_name;
     ButtonWidget wbtn_back; 
 
     SettingsListWidget wlst_SettingList;
-    ListWidget wlst_modList;
+ 
 
     ButtonWidget wbtn_serveroptions;
     ButtonWidget wbtn_serverModOptions;
     ButtonWidget wbtn_create;
+ 
     TextWidget wtxt_title;
     NewWorldPages newWorldPage;
     bool loaded;
 
 
-
-   
-
+     
 
     public override void LoadTranslations()
     {
         wbtn_back.SetText(menu.lang.Get("MainMenu_ButtonBack"));
-        wbtn_create.SetText("Create"); //TODO LANG
+        wbtn_create.SetText(menu.lang.Get("MainMenu_CreateWorld")); 
         wtxt_title.SetText(menu.lang.Get("MainMenu_Singleplayer"));
-        wbtn_serveroptions.SetText("Server Options"); //TODO LANG
-        wbtn_serverModOptions.SetText("Mod Options"); //TODO LANG
+        wbtn_serveroptions.SetText(menu.lang.Get("MainMenu_ServerOptions"));  
+        wbtn_serverModOptions.SetText(menu.lang.Get("MainMenu_ModOptions"));
+
+        wmm_ModManager.LoadTranslationsandMods(gamePlatform, menu);
+
     }
 
     public override void Render(float dt)
@@ -134,41 +148,23 @@ public class NewWorld : MainMenuScreen
             wtbx_name.SetLabel("World name"); //TODO LANG
             wtbx_name.SetContent(gamePlatform,"New World");
             loaded = true;
-
-            IntRef lenght = new IntRef();
-            Modinfo[] modinfos = menu.GetModinfo(lenght);
-            for (int m = 0; m < lenght.GetValue(); m++)
-            {
-                ListEntry entry = new ListEntry();
-                entry.textTopLeft = modinfos[m].ModName;
-                entry.textTopRight = "Active";
-                entry.textBottomLeft = modinfos[m].Description;
-                entry.textBottomRight = modinfos[m].Category;
-
-                wlst_modList.AddElement(entry);
-                
-            }
-            //wbtn_serveroptions.SetText(menu.p.StringFormat("Server Options{0}",menu.p.IntToString(lenght.GetValue())));
-
-
+             
         }
+
+
         float scale = menu.uiRenderer.GetScale();
         float leftx = gamePlatform.GetCanvasWidth() / 2 - 128 * scale;
-        float y = gamePlatform.GetCanvasHeight() / 2 + 0 * scale;
+        float y = gamePlatform.GetCanvasHeight() / 2 ;
 
+        float wlst_SettingListPading= 100 *scale;
 
-  
-        wlst_SettingList.x = 100 * scale;
-        wlst_SettingList.y = 100 * scale;
-        wlst_SettingList.sizex = gamePlatform.GetCanvasWidth() - 200 * scale;
-        wlst_SettingList.sizey = gamePlatform.GetCanvasHeight() - 200 * scale;
+        wtxt_title.SetX(gamePlatform.GetCanvasWidth() / 2 - wtxt_title.sizex/2);
 
-
-        wlst_modList.x = 100 * scale;
-        wlst_modList.y = 100 * scale;
-        wlst_modList.sizex = gamePlatform.GetCanvasWidth() - 200 * scale;
-        wlst_modList.sizey = gamePlatform.GetCanvasHeight() - 200 * scale;
-
+        wlst_SettingList.x = wlst_SettingListPading;
+        wlst_SettingList.y = wlst_SettingListPading;
+        wlst_SettingList.sizex = gamePlatform.GetCanvasWidth() - wlst_SettingListPading*2;
+        wlst_SettingList.sizey = gamePlatform.GetCanvasHeight() - wlst_SettingListPading*2;
+ 
 
         wtbx_name.x = leftx-128*scale;
         wtbx_name.y = y + 100 * scale;
@@ -196,9 +192,16 @@ public class NewWorld : MainMenuScreen
         wbtn_back.sizex = 256 * scale;
         wbtn_back.sizey = 64 * scale;
 
-    
 
-        // TODO: Implement savegame handling in game menu
+
+        float offsetfromborder = 50 * scale;
+
+
+        wmm_ModManager.x = offsetfromborder;
+        wmm_ModManager.y = 0;
+        wmm_ModManager.sizex = gamePlatform.GetCanvasWidth() - offsetfromborder * 2;
+        wmm_ModManager.sizey = gamePlatform.GetCanvasHeight() - offsetfromborder;
+
 
         DrawWidgets(dt);
 
@@ -212,7 +215,8 @@ public class NewWorld : MainMenuScreen
   
     public override void OnButton(AbstractMenuWidget w)
     {
-        
+       
+
 
         if (w == wbtn_back)
         {
@@ -239,30 +243,31 @@ public class NewWorld : MainMenuScreen
                     break;
             }
 
-            wbtn_serverModOptions.SetText("Mod Options"); //TODO LANG
-            wbtn_serveroptions.SetText("Server Options"); //TODO LANG
+            wbtn_serveroptions.SetText(menu.lang.Get("MainMenu_ServerOptions"));
+            wbtn_serverModOptions.SetText(menu.lang.Get("MainMenu_ModOptions"));
 
             wtbx_name.visible = false;
-
+            wmm_ModManager.visible = false;
             wlst_SettingList.visible = false;
-            wlst_modList.visible = false;
+  
 
             switch (newWorldPage)
             {
                 case NewWorldPages.Mods:
-                    wbtn_serverModOptions.SetText("World Options");
-                    wlst_modList.visible = true;
-                    wtxt_title.SetText("Mod settings");//TODO LANG
+                    wbtn_serverModOptions.SetText(menu.lang.Get("MainMenu_WorldOptions"));
+                    wmm_ModManager.visible = true;
+  
+                    wtxt_title.SetText(menu.lang.Get("MainMenu_ModOptions"));
 
                     break;
                 case NewWorldPages.ServerSettings:
-                    wbtn_serveroptions.SetText("World Options"); //TODO LANG
-                    wtxt_title.SetText("Server settings"); //TODO LANG
+                    wbtn_serveroptions.SetText(menu.lang.Get("MainMenu_WorldOptions"));
+                    wtxt_title.SetText(menu.lang.Get("MainMenu_ServerOptions"));
 
                     wlst_SettingList.visible = true; //TODO LANG
                     break;
                 case NewWorldPages.Default:
-                    wtxt_title.SetText("World settings"); //TODO LANG
+                    wtxt_title.SetText(menu.lang.Get("MainMenu_WorldOptions"));
 
                     wtbx_name.visible = true;
                     break;
@@ -299,6 +304,12 @@ public class NewWorld : MainMenuScreen
             ServerInitSettings serverInitSettings =new ServerInitSettings();
             serverInitSettings.filename = wordname;
             serverInitSettings.settingsOverride = wlst_SettingList.GetAllElements();
+
+            IntRef activeModslLenght=new IntRef();
+
+            serverInitSettings.mods = wmm_ModManager.GetActiveMods(activeModslLenght);
+            serverInitSettings.ModCount = activeModslLenght.GetValue();
+
             menu.StartGame(true, serverInitSettings, null);
 
         }

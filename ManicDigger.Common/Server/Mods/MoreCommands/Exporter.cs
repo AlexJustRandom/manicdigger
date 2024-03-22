@@ -22,7 +22,6 @@ namespace ManicDigger.Mods
 	{
 		public void PreStart(ModManager m)
 		{
-			m.RequireMod("Default");
 		}
 
 		public void Start(ModManager m)

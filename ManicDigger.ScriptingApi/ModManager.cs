@@ -767,20 +767,28 @@ namespace ManicDigger
         int GetToolType(string name);
         bool IsHarvestableByTool(int harvestabilitymask, int tooltype);
 
-void VIPDEBUGTEST(string texr, int val);
-        
+        void VIPDEBUGTEST(string texr, int val);
+
+
+
 
         #endregion
 
+        #region VIP fileloading
+
+        /// <summary>
+        ///  Loads Block definitions from file
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="enable">Enable (true) or disable (false) freemove and noclip for given player</param>
+        void LoadBlocks(string path);
 
 
 
+        #endregion  
 
 
-
-
-
-            #region Deprecated functions
+        #region Deprecated functions
         [Obsolete("GetCurrentYearTotal is deprecated, please use GetYear instead.", false)]
 		double GetCurrentYearTotal();
 		[Obsolete("GetCurrentHourTotal is deprecated, please use GetTotalHours instead.", false)]
@@ -1228,6 +1236,14 @@ void VIPDEBUGTEST(string texr, int val);
 			w.Color = renderColor;
 			return w;
 		}
+
+
+
+
+
+
+
+
 	}
 
 	public enum WidgetType

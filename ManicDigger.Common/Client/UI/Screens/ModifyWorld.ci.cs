@@ -15,8 +15,8 @@
 	public override void LoadTranslations()
 	{
 		wbtn_back.SetText(menu.lang.Get("MainMenu_ButtonBack"));
-		wtxt_title.SetText("Modify World");
-	}
+		wtxt_title.SetText(menu.lang.Get("MainMenu_ModifyWorld"));
+    }
 
 	public override void Render(float dt)
 	{

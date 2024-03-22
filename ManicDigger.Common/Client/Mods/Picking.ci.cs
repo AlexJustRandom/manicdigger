@@ -82,8 +82,7 @@
 		Packet_Item item = game.d_Inventory.RightHand[game.ActiveHudIndex];
 	
 		
-		//grenade cooking - TODO: fix instant explosion when closing ESC menu
-		
+ 		
 		
 		IntRef pick2count = new IntRef();
 		Line3D pick = new Line3D();

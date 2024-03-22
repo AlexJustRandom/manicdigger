@@ -8,6 +8,7 @@
 	float _offsetX;
 	float _offsetY;
 	TextTexture _texture;
+    string _textColor;
 
 	public TextWidget()
 	{
@@ -17,7 +18,9 @@
 		_offsetY = 0;
 		_align = TextAlign.Left;
 		_baseline = TextBaseline.Top;
-	}
+        _textColor = "";
+
+    }
 	//public TextWidget(float dx, float dy, string text, FontCi font, TextAlign align, TextBaseline baseline)
 	//{
 	//	x = dx;
@@ -37,8 +40,8 @@
 		if (_texture == null)
 		{
 			// Create new text texture
-			_texture = renderer.GetTextTexture(_text, _font);
-
+			_texture = renderer.GetTextTexture(renderer.GetPlatform().StringFormat2("{0}{1}", _textColor, _text), _font);
+              
 			// Calculate baseline and alignment offset
 			UpdateOffset_Alignment();
 			UpdateOffset_Baseline();
@@ -47,8 +50,8 @@
 			sizex = _texture.textwidth;
 			sizey = _texture.textheight;
 		}
-
-		renderer.Draw2dTexture(_texture.texture, x + _offsetX, y + _offsetY, _texture.texturewidth, _texture.textureheight, null, 0, color);
+     
+		renderer.Draw2dTexture(_texture.texture, x + _offsetX, y + _offsetY, _texture.texturewidth, _texture.textureheight, null, 0,color);
 	}
 
 	public TextAlign GetAlignment()
@@ -75,7 +78,13 @@
 	{
 		return _font;
 	}
-	public void SetFont(FontCi font)
+    public void SetTextColor(string textColor)
+    {
+        _textColor = textColor;
+        _texture = null;
+
+    }
+    public void SetFont(FontCi font)
 	{
 		if (font == null) { return; }
 		_font = font;

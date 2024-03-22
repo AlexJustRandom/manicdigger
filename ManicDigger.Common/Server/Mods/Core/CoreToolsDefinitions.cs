@@ -5,7 +5,7 @@
         public void PreStart(ModManager m)
         {
             //ILLEGAL TODO hack but Its safe mod dosent have anything i need to create
-            //guide for myself what is and what isnt worth to puting to own mod
+            //TO d0: guide for myself what is and what isnt worth to puting to own mod
             m.AddTooltype("Axe");
             m.AddTooltype("Pickaxe");
             m.AddTooltype("Shovel");

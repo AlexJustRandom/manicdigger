@@ -285,51 +285,62 @@
     <Compile Include="Client\UI\MainMenu.ci.cs" />
     <Compile Include="Client\UI\Widgets\ModListWidget.ci.cs" />
     <Compile Include="Client\Mods\EntityEngine.ci.cs" />
-    <Compile Include="Server\Mods\Fortress\EXPERIMENTS\ToManyBlocks.cs" />
     <Compile Include="Client\Mods\WalkSound.ci.cs" />
+    <Compile Include="Client\UI\Widgets\ModDescriptionWidget.ci.cs" />
+    <Compile Include="Client\UI\Widgets\LabeledTextWidget.ci.cs" />
+    <Compile Include="Common\ModLodingUtil.cs" />
+    <Compile Include="Server\Mods\EXPERIMENTS\ToManyBlocks.cs" />
+    <Compile Include="Client\UI\Widgets\SelectWidget.ci.cs" />
+    <Compile Include="Client\SimpleServer\ModManagerScreen.ci.cs" />
+    <Compile Include="Client\UI\Widgets\ModManagerWidget.ci.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <Compile Include="Client\UI\EventHandlers.ci.cs" />
     <None Include="packages.config" />
-    <None Include="Server\Mods\Fortress\Core\BuildLog.cs" />
-    <None Include="Server\Mods\Fortress\Core\Core.cs" />
-    <None Include="Server\Mods\Fortress\Core\CoreBlocks.cs" />
-    <None Include="Server\Mods\Fortress\Core\CoreCrafting.cs" />
-    <None Include="Server\Mods\Fortress\Core\CoreEvents.cs" />
-    <None Include="Server\Mods\Fortress\Core\Default.cs" />
-    <None Include="Server\Mods\Fortress\Core\Doors.cs" />
-    <None Include="Server\Mods\Fortress\Core\EntitySigns.cs" />
-    <None Include="Server\Mods\Fortress\Core\Food.cs" />
-    <None Include="Server\Mods\Fortress\Core\Ghost.cs" />
-    <None Include="Server\Mods\Fortress\Core\HttpStats.cs" />
-    <None Include="Server\Mods\Fortress\Core\MonsterEggs.cs" />
-    <None Include="Server\Mods\Fortress\Core\OreGenerator.cs" />
-    <None Include="Server\Mods\Fortress\Core\PlayerList.cs" />
-    <None Include="Server\Mods\Fortress\Core\RememberPosition.cs" />
-    <None Include="Server\Mods\Fortress\Core\Revert.cs" />
-    <None Include="Server\Mods\Fortress\Core\SandPhysics.cs" />
-    <None Include="Server\Mods\Fortress\Core\Tnt.cs" />
-    <None Include="Server\Mods\Fortress\Core\TreeGenerator.cs" />
-    <None Include="Server\Mods\Fortress\Core\VandalFinder.cs" />
-    <None Include="Server\Mods\Fortress\Core\VegetationGrowth.cs" />
-    <None Include="Server\Mods\Fortress\Core\CoreToolsDefinitions.cs" />
-    <None Include="Server\Mods\Fortress\Core\CoreTools.cs" />
-    <None Include="Server\Mods\Fortress\MoreCommands\PlayerStats.cs" />
-    <None Include="Server\Mods\Fortress\MoreCommands\Locations.cs" />
-    <None Include="Server\Mods\Fortress\MoreCommands\Protection.cs" />
-    <None Include="Server\Mods\Fortress\MoreCommands\ChatHighlighter.cs" />
-    <None Include="Server\Mods\Fortress\MoreCommands\Exporter.cs" />
-    <None Include="Server\Mods\Fortress\MoreCommands\ServerSwitcher.cs" />
-    <None Include="Server\Mods\Fortress\MoreCommands\Sounds.cs" />
-    <None Include="Server\Mods\Fortress\MoreCommands\ServerUtilities.cs" />
-    <None Include="Server\Mods\Fortress\Unused\Sign.cs" />
-    <None Include="Server\Mods\Fortress\Unused\BlockId.cs" />
-    <None Include="Server\Mods\Fortress\Unused\PermissionBlock.cs" />
-    <None Include="Server\Mods\Fortress\Unused\Fluids.cs" />
-    <None Include="Server\Mods\Fortress\Upgrades\AdvancedWorldGenerator.cs" />
-    <None Include="Server\Mods\Fortress\MoreCommands\ServerDebug.cs" />
-    <None Include="Server\Mods\Fortress\EXPERIMENTS\Frostwalk.cs" />
+    <None Include="Server\Mods\Core\BuildLog.cs" />
+    <None Include="Server\Mods\Core\Core.cs" />
+    <None Include="Server\Mods\Core\CoreBlocks.cs" />
+    <None Include="Server\Mods\Core\CoreCrafting.cs" />
+    <None Include="Server\Mods\Core\CoreEvents.cs" />
+    <None Include="Server\Mods\Core\CoreTools.cs" />
+    <None Include="Server\Mods\Core\CoreToolsDefinitions.cs" />
+    <None Include="Server\Mods\Core\Default.cs" />
+    <None Include="Server\Mods\Core\Doors.cs" />
+    <None Include="Server\Mods\Core\Food.cs" />
+    <None Include="Server\Mods\Core\Ghost.cs" />
+    <None Include="Server\Mods\Core\HttpStats.cs" />
+    <None Include="Server\Mods\Core\Modinfo.json" />
+    <None Include="Server\Mods\Core\MonsterEggs.cs" />
+    <None Include="Server\Mods\Core\OreGenerator.cs" />
+    <None Include="Server\Mods\Core\PlayerList.cs" />
+    <None Include="Server\Mods\Core\RememberPosition.cs" />
+    <None Include="Server\Mods\Core\Revert.cs" />
+    <None Include="Server\Mods\Core\SandPhysics.cs" />
+    <None Include="Server\Mods\Core\Tnt.cs" />
+    <None Include="Server\Mods\Core\TreeGenerator.cs" />
+    <None Include="Server\Mods\Core\VandalFinder.cs" />
+    <None Include="Server\Mods\Core\VegetationGrowth.cs" />
+    <None Include="Server\Mods\EXPERIMENTS\Frostwalk.cs" />
+    <None Include="Server\Mods\EXPERIMENTS\Modinfo.json" />
+    <None Include="Server\Mods\MoreCommands\ChatHighlighter.cs" />
+    <None Include="Server\Mods\MoreCommands\EntitySigns.cs" />
+    <None Include="Server\Mods\MoreCommands\Exporter.cs" />
+    <None Include="Server\Mods\MoreCommands\Locations.cs" />
+    <None Include="Server\Mods\MoreCommands\Modinfo.json" />
+    <None Include="Server\Mods\MoreCommands\PlayerStats.cs" />
+    <None Include="Server\Mods\MoreCommands\Protection.cs" />
+    <None Include="Server\Mods\MoreCommands\ServerDebug.cs" />
+    <None Include="Server\Mods\MoreCommands\ServerSwitcher.cs" />
+    <None Include="Server\Mods\MoreCommands\ServerUtilities.cs" />
+    <None Include="Server\Mods\MoreCommands\Sounds.cs" />
+    <None Include="Server\Mods\Unused\BlockId.cs" />
+    <None Include="Server\Mods\Unused\Fluids.cs" />
+    <None Include="Server\Mods\Unused\PermissionBlock.cs" />
+    <None Include="Server\Mods\Unused\Sign.cs" />
+    <None Include="Server\Mods\Upgrades\AdvancedWorldGenerator.cs" />
+    <None Include="Server\Mods\Upgrades\Modinfo.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Packet.proto">
@@ -354,9 +365,12 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Folder Include="Server\Mods\Fortress\Core\" />
-    <Folder Include="Server\Mods\Fortress\MoreCommands\" />
-    <Folder Include="Server\Mods\Fortress\EXPERIMENTS\" />
+    <Folder Include="Server\Mods\Core\" />
+    <Folder Include="Server\Mods\EXPERIMENTS\" />
+    <Folder Include="Server\Mods\MoreCommands\" />
+    <Folder Include="Server\Mods\Unused\" />
+    <Folder Include="Server\Mods\Upgrades\" />
+    <Folder Include="Server\Mods\Fortress\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

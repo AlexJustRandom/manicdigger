@@ -6,7 +6,6 @@ namespace ManicDigger.Mods
 	public class Frostwalk : IMod
 	{
 		public void PreStart(ModManager m) {
-            m.RequireMod("CoreBlocks");
             m.RequireMod("ToManyBlocks");
         }
 

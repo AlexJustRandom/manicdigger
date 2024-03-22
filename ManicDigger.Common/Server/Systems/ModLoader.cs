@@ -1,10 +1,9 @@
-﻿using ManicDigger.Common;
-using Microsoft.CSharp;
-using System;
+﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
+using ManicDigger.Common;
+using Microsoft.CSharp;
 
 namespace ManicDigger.Server
 {
@@ -17,11 +16,14 @@ namespace ManicDigger.Server
         }
 
         bool started;
-        public override void Update(Server server, float dt)
+        Server server;
+        public bool modlodingDebug = false;
+        public override void Update(Server _server, float dt)
         {
             if (!started)
             {
                 started = true;
+                server = _server;
                 LoadMods(server, false);
             }
         }
@@ -56,83 +58,90 @@ namespace ManicDigger.Server
             LoadMods(server, true);
             return true;
         }
-
-        void LoadMods(Server server, bool restart)
+         void LoadMods(Server server, bool restart)
         {
             server.modManager = new ModManager1();
-            var m = server.modManager;
-            m.Start(server);
-            var scritps = GetScriptSources(server);
-            CompileScripts(scritps, restart);
-            Start(m, m.required);
+            server.modManager.Start(server);
+            if (server.serverInitSettings.ModCount == 0) {
+                Console.WriteLine("Error no mods selected");
+                return; 
+            }
+            else
+            {
+                List<Tuple<ModInformation, Dictionary<string, string>>> modsources = new List<Tuple<ModInformation, Dictionary<string, string>>>();
+               
+                for(int index = 0; index < server.serverInitSettings.ModCount;index++) {
+                    modsources.Add(new Tuple<ModInformation, Dictionary<string, string>>(server.serverInitSettings.mods[index], ModLodingUtil.GetScriptSources(server.serverInitSettings.mods[index].SrcFolder)));
+                }
+
+                if (modlodingDebug) Console.WriteLine(string.Format("Server Mods to load: {0}", modsources.Count));
+                for(int index = 0; index < modsources.Count; index++)
+                {
+                    CompileMod(modsources, index);
+                }
+ 
+            }
+ 
         }
 
+        bool CompileMod(List<Tuple<ModInformation, Dictionary<string, string>>> modsources,int index) {
 
-     
+            //load all dependencis first
+            if (loadedMods.ContainsKey(modsources[index].Item1.ModID))
+                return true;
 
-        Dictionary<string, string> GetScriptSources(Server server)
-        {
-            string[] modpaths = new[] { Path.Combine(Path.Combine(Path.Combine(Path.Combine(Path.Combine("..", ".."), ".."), "ManicDigger.Common"), "Server"), "Mods"), "Mods" };
-
-            for (int i = 0; i < modpaths.Length; i++)
+            if (modsources[index].Item1.ModDependencies != null) 
+            foreach (var dep in modsources[index].Item1.ModDependencies)
             {
-                if (File.Exists(Path.Combine(modpaths[i], "current.txt")))
+                if (loadedMods.ContainsKey(dep))
+                    continue;
+                bool found=false;
+                for(int i = 0 ; i < modsources.Count;i++)
                 {
-                    server.gameMode = File.ReadAllText(Path.Combine(modpaths[i], "current.txt")).Trim();
+                    if (modsources[i].Item1.ModID == dep)
+
+                        found = CompileMod(modsources, i);
                 }
-                else if (Directory.Exists(modpaths[i]))
-                {
+                if (!found) {
                     try
                     {
-                        File.WriteAllText(Path.Combine(modpaths[i], "current.txt"), server.gameMode);
+                        System.Windows.Forms.MessageBox.Show(string.Format("Can't load mod {0} because its dependency {1} couldn't be loaded.", modsources[index].Item1.ModID, dep));
+                       
                     }
                     catch
                     {
+                        //This will be the case if the server is running on a headless linux server without X11 installed (previously crashed)
+                        Console.WriteLine(string.Format("[Mod error] Can't load mod {0} because its dependency {1} couldn't be loaded.", modsources[index].Item1.ModID, dep));
                     }
+                    return false;
                 }
-                modpaths[i] = Path.Combine(modpaths[i], server.gameMode);
+
             }
-  
-            Dictionary<string, string> scripts = new Dictionary<string, string>();
-            foreach (string modpath in modpaths)
-            {
-                if (!Directory.Exists(modpath))
-                {
-                    continue;
-                }
-                server.ModPaths.Add(modpath);
+            if (modlodingDebug) Console.WriteLine(string.Format("Starting compilation of {0}", modsources[index].Item1.ModID));
+           
 
-                string[] directories = Directory.GetDirectories(modpath);
+            CompileScripts(modsources[index].Item1.ModID, modsources[index].Item2, false);
+            //Load all json as blocks in subfolder
+            LoadBlocks(modsources[index].Item1);
 
-                foreach (string d in directories)
-                {
-                    string[] files = Directory.GetFiles(d);
-
-                    foreach (string s in files)
-                    {
-                        if (!GameStorePath.IsValidName(Path.GetFileNameWithoutExtension(s)))
-                        {
-                            continue;
-                        }
-                        if (!(Path.GetExtension(s).Equals(".cs", StringComparison.InvariantCultureIgnoreCase)
-                            || Path.GetExtension(s).Equals(".js", StringComparison.InvariantCultureIgnoreCase)))
-                        {
-                            continue;
-                        }
-                        string scripttext = File.ReadAllText(s);
-                        string filename = new FileInfo(s).Name;
-                        scripts[filename] = scripttext;
-                    }
-                }
-            }
-
-
-            return scripts;
+            Start(server.modManager, server.modManager.required, modsources[index].Item1.ModID);
+            loadedMods.Add(modsources[index].Item1.ModID, true);
+            return true;
         }
 
+        public void LoadBlocks(ModInformation modinfo) {
+
+            IntRef dummy=new IntRef();
+            var files = ModLodingUtil.FindBlockDefinitions(modinfo.SrcFolder, dummy);
+            foreach(var file in files) {
+                server.modManager.LoadBlocks(file);
+            }
+        }
+ 
         Jint.JintEngine jintEngine = new Jint.JintEngine();
         Dictionary<string, string> javascriptScripts = new Dictionary<string, string>();
-        public void CompileScripts(Dictionary<string, string> scripts, bool restart)
+
+        public void CompileScripts(string modID,Dictionary<string, string> scripts, bool restart)
         {
             CSharpCodeProvider compiler = new CSharpCodeProvider(new Dictionary<String, String> { { "CompilerVersion", "v4.0" } });
             var parms = new CompilerParameters();
@@ -175,7 +184,7 @@ namespace ManicDigger.Server
             }
 
             //created locally, this allows the debugger to find the .pdb
-            parms.OutputAssembly = Path.Combine(new DirectoryInfo(new FileInfo(GetType().Assembly.Location).DirectoryName).FullName, "Mods.dll");
+            parms.OutputAssembly = Path.Combine(new DirectoryInfo(new FileInfo(GetType().Assembly.Location).DirectoryName).FullName,String.Format("{0}-Mod.dll",modID));
 
             //generatet .cs files are stored here
             //they are rather important for this debug session, since the .pdb link to them
@@ -188,6 +197,10 @@ namespace ManicDigger.Server
             parms.ReferencedAssemblies.Add("LibNoise.dll");
             parms.ReferencedAssemblies.Add("protobuf-net.dll");
             parms.ReferencedAssemblies.Add("System.Xml.dll");
+
+            foreach(var modAssemble in CompiledAssemblies) {
+                parms.ReferencedAssemblies.Add(modAssemble);
+            }
 
             Dictionary<string, string> csharpScripts = new Dictionary<string, string>();
             foreach (var k in scripts)
@@ -220,38 +233,44 @@ namespace ManicDigger.Server
   
                 int warningsCount = 0;
                 int errorCount = 0;
-
+                
                 for (int j =0; j < results.Errors.Count; j++) {
                     if (results.Errors[j].IsWarning) {
                         warningsCount++;
-                        Console.WriteLine("----------------------------------WARNING------------------------------------");
+                        if (modlodingDebug) Console.WriteLine("----------------------------------WARNING------------------------------------");
 
                     }
                     else
                     {
                         errorCount++;
-                        Console.WriteLine("-----------------------------------ERROR-------------------------------------");
+                        if (modlodingDebug) Console.WriteLine("-----------------------------------ERROR-------------------------------------");
 
                     }
-                    //TODO ORGINAL FILENAME ?
-                    Console.WriteLine("Filename:" + errorCount+ results.Errors[j].FileName);
-                    Console.WriteLine("Line:" + results.Errors[j].Line);
-                    Console.WriteLine("Text:"+results.Errors[j].ErrorText);
-                    Console.WriteLine("-----------------------------------------------------------------------------");
+                    if (modlodingDebug)
+                    {
+                        //TODO ORGINAL FILENAME ?
+                        Console.WriteLine("Filename:" + errorCount + results.Errors[j].FileName);
+                        Console.WriteLine("Line:" + results.Errors[j].Line);
+                        Console.WriteLine("Text:" + results.Errors[j].ErrorText);
+                        Console.WriteLine("-----------------------------------------------------------------------------");
+                    }
 
                 }
                 if(errorCount!=0| warningsCount != 0) {
-                    Console.WriteLine("-----------------------------------------------------------------------------");
-                    Console.WriteLine("Compiled with:");
-                    Console.WriteLine("Errors:"+ errorCount);
-                    Console.WriteLine("Warnings:"+ warningsCount);
-                    Console.WriteLine("-----------------------------------------------------------------------------");
-
+                    if (modlodingDebug)
+                    {
+                        Console.WriteLine("-----------------------------------------------------------------------------");
+                        Console.WriteLine("Compiled with:");
+                        Console.WriteLine("Errors:" + errorCount);
+                        Console.WriteLine("Warnings:" + warningsCount);
+                        Console.WriteLine("-----------------------------------------------------------------------------");
+                    }
                 }
-
+ 
+                mods.Add(modID, new Dictionary<string, IMod>());
                 if (errorCount == 0)
                 {
-                    Use(results);
+                    Use(results, modID);
                     return;
                 }
 
@@ -293,27 +312,35 @@ namespace ManicDigger.Server
                     }
                     continue;
                 }
-                Use(results);
+                Use(results, modID);
+                
             }
         }
 
-        void Use(CompilerResults results)
+        void Use(CompilerResults results,string id)
         {
+            CompiledAssemblies.Add(results.PathToAssembly);
+            if (modlodingDebug)
+                Console.WriteLine("CompiledAssemblies.Add : {0} : {1}", id, results.PathToAssembly);
             foreach (Type t in results.CompiledAssembly.GetTypes())
             {
                 if (typeof(IMod).IsAssignableFrom(t))
                 {
-                    mods[t.Name] = (IMod)results.CompiledAssembly.CreateInstance(t.FullName);
-                    Console.WriteLine("Loaded mod: {0}", t.Name);
+                    mods[id][t.Name] = (IMod)results.CompiledAssembly.CreateInstance(t.FullName);
+                    if (modlodingDebug)
+                        Console.WriteLine("Loaded file from : {0} : {1}",id, t.Name);
+
                 }
             }
         }
 
-        Dictionary<string, IMod> mods = new Dictionary<string, IMod>();
+        Dictionary<string,Dictionary<string, IMod>> mods = new Dictionary<string, Dictionary<string, IMod>>();
         Dictionary<string, string[]> modRequirements = new Dictionary<string, string[]>();
         Dictionary<string, bool> loaded = new Dictionary<string, bool>();
+        Dictionary<string, bool> loadedMods = new Dictionary<string,bool>();
+        List<string> CompiledAssemblies = new List<string>();
 
-        public void Start(ModManager m, List<string> currentRequires)
+        public void Start(ModManager m, List<string> currentRequires,string ModId)
         {
             /*
             foreach (var mod in mods)
@@ -325,15 +352,15 @@ namespace ManicDigger.Server
             modRequirements.Clear();
             loaded.Clear();
 
-            foreach (var k in mods)
+            foreach (var k in mods[ModId])
             {
                 k.Value.PreStart(m);
                 modRequirements[k.Key] = currentRequires.ToArray();
                 currentRequires.Clear();
             }
-            foreach (var k in mods)
+            foreach (var k in mods[ModId])
             {
-                StartMod(k.Key, k.Value, m);
+                StartMod(ModId,k.Key, k.Value, m);
             }
 
             StartJsMods(m);
@@ -348,16 +375,18 @@ namespace ManicDigger.Server
                 try
                 {
                     jintEngine.Run(k.Value);
-                    Console.WriteLine("Loaded mod: {0}", k.Key);
+                    if (modlodingDebug)
+                        Console.WriteLine("Loaded Script: {0}", k.Key);
                 }
                 catch
                 {
-                    Console.WriteLine("Error in mod: {0}", k.Key);
+                    if (modlodingDebug)
+                        Console.WriteLine("Error script: {0} ", k.Key);
                 }
             }
         }
 
-        void StartMod(string name, IMod mod, ModManager m)
+        void StartMod(string ModId, string name, IMod mod, ModManager m)
         {
             if (loaded.ContainsKey(name))
             {
@@ -367,7 +396,7 @@ namespace ManicDigger.Server
             {
                 foreach (string required_name in modRequirements[name])
                 {
-                    if (!mods.ContainsKey(required_name))
+                    if (!mods[ModId].ContainsKey(required_name))
                     {
                         try
                         {
@@ -379,10 +408,17 @@ namespace ManicDigger.Server
                             Console.WriteLine(string.Format("[Mod error] Can't load mod {0} because its dependency {1} couldn't be loaded.", name, required_name));
                         }
                     }
-                    StartMod(required_name, mods[required_name], m);
+                   
+                        StartMod(ModId, required_name, mods[ModId][required_name], m);
+          
+
                 }
             }
-            mod.Start(m);
+
+ 
+                mod.Start(m);
+ 
+          
             loaded[name] = true;
         }
     }

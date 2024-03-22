@@ -82,4 +82,9 @@ public class ServerInitSettings
 {
     public SettingListEntry[] settingsOverride;
     public string filename;
+    public ModInformation[] mods;
+    public int ModCount;
+    public ServerInitSettings() {
+        ModCount = 0;
+     }
 }

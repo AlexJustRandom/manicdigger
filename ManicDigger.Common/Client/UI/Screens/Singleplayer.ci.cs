@@ -8,17 +8,14 @@ public class ScreenSingleplayer : MainMenuScreen
 	{
 		// initialize widgets
 		wbtn_newWorld = new ButtonWidget();
-		wbtn_newWorld.SetText("New World");
-		wbtn_newWorld.SetVisible(true);
+        wbtn_newWorld.SetVisible(true);
 		AddWidget(wbtn_newWorld);
 
 		wbtn_playWorld = new ButtonWidget();
-		wbtn_playWorld.SetText("Play selected");
 		wbtn_playWorld.SetVisible(true);
 		AddWidget(wbtn_playWorld);
 
 		wbtn_modifyWorld = new ButtonWidget();
-		wbtn_modifyWorld.SetText("Modify");
 		wbtn_modifyWorld.SetVisible(true);
 		AddWidget(wbtn_modifyWorld);
 
@@ -60,9 +57,13 @@ public class ScreenSingleplayer : MainMenuScreen
 		wbtn_back.SetText(menu.lang.Get("MainMenu_ButtonBack"));
 		wbtn_openFile.SetText(menu.lang.Get("MainMenu_SingleplayerButtonCreate"));
 		wtxt_title.SetText(menu.lang.Get("MainMenu_Singleplayer"));
-	}
+        wbtn_newWorld.SetText(menu.lang.Get("MainMenu_NewWorld"));
+        wbtn_modifyWorld.SetText(menu.lang.Get("MainMenu_ModifyWorld"));
+        wbtn_playWorld.SetText(menu.lang.Get("MainMenu_PlaySelectedWorld"));
 
-	public override void Render(float dt)
+    }
+
+    public override void Render(float dt)
 	{
 		float scale = menu.uiRenderer.GetScale();
 		float leftx = gamePlatform.GetCanvasWidth() / 2 - 128 * scale;

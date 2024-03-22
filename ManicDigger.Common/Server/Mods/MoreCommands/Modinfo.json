@@ -1,0 +1,7 @@
+{
+    "name": "MoreComands",
+    "author": "Alex",
+    "description": "experimental fetures",
+    "version": "0.0.1",
+    "ModDependencies": ["core"]
+}

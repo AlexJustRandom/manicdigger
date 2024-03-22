@@ -4,6 +4,9 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ManicDigger.Common;
 
 namespace ManicDigger.Server
 {
@@ -47,16 +50,16 @@ namespace ManicDigger.Server
         }
         #region Items
 
-        public void SetItemType(int id, string name, Item block) { 
-        
+        public void SetItemType(int id, string name, Item block) {
+
         }
 
-        public void SetItemType(string name, Item block) { 
-        
+        public void SetItemType(string name, Item block) {
+
         }
 
-        public int GetItemId(string name) { 
-            return 0; 
+        public int GetItemId(string name) {
+            return 0;
         }
 
 
@@ -1003,7 +1006,7 @@ namespace ManicDigger.Server
 
         public void LoadWorld(string filename)
         {
-     
+
             server.LoadDatabase(filename);
         }
 
@@ -1170,7 +1173,7 @@ namespace ManicDigger.Server
             server.DespawnEntity(id);
         }
         public void SpawnMonster(int x, int y, int z) {
-           server.SendMessageToAll("SPAWNING MONSTER");
+            server.SendMessageToAll("SPAWNING MONSTER");
             server.d_Map.GetChunk(x, y, z).Monsters.Add(new Monster()
             {
                 X = x,
@@ -1184,22 +1187,22 @@ namespace ManicDigger.Server
 
 
         #region VIP TOOLS AND CRAFTING
-            
+
         public int AddTooltype(string name) {
             if (GameData.MAX_TOOLTYPES == server.d_Data.tooltypesAdded)
                 throw new Exception(" MAX TOOLTYPES ALREADY");//TODO something anout this?
             server.d_Data.tooltypesAdded++;
             server.d_Data.tooltypes[server.d_Data.tooltypesAdded] = name;
-            return 1 <<  server.d_Data.tooltypesAdded;
-          
+            return 1 << server.d_Data.tooltypesAdded;
+
         }
- 
+
         public int GetToolType(string name) { //STUPID TODO
-            for(int i=0;i < GameData.MAX_TOOLTYPES; i++) {
+            for (int i = 0; i < GameData.MAX_TOOLTYPES; i++) {
                 if (server.d_Data.tooltypes[i] == name)
-                return 1 << i;
-                }
-            return -1; 
+                    return 1 << i;
+            }
+            return -1;
         }
 
         public bool IsHarvestableByTool(int blockid, int toolid) {
@@ -1216,6 +1219,24 @@ namespace ManicDigger.Server
 
         }
         #endregion
+
+
+
+        public void LoadBlocks(string path) {
+            IntRef dummy = new IntRef();
+            var blocks =ModLodingUtil.LoadBlocks(path, dummy);
+
+            foreach (var block in blocks)
+            {
+                if (block.id != 0)
+                    SetBlockType(block.id, block.type.Name, block.type);
+                else
+                    SetBlockType(block.type.Name, block.type);
+            }
+
+        }
+
+
 
 
 
@@ -1243,4 +1264,34 @@ namespace ManicDigger.Server
         }
         #endregion
     }
+
+    public class BlockTemplate{
+        public int TemplateBlockID;
+        public string TextureIdTop = "Unknown";
+        public string TextureIdBottom = "Unknown";
+        public string TextureIdFront = "Unknown";
+        public string TextureIdBack = "Unknown";
+        public string TextureIdLeft = "Unknown";
+        public string TextureIdRight = "Unknown";
+        public string TextureIdForInventory = "Unknown";
+        public DrawType DrawType;
+        public WalkableType WalkableType;
+
+        public float WalkSpeed = 1;
+        public bool IsSlipperyWalk;
+        public int LightRadius;
+        public float Hardness;
+        public string Name;
+        public bool IsBuildable;
+        public bool IsUsable;
+      //  public bool IsTool;
+      //  public string handimage;
+       // public int Durablility;
+       // public float ToolStrenght;
+       // public float WalkSpeedWhenUsed = 1;
+    }
+
+
+ 
+ 
 }

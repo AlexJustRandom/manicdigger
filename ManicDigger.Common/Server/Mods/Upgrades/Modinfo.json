@@ -1,0 +1,8 @@
+{
+    "ModID": "upgrades",
+    "name": "upgrades Mod",
+    "author": "Alex",
+    "description": "Testing some stuff...",
+    "version": "0.0.0",
+    "ModDependencies": ["core"]
+}
