@@ -1,4 +1,9 @@
-﻿public class SelectWidget : AbstractMenuWidget
+﻿/// <summary>
+/// Todo this widget is hastly writen functions are confusing and badny writen;
+/// </summary>
+
+
+public class SelectWidget : AbstractMenuWidget
 {
     TextWidget _text;
     ButtonState _state;
@@ -40,11 +45,7 @@
     public int GetSelected() {
         return selected;
     }
-    public string GetSelectedValue()
-    {
-        return selectWidgetValues[selected];
-    }
-
+ 
     public void SetOptionSize(int size)
     {
         selectWidgetValues = new string[size];
@@ -79,11 +80,7 @@
     {
         return displayedValue;
     }
-    public string GetDisplayedValue()
-    {
-        return selectWidgetValues[displayedValue];
-    }
-
+ 
     public void SetDisplayedValue(int i) {
         displayedValue = i;
         _text.SetText(selectWidgetValues[i]);

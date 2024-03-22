@@ -28,8 +28,9 @@
     bool deleteModpackActive;
     bool activeModsChanged;
 
-    int lastSelected;
-    int selected;
+    string[] modpackList;
+    int lastModpackID;
+    int currentModpackID;
 
     public ModManagerWidget() {
  
@@ -58,8 +59,7 @@
         wbtn_saveChanges = new ButtonWidget();
         wbtn_reversChanges = new ButtonWidget();
 
-        lastSelected=0;
-        selected=0;
+        lastModpackID=0;
 
     }
     MainMenu menu;
@@ -83,8 +83,7 @@
     }
     public void OnNewNameCancel(GamePlatform p)
     {
-        selected = lastSelected;
-        wts_modpack.SetDisplayedValue(lastSelected);
+        wts_modpack.SetDisplayedValue(lastModpackID);
 
         wtb_newModpackName.SetContent(p, "");
         newModpackActive = false;
@@ -93,19 +92,18 @@
     {
         IntRef lenght = new IntRef();
         string activeModpack=p.GetCurrentModpack();
-         string[] modpackList = p.GetModpacks(lenght);
+        modpackList = p.GetModpacks(lenght);
 
         wts_modpack.SetOptionSize(lenght.GetValue() + 1);
 
         for (int i = 0; i < lenght.GetValue(); i++)
         {
-            if (activeModpack == modpackList[i]) selected = i;
+            if (activeModpack == modpackList[i]) currentModpackID = i;
             wts_modpack.SetOption(modpackList[i], i);
         }
 
-        lastSelected = selected;
-
-        wts_modpack.SetOption("New", lenght.GetValue());
+        lastModpackID = currentModpackID;
+         wts_modpack.SetOption("New", lenght.GetValue());
 
         wts_modpack.SetText(activeModpack);
     }
@@ -117,11 +115,11 @@
 
         IntRef lenght = new IntRef();
 
-        string[] modpackList = p.GetModpacks(lenght);
+        string[] _modpackList = p.GetModpacks(lenght);
         bool found = false;
         for (int i = 0; i < lenght.GetValue(); i++)
         {
-            if (content == modpackList[i])
+            if (content == _modpackList[i])
             {
                 found = true; break;
             }
@@ -246,24 +244,24 @@
         {
             IntRef dummy=new IntRef();
             activeModsChanged = false;
-            p.SaveModpack( wts_modpack.GetDisplayedValue(),GetActiveModsID(dummy));
+            p.SaveModpack( modpackList[currentModpackID],GetActiveModsID(dummy));
         }
         if (wbtn_reversChanges.HasBeenClicked(args))
         {
             activeModsChanged = false;
-            LoadModpack(p, wts_modpack.GetDisplayedValue());
+            LoadModpack(p, modpackList[currentModpackID]);
         }
 
 
 
         if (wts_modpack.HasBeenClicked(args))
         {
-            lastSelected = selected;
-            selected = wts_modpack.GetSelected();
-            if (selected != -1)
+            lastModpackID = currentModpackID;
+            int selectedModpackID = wts_modpack.GetSelected();
+            if (selectedModpackID != -1)
             {
-                wts_modpack.SetDisplayedValue(selected);
-                if (selected == wts_modpack.GetOptionSize() - 1)
+                wts_modpack.SetDisplayedValue(selectedModpackID);
+                if (selectedModpackID == wts_modpack.GetOptionSize() - 1)
                 {
                     newModpackActive = true;
                     wtb_newModpackName.SetFocused(true);
@@ -271,7 +269,11 @@
                     wbtn_cancel.SetText(menu.lang.Get("Modloder_Cancel"));
                 }
                 else
-                    LoadModpack(p,wts_modpack.GetSelectedValue());
+                {
+                    currentModpackID = selectedModpackID;
+                    LoadModpack(p, modpackList[currentModpackID]);
+                
+                }
             }
         }
         if (wlst_modList.HasBeenClicked(args))
@@ -305,7 +307,7 @@
                     wlst_modList.GetElement(modListIndex).textTopRight = "&4Inactive";//TODO lang
                     wbtn_switchactive.SetText(menu.lang.Get("Modloder_ModTurnOn"));
                 }
-                activeModsChanged =true;
+                activeModsChanged = true;
                
             }
 
@@ -470,10 +472,10 @@
         wbtn_notDeleteModpack.sizey = buttonheight;
         wbtn_notDeleteModpack.Draw(dt, renderer);
 
-        if (activeModsChanged && !newModpackActive && wts_modpack.GetDisplayedValueIndex()!=0)//GetDisplayedValueIndex==0 Is Default you cant save/change default
+        if (activeModsChanged && !newModpackActive && currentModpackID!=0)//GetDisplayedValueIndex==0 Is Default you cant save/change default
         {
             wbtn_reversChanges.x = sizex - buttonwidth / 2;
-            wbtn_reversChanges.y = y;
+            wbtn_reversChanges.y = wts_modpack.y;
             wbtn_reversChanges.sizex = buttonwidth / 2;
             wbtn_reversChanges.sizey = buttonheight;
             wbtn_reversChanges.Draw(dt, renderer);
