@@ -2415,6 +2415,7 @@ namespace ManicDigger.ClientNative
         public override string[] GetModpacks(IntRef lenght) { return ModLodingUtil.GetListOfModpacks(lenght); }
         public override string GetCurrentModpack() { return ModLodingUtil.GetCurrentModpack(); }
         public override void SetCurrentModpack(string name) { ModLodingUtil.SetCurrentModpack(name); }
+        public override void DeleteModpack(string name) { ModLodingUtil.DeleteModpack(name); }
         public override void SaveModpack(string name, string[] mods) { ModLodingUtil.SaveModpack(name, mods); }
         public override string[] GetMods(string name, IntRef lenght) { return ModLodingUtil.GetMods(name, lenght); }
 

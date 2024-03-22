@@ -6,9 +6,7 @@
     ModDescriptionWidget wt_ModDesc;
     ButtonWidget wbtn_switchactive;
     ButtonWidget wbtn_configmod;
-
-    TextWidget wtxt_title;
-
+    
     TextBoxWidget wtb_newModpackName;
 
     ButtonWidget wbtn_accept;
@@ -22,14 +20,10 @@
     ButtonWidget wbtn_saveChanges;
     ButtonWidget wbtn_reversChanges;
  
-
-
-
     ModInformation[] modinfos;
     bool[] modState;
     IntRef modinfosLenght;
 
-    bool loaded;
     bool newModpackActive;
     bool deleteModpackActive;
     bool activeModsChanged;
@@ -37,13 +31,12 @@
     int lastSelected;
     int selected;
 
-
-    public ModManagerWidget()
-    {
+    public ModManagerWidget() {
  
         clickable = true;
         focusable = true;
         activeModsChanged = false;
+
         wlst_modList = new ListWidget();
  
         wt_ModDesc = new ModDescriptionWidget();
@@ -62,10 +55,8 @@
         wbtn_deleteModpack = new ButtonWidget();
         wbtn_notDeleteModpack = new ButtonWidget();
 
-
         wbtn_saveChanges = new ButtonWidget();
         wbtn_reversChanges = new ButtonWidget();
-
 
         lastSelected=0;
         selected=0;
@@ -84,56 +75,11 @@
         wbtn_notDeleteModpack.SetText(menu.lang.Get("Modloder_Cancel"));  
 
         wbtn_saveChanges.SetText(menu.lang.Get("Modloder_SaveChanges"));  
-        wbtn_reversChanges.SetText(menu.lang.Get("Modloder_ReverseChanges"));  
+        wbtn_reversChanges.SetText(menu.lang.Get("Modloder_ReverseChanges"));
 
-        string current = gamePlatform.GetCurrentModpack();
-        wts_modpack.SetText(current);
-
-        IntRef lenght = new IntRef();
-        string[] modpacks = gamePlatform.GetModpacks(lenght);
-        wts_modpack.SetOptionSize(lenght.GetValue() + 1);
-        for (int i = 0; i < lenght.value; i++)
-        {
-            if (modpacks[i] == current)
-            {
-                lastSelected = i;
-                selected = i;
-            }
-            wts_modpack.SetOption(modpacks[i], i);
-        }
-        wts_modpack.SetOption("New", lenght.GetValue());
-
-        if (!loaded)
-        {
-            loaded = true;
-
-            modinfosLenght = new IntRef();
-            modinfos = gamePlatform.GetModlist(modinfosLenght);
-            modState = new bool[modinfosLenght.value];
-
-            for (int m = 0; m < modinfosLenght.GetValue(); m++)
-            {
-                ListEntry entry = new ListEntry();
-                if (modinfos[m] == null) continue;
-                modState[m] = true;
-
-                if (modinfos[m].Name != null)
-                    entry.textTopLeft = modinfos[m].Name;
-
-                entry.textTopRight = "&2Active";
-                if (modinfos[m].Description != null)
-
-                    entry.textBottomLeft = modinfos[m].Description;
-                if (modinfos[m].Category != null)
-                    entry.textBottomRight = modinfos[m].Category;
-
-                wlst_modList.AddElement(entry);
-
-            }
-            //wbtn_serveroptions.SetText(menu.p.StringFormat("Server Options{0}",menu.p.IntToString(lenght.GetValue())));
-
-
-        }
+        ReloadModpacks(gamePlatform);
+        LoadModpack(gamePlatform, gamePlatform.GetCurrentModpack());
+   
     }
     public void OnNewNameCancel(GamePlatform p)
     {
@@ -142,6 +88,26 @@
 
         wtb_newModpackName.SetContent(p, "");
         newModpackActive = false;
+    }
+    public void ReloadModpacks(GamePlatform p)
+    {
+        IntRef lenght = new IntRef();
+        string activeModpack=p.GetCurrentModpack();
+         string[] modpackList = p.GetModpacks(lenght);
+
+        wts_modpack.SetOptionSize(lenght.GetValue() + 1);
+
+        for (int i = 0; i < lenght.GetValue(); i++)
+        {
+            if (activeModpack == modpackList[i]) selected = i;
+            wts_modpack.SetOption(modpackList[i], i);
+        }
+
+        lastSelected = selected;
+
+        wts_modpack.SetOption("New", lenght.GetValue());
+
+        wts_modpack.SetText(activeModpack);
     }
     public void OnNewNameAccept(GamePlatform p)
     {
@@ -157,42 +123,16 @@
         {
             if (content == modpackList[i])
             {
-                found = true;
-                break;
+                found = true; break;
             }
         }
         if (found) return;
 
-        int activeModCount = 0;
-        for (int m = 0; m < modinfosLenght.value; m++)
-        {
-            if (modState[m] != true) continue;
-            activeModCount++;
-        }
-        string[] activeMods = new string[activeModCount];
-        int activemodIndex = 0;
-        for (int m = 0; m < modinfosLenght.value; m++)
-        {
-            if (modState[m] != true) continue;
-            activeMods[activemodIndex] = modinfos[m].ModID;
-            activemodIndex++;
-        }
-
-        p.SaveModpack(content, activeMods);
+        p.SaveModpack(content, GetActiveModsID(lenght));
         p.SetCurrentModpack(content);
 
-        wts_modpack.SetOptionSize(lenght.GetValue() + 2);
+        ReloadModpacks(p);
 
-        for (int i = 0; i < lenght.GetValue(); i++)
-        {
-            wts_modpack.SetOption(modpackList[i], i);
-        }
-
-        wts_modpack.SetOption(content, lenght.GetValue());
-        wts_modpack.SetOption("New", lenght.GetValue() + 1);
-
-        wts_modpack.SetDisplayedValue(lenght.GetValue());
-        
         newModpackActive = false;
     }
 
@@ -261,14 +201,18 @@
             {
                 deleteModpackActive = true;
                 wbtn_deleteModpack.SetText(menu.lang.Get("Modloder_ModpackDeleteValidation"));  
-                 return;
+                return;
             }
+
+            p.DeleteModpack(p.GetCurrentModpack());
+            p.SetCurrentModpack("Default");
+            ReloadModpacks(p);
+            LoadModpack(p, p.GetCurrentModpack());
 
             deleteModpackActive = false;
             wbtn_deleteModpack.SetText(menu.lang.Get("Modloder_ModpackDelete")); 
 
         }
- 
 
         if (wbtn_notDeleteModpack.HasBeenClicked(args)|| wbtn_deleteModpack.HasBeenClicked(args) && deleteModpackActive) 
         {
@@ -283,8 +227,8 @@
                 OnNewNameAccept(p);
                 return;
             }
-          
-            //DeleteModpack
+            
+
         }
        
 
@@ -307,7 +251,7 @@
         if (wbtn_reversChanges.HasBeenClicked(args))
         {
             activeModsChanged = false;
-            ReloadMods(p, wts_modpack.GetDisplayedValue());
+            LoadModpack(p, wts_modpack.GetDisplayedValue());
         }
 
 
@@ -316,7 +260,6 @@
         {
             lastSelected = selected;
             selected = wts_modpack.GetSelected();
-            p.ConsoleWriteLine(p.StringFormat("ID SELECTED: {0}", p.IntToString(selected)));
             if (selected != -1)
             {
                 wts_modpack.SetDisplayedValue(selected);
@@ -328,13 +271,21 @@
                     wbtn_cancel.SetText(menu.lang.Get("Modloder_Cancel"));
                 }
                 else
-                    ReloadMods(p,wts_modpack.GetSelectedValue());
+                    LoadModpack(p,wts_modpack.GetSelectedValue());
             }
         }
         if (wlst_modList.HasBeenClicked(args))
         {
             if (modListIndex != -1)
+            {
                 wt_ModDesc.SetModinfo(modinfos[modListIndex]);
+               if (modState[modListIndex])
+                    wbtn_switchactive.SetText(menu.lang.Get("Modloder_ModTurnOff"));
+               else
+                    wbtn_switchactive.SetText(menu.lang.Get("Modloder_ModTurnOn"));
+
+
+            }
         }
         if (wbtn_switchactive.HasBeenClicked(args))
         {
@@ -344,10 +295,17 @@
                 modState[modListIndex] = !modState[modListIndex];
 
                 if (modState[modListIndex])
+                {
                     wlst_modList.GetElement(modListIndex).textTopRight = "&2Active";//TODO lang
+                    wbtn_switchactive.SetText(menu.lang.Get("Modloder_ModTurnOff"));
+
+                }
                 else
+                {
                     wlst_modList.GetElement(modListIndex).textTopRight = "&4Inactive";//TODO lang
-                activeModsChanged=true;
+                    wbtn_switchactive.SetText(menu.lang.Get("Modloder_ModTurnOn"));
+                }
+                activeModsChanged =true;
                
             }
 
@@ -434,8 +392,7 @@
         wt_ModDesc.SetPaddingX(25 * scale);
         wt_ModDesc.SetPaddingY(25 * scale);
         wt_ModDesc.Draw(dt, renderer);
-
-
+ 
         int ModDescButtonCount = 2;
 
 
@@ -569,7 +526,8 @@
         return activeMods;
 
     }
-    public void ReloadMods(GamePlatform  p,string name)
+
+    public void LoadModpack(GamePlatform  p,string name)
     {
         IntRef lenght = new IntRef();
         string[] mods = p.GetMods(name, lenght);
@@ -613,9 +571,8 @@
             wlst_modList.AddElement(entry);
 
         }
-
+        p.SetCurrentModpack(name);
 
     }
-
 
 }

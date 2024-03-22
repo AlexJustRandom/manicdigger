@@ -80,7 +80,11 @@ namespace ManicDigger.Common
             lenght.SetValue(modpacks.Count);
             return modpacks.ToArray();
         }
-
+        public static void DeleteModpack(string name)
+        {
+            string path = GameStorePath.GetModpacksPath();
+            File.Delete(Path.Combine(path, name + ".mp"));
+        }
         public static void SaveModpack(string name,string[] activeMods) {
             string path = GameStorePath.GetModpacksPath();
             File.WriteAllText(Path.Combine(path, name+ ".mp"), string.Join("\n", activeMods));

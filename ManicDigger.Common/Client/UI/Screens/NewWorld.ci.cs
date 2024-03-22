@@ -148,8 +148,7 @@ public class NewWorld : MainMenuScreen
             wtbx_name.SetLabel("World name"); //TODO LANG
             wtbx_name.SetContent(gamePlatform,"New World");
             loaded = true;
-
- 
+             
         }
 
 
