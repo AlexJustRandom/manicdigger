@@ -183,10 +183,11 @@ namespace ManicDigger.Server
                 }
             }
 
-            //created locally, this allows the debugger to find the .pdb
-            parms.OutputAssembly = Path.Combine(new DirectoryInfo(new FileInfo(GetType().Assembly.Location).DirectoryName).FullName,String.Format("{0}-Mod.dll",modID));
-
-            //generatet .cs files are stored here
+            //created locally, this allows the debugger to find the .pdb ? TODO idk if i broke this by moving to /ModAssemblyFiles
+            parms.OutputAssembly = Path.Combine(new DirectoryInfo(new FileInfo(GetType().Assembly.Location).DirectoryName).FullName, "ModAssemblyFiles", String.Format("{0}-Mod.dll",modID));
+            Directory.CreateDirectory(Path.GetDirectoryName(parms.OutputAssembly));
+          
+             //generatet .cs files are stored here
             //they are rather important for this debug session, since the .pdb link to them
             parms.TempFiles = new TempFileCollection(dirTemp.FullName, true);
 #endif
@@ -197,7 +198,7 @@ namespace ManicDigger.Server
             parms.ReferencedAssemblies.Add("LibNoise.dll");
             parms.ReferencedAssemblies.Add("protobuf-net.dll");
             parms.ReferencedAssemblies.Add("System.Xml.dll");
-
+            //TODO dont need to link every asembly only required ones 
             foreach(var modAssemble in CompiledAssemblies) {
                 parms.ReferencedAssemblies.Add(modAssemble);
             }

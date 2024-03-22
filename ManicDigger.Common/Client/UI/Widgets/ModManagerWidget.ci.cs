@@ -157,8 +157,7 @@
     {
         wts_modpack.OnMouseUp(p, args);
         wlst_modList.OnMouseUp(p, args);
-
-
+ 
         wbtn_accept.OnMouseUp(p, args);
         wbtn_switchactive.OnMouseUp(p, args);
         wbtn_configmod.OnMouseUp(p, args);

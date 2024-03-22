@@ -84,8 +84,9 @@ namespace ManicDigger.Server
 
 
         }
-
+        //Function for testing
         void SaveBlockstoJson() {
+            return; 
             List<IDBlocktype> blocktypes= new List<IDBlocktype>();
             for(int i = 0; i < 1024; i++) {
                 if (string.IsNullOrEmpty(BlockTypes[i].Name)) continue;
@@ -3521,6 +3522,9 @@ namespace ManicDigger.Server
 		public List<ModDelegates.CheckBlockUse> checkonuse = new List<ModDelegates.CheckBlockUse>();
 		public List<ModDelegates.CheckBlockBuild> checkonbuild = new List<ModDelegates.CheckBlockBuild>();
 		public List<ModDelegates.CheckBlockDelete> checkondelete = new List<ModDelegates.CheckBlockDelete>();
+        //To implement TODO
+        //On PlayerDeath(before) with option to stop?
+
 	}
 
 	#region GameTime
