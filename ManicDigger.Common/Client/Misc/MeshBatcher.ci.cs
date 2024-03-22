@@ -14,9 +14,26 @@
 		glTexturesLength = 10;
 		empty = new int[modelsMax];
 		emptyCount = 0;
-	}
+     
 
-	internal Game game;
+    }
+    public ShaderCi TerrainShader;
+    public void CreateTerrainShader()
+    {
+        GamePlatform platform_ = game.platform;
+        platform_.ConsoleWriteLine("Compiling terrain shaders - Started");
+
+        TerrainShader = new ShaderCi();
+        TerrainShader.Init(platform_);
+        if (!TerrainShader.Compile(ShaderSources.TerrainVertex, ShaderType.VertexShader)) return;
+        if (!TerrainShader.Compile(ShaderSources.TerrainFragment, ShaderType.FragmentShader)) return;
+        TerrainShader.Link();
+
+        platform_.ConsoleWriteLine("Compiling terrain shaders - Completed");
+
+    }
+
+    internal Game game;
 	internal FrustumCulling d_FrustumCulling;
 	internal bool BindTexture;
 	ListInfo[] models;
@@ -39,10 +56,12 @@
 			id = modelsCount;
 			modelsCount++;
 		}
+ 
 
-		Model model = game.platform.CreateModel(modelData);
+        Model model = game.platform.CreateModel2(modelData);
+   //     Model model2 = game.platform.CreateModel2(modelData);
 
-		ListInfo li = models[id];
+        ListInfo li = models[id];
 		li.indicescount = modelData.GetIndicesCount();
 		li.centerX = centerX;
 		li.centerY = centerY;
@@ -58,25 +77,31 @@
 
 	public void Remove(int id)
 	{
-		game.platform.DeleteModel(models[id].model);
+		//game.platform.DeleteModel(models[id].model);
 		models[id].empty = true;
 		empty[emptyCount++] = id;
 	}
 
+
+    //ONLY FOR TERAIN RIGHT NOW
 	public void Draw(float playerPositionX, float playerPositionY, float playerPositionZ)
 	{
 		UpdateCulling();
 		SortListsByTexture();
 
-		//Need to first render all solid lists (to fill z-buffer), then transparent.
-		for (int i = 0; i < texturesCount; i++)
+       TerrainShader.setMat4("MV", game.rend.GetMatrixUniformModelView());
+        TerrainShader.setMat4("P", game.rend.GetMatrixUniformProjection());
+        TerrainShader.BeginUse();
+        //Need to first render all solid lists (to fill z-buffer), then transparent.
+        for (int i = 0; i < texturesCount; i++)
 		{
 			if (tocallSolid[i].Count == 0) { continue; }
 			if (BindTexture)
 			{
+
 				game.platform.BindTexture2d(glTextures[i]);
 			}
-			game.rend.DrawModels(tocallSolid[i].Lists, tocallSolid[i].Count);
+			game.rend.DrawModels2(tocallSolid[i].Lists, tocallSolid[i].Count);
 		}
 		game.platform.GlDisableCullFace(); // for water.
 		for (int i = 0; i < texturesCount; i++)
@@ -86,13 +111,16 @@
 			{
 				game.platform.BindTexture2d(glTextures[i]);
 			}
-			game.rend.DrawModels(tocallTransparent[i].Lists, tocallTransparent[i].Count);
+			game.rend.DrawModels2(tocallTransparent[i].Lists, tocallTransparent[i].Count);
 		}
 		game.platform.GlEnableCullFace();
-	}
+        TerrainShader.EndUse();
 
-	// Finds an index in glTextures array.
-	int GetTextureId(int glTexture)
+
+    }
+
+    // Finds an index in glTextures array.
+    int GetTextureId(int glTexture)
 	{
 		int id = ArrayIndexOf(glTextures, glTexturesLength, glTexture);
 		if (id != -1)

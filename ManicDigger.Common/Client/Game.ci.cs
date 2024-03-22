@@ -167,7 +167,8 @@
 		d_Batcher = new MeshBatcher();
 		d_Batcher.d_FrustumCulling = frustumculling;
 		d_Batcher.game = this;
-		d_FrustumCulling = frustumculling;
+        d_Batcher.CreateTerrainShader();
+        d_FrustumCulling = frustumculling;
 		d_Data = gamedata;
 		d_DataMonsters = new GameDataMonsters();
 		d_Config3d = config3d;
@@ -251,7 +252,7 @@
 		AddMod(new ModGuiCrafting());
 		AddMod(new ModDialog());
 		AddMod(new ModPicking());
-        AddMod(new ModFrost());
+      //  AddMod(new ModFrost());
         AddMod(new ModClearInactivePlayersDrawInfo());
 		AddMod(new ModCameraKeys());
 		AddMod(new ModSendActiveMaterial());

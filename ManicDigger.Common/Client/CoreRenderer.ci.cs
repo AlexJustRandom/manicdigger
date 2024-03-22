@@ -31,6 +31,7 @@
         {
             cachedTextTextures[i] = null;
         }
+
     }
     internal GetCameraMatrix CameraMatrix;
 
@@ -51,8 +52,7 @@
         this.platform = platform_;
         textColorRenderer = new TextColorRenderer();
         textColorRenderer.platform = platform;
-
-    }
+     }
 
     int whitetexture;
     public int WhiteTexture()
@@ -320,10 +320,17 @@
         SetMatrixUniformModelView();
         platform.DrawModel(model);
     }
+
     public void DrawModels(Model[] model, int count)
     {
         SetMatrixUniformModelView();
+
         platform.DrawModels(model, count);
+    }
+    public void DrawModels2(Model[] model, int count)
+    {
+        platform.DrawModels2(model, count);
+
     }
     public void DrawModelData(ModelData data)
     {
@@ -367,7 +374,24 @@
     public void SetMatrixUniformModelView()
     {
         platform.SetMatrixUniformModelView(mvMatrix.Peek());
+        
     }
+    public float[] GetMatrixUniformProjection()
+    {
+      return pMatrix.Peek();
+    }
+
+    public float[] GetMatrixUniformModelView()
+    {
+         return mvMatrix.Peek();
+
+
+    }
+
+
+
+
+
 
     public void GLLoadMatrix(float[] m)
     {
@@ -560,8 +584,10 @@
 
     ShaderCi GenerateTextureshader;
 
+
+
     public void GenerateTexture(Game game, int tileType, int id2, int id3) {
-        game.platform.GenerateTextureStart();
+         game.platform.GenerateTextureStart();
 
         float[] perspective = new float[16];
         Mat4.Perspective(perspective, 0.013f, 1, 64, 256);
