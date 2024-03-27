@@ -1,6 +1,10 @@
 ﻿public class ModGuiCointainer : ClientMod
 {
-	public ModGuiCointainer()
+    public int X;
+    public int Y;
+    public int Z;
+    public Packet_Inventory d_container;
+    public ModGuiCointainer()
 	{
 		//indexed by enum WearPlace
 		wearPlaceStart = new PointRef[5];
@@ -12,6 +16,7 @@
 			wearPlaceStart[3] = PointRef.Create(114, 100); //Helmet,
 			wearPlaceStart[4] = PointRef.Create(154, 100); //Gauntlet,
 		}
+    
 
 		//indexed by enum WearPlace
 		wearPlaceCells = new PointRef[5];
@@ -28,7 +33,13 @@
 		CellCountTotalX = 12;
 		CellCountTotalY = 7 * 6;
 		CellDrawSize = 40;
-	}
+
+        X = 0;
+        Y = 0;
+        Z = 0;
+        d_container = null;
+
+    }
 
 	internal Game game;
 	internal GameDataItemsClient dataItems;
@@ -77,6 +88,9 @@
 
     public void OpenContainer(Game game_,int posx,int posy,int posz) {
         game_.guistate = GuiState.Container;
+        game_.menustate = new MenuState();
+        game_.SetFreeMouse(true);
+        game.SendRequestContainer( posx,  posy,  posz);
     }
 
 
@@ -581,4 +595,19 @@
 			}
 		}
 	}
+}
+
+
+public class PacketHandlerContainerInventory : ClientPacketHandler
+{
+    internal ModGuiCointainer mod;
+    public override void Handle(Game game, Packet_Server packet)
+    {
+        mod.d_container = packet.Container.Inventory;
+        mod.X = packet.Container.X;
+        mod.Y = packet.Container.Y;
+        mod.Z = packet.Container.Z;
+        game.platform.ConsoleWriteLine("ADDED INVENTORY");
+
+    }
 }

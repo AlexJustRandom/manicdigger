@@ -65,8 +65,21 @@
 		pp.PingReply = p;
 		return pp;
 	}
-
-	public static Packet_Client SetBlock(int x, int y, int z, int mode, int type, int materialslot)
+    public static Packet_Client RequestContainer(int x, int y, int z)
+    {
+        Packet_ClientRequestContainer p = new Packet_ClientRequestContainer();
+        {
+            p.X = x;
+            p.Y = y;
+            p.Z = z;
+           
+        }
+        Packet_Client pp = new Packet_Client();
+        pp.Id = Packet_ClientIdEnum.RequestContainer;
+        pp.RequestContainer = p;
+        return pp;
+    }
+        public static Packet_Client SetBlock(int x, int y, int z, int mode, int type, int materialslot)
 	{
 		Packet_ClientSetBlock p = new Packet_ClientSetBlock();
 		{

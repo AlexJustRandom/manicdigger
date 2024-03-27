@@ -16,7 +16,13 @@ namespace ManicDigger.Server
 		[ProtoMember(4, IsRequired = false)]
 		public ManicDigger.Inventory Inventory;
 	}
-	[ProtoContract]
+    [ProtoContract]
+    public class PacketServerContainer
+    {
+        [ProtoMember(4, IsRequired = false)]
+        public ManicDigger.Inventory Inventory;
+    }
+    [ProtoContract]
 	public class PacketServerPlayerStats
 	{
 		[ProtoMember(1, IsRequired = false)]

@@ -248,8 +248,9 @@
         AddMod(new ModDrawMinecarts());
         AddMod(new ModDrawHand2d());
 		AddMod(new ModDrawHand3d());
-		AddMod(new ModGuiCrafting());
-		AddMod(new ModDialog());
+        AddMod(new ModGuiCrafting());
+        AddMod(new ModGuiCointainer());
+        AddMod(new ModDialog());
 		AddMod(new ModPicking());
         AddMod(new ModFrost());
         AddMod(new ModClearInactivePlayersDrawInfo());
@@ -535,7 +536,11 @@
 	{
 		SendPacketClient(ClientPackets.SetBlock(x, y, z, mode, type, materialslot));
 	}
-	internal int ActiveHudIndex;
+    internal void SendRequestContainer(int x, int y, int z)
+    {
+        SendPacketClient(ClientPackets.RequestContainer(x, y, z));
+    }
+    internal int ActiveHudIndex;
 
 	internal void SendFillArea(int startx, int starty, int startz, int endx, int endy, int endz, int blockType)
 	{

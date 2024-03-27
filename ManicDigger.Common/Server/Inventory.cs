@@ -413,10 +413,8 @@ namespace ManicDigger.Server
 				SendInventory();
 			}
 			else
-                    if (pos.Type == Packet_InventoryPositionTypeEnum.WearPlace)
-            {
-                }
-                if (pos.Type == Packet_InventoryPositionTypeEnum.WearPlace)
+         
+            if (pos.Type == Packet_InventoryPositionTypeEnum.WearPlace)
 			{
 				//just swap.
 				Item wear = d_InventoryUtil.ItemAtWearPlace(pos.WearPlace, pos.ActiveMaterial);

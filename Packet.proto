@@ -24,6 +24,7 @@ enum ClientId {
 	ServerQuery = 64;
 	GameResolution = 10;
 	ExtendedPacketCommand = 100;
+	RequestContainer = 101;
 }
 
 message ClientIdentification {
@@ -36,7 +37,11 @@ message ClientIdentification {
 message ClientRequestBlob {
 	optional StringList requestedMd5 = 1;
 }
-
+message ClientRequestContainer {
+	optional int32 x = 1;
+	optional int32 y = 2;
+	optional int32 z = 3;
+}
 message ClientSetBlock {
 	optional int32 x = 1;
 	optional int32 y = 2;
@@ -227,6 +232,7 @@ message Client {
 	optional ClientServerQuery query = 19;
 	optional ClientGameResolution gameResolution = 20;
 	optional ClientEntityInteraction entityInteraction = 21;
+	optional ClientRequestContainer requestContainer = 22;
 }
 
 message ClientEntityInteraction {
@@ -372,6 +378,8 @@ enum ServerId {
 	EntityDespawn = 68;
 	ExtendedPacketCommand = 100;
 	ExtendedPacketTick = 101;
+
+	ContainerInventory = 102;
 }
 
 message ServerIdentification {
@@ -603,6 +611,7 @@ message Server {
 	optional ServerEntitySpawn entitySpawn = 39;
 	optional ServerEntityPositionAndOrientation entityPosition = 40;
 	optional ServerEntityDespawn entityDespawn = 41;
+	optional ServerContainer container = 42;
 }
 
 message ServerEntitySpawn {
@@ -709,7 +718,12 @@ message ServerHeightmapChunk {
 message ServerInventory {
 	optional Inventory inventory = 4;
 }
-
+message ServerContainer {
+	optional Inventory inventory = 4;
+	optional int32 x = 1;
+	optional int32 y = 2;
+	optional int32 z = 3;
+}
 message ServerPlayerStats {
 	optional int32 currentHealth = 1;
 	optional int32 maxHealth = 2;

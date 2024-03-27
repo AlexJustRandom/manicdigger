@@ -61,7 +61,6 @@
             float health = 1;// game.GetCurrentBlockHealth(x, y, z);
             int now = game.platform.TimeMillisecondsFromStart();
             int end = game.whenStartedMining + game.platform.FloatToInt((game.GetMiningTime(game.d_Inventory.RightHand[game.ActiveHudIndex].BlockId, game.map.GetBlock(x, y, z)) * 1000));
-            game.platform.ConsoleWriteLine(game.platform.IntToString(now - end));
             float progress = now / end;
 			if (game.IsUsableBlock(blocktype))
 			{

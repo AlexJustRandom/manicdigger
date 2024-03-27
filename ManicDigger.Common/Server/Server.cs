@@ -701,7 +701,54 @@ namespace ManicDigger.Server
                 c.IsInventoryDirty = false;
             }
         }
+        private Packet_ServerContainer ConvertInventory(PacketServerContainer inv)
+        {
 
+            if (inv == null)
+            {
+                return null;
+            }
+            Packet_ServerContainer p = new Packet_ServerContainer();
+            if (inv.Inventory != null)
+            {
+                p.Inventory = new Packet_Inventory();
+                p.Inventory.Boots = ConvertItem(inv.Inventory.Boots);
+                p.Inventory.DragDropItem = ConvertItem(inv.Inventory.DragDropItem);
+                p.Inventory.Gauntlet = ConvertItem(inv.Inventory.Gauntlet);
+                p.Inventory.Helmet = ConvertItem(inv.Inventory.Helmet);
+                p.Inventory.Items = new Packet_PositionItem[inv.Inventory.Items.Count];
+                p.Inventory.ItemsCount = inv.Inventory.Items.Count;
+                p.Inventory.ItemsLength = inv.Inventory.Items.Count;
+                {
+                    int i = 0;
+                    foreach (var k in inv.Inventory.Items)
+                    {
+                        Packet_PositionItem item = new Packet_PositionItem();
+                        item.Key_ = SerializePoint(k.Key.X, k.Key.Y);
+                        item.Value_ = ConvertItem(k.Value);
+                        item.X = k.Key.X;
+                        item.Y = k.Key.Y;
+                        p.Inventory.Items[i++] = item;
+                    }
+                }
+                p.Inventory.MainArmor = ConvertItem(inv.Inventory.MainArmor);
+                p.Inventory.RightHand = new Packet_Item[10];
+                p.Inventory.RightHandCount = 10;
+                p.Inventory.RightHandLength = 10;
+                for (int i = 0; i < inv.Inventory.RightHand.Length; i++)
+                {
+                    if (inv.Inventory.RightHand[i] == null)
+                    {
+                        p.Inventory.RightHand[i] = new Packet_Item();
+                    }
+                    else
+                    {
+                        p.Inventory.RightHand[i] = ConvertItem(inv.Inventory.RightHand[i]);
+                    }
+                }
+            }
+            return p;
+        }
         private Packet_ServerInventory ConvertInventory(PacketServerInventory inv)
         {
             if (inv == null)
@@ -1690,6 +1737,43 @@ namespace ManicDigger.Server
                             Console.WriteLine("Unknown EntityInteractionType: {0}, clientid: {1}", packet.EntityInteraction.InteractionType, clientid);
                             break;
                     }
+                    break;
+                case Packet_ClientIdEnum.RequestContainer:
+
+                    int xc = packet.RequestContainer.X;
+                    int yc = packet.RequestContainer.Y;
+                    int zc = packet.RequestContainer.Z;
+
+                    int blocktype = d_Map.GetBlock(xc, yc, zc);
+                    if (blocktype != d_Data.BlockIdChest())
+                    {
+                        Console.WriteLine("ERROR: Trying to open Block thats NOT container BlockID: "+ blocktype);
+                           return; //TODO Change from fixed id
+                    }
+                    var chunk = d_Map.GetChunk(xc, yc, zc);
+                    if (chunk.Cointainers == null) {
+                        chunk.Cointainers = new Dictionary<Vector3i, Inventory>();
+                    }
+
+                    if (!chunk.Cointainers.ContainsKey(new Vector3i(xc, yc, zc))) {
+
+                        chunk.Cointainers.Add(new Vector3i(xc, yc, zc), StartInventory());
+                           
+                    }
+
+                    PacketServerContainer container = new PacketServerContainer()
+                    {
+                        Inventory = chunk.Cointainers[new Vector3i(xc, yc, zc)]
+                    };
+
+
+                    Packet_Server respond = new Packet_Server();
+                    respond.Container = ConvertInventory( container);
+                    respond.Container.X = xc;
+                    respond.Container.Y = yc;
+                    respond.Container.Z = zc;
+                    respond.Id = Packet_ServerIdEnum.ContainerInventory;
+                    SendPacket(clientid, respond);
                     break;
                 default:
                     Console.WriteLine("Invalid packet: {0}, clientid:{1}", packet.Id, clientid);
