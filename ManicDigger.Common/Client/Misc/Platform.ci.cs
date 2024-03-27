@@ -232,7 +232,7 @@
 	public abstract bool LanguageNativeAvailable();
 	public abstract Language GetLanguageHandler();
     //Modmanagment related stuf
-    public abstract ModInformation[] GetModlist(IntRef length);
+    public abstract ModInformation[] GetCurrentMods(IntRef length);
     public abstract string[] GetModpacks(IntRef length);
     public abstract string GetCurrentModpack();
     public abstract void SetCurrentModpack(string name);

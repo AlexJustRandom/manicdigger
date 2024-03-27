@@ -835,13 +835,13 @@ namespace ManicDigger.Server
         }
         public PacketServerInventory GetPlayerInventory(string playername)
         {
-            if (Inventory == null)
+            if (inventories == null)
             {
-                Inventory = new Dictionary<string, PacketServerInventory>(StringComparer.InvariantCultureIgnoreCase);
+                inventories = new Dictionary<string, PacketServerInventory>(StringComparer.InvariantCultureIgnoreCase);
             }
-            if (!Inventory.ContainsKey(playername))
+            if (!inventories.ContainsKey(playername))
             {
-                Inventory[playername] = new PacketServerInventory()
+                inventories[playername] = new PacketServerInventory()
                 {
                     Inventory = StartInventory(),
                     /*
@@ -850,15 +850,15 @@ namespace ManicDigger.Server
                     */
                 };
             }
-            return Inventory[playername];
+            return inventories[playername];
         }
         public void ResetPlayerInventory(ClientOnServer client)
         {
-            if (Inventory == null)
+            if (inventories == null)
             {
-                Inventory = new Dictionary<string, PacketServerInventory>(StringComparer.InvariantCultureIgnoreCase);
+                inventories = new Dictionary<string, PacketServerInventory>(StringComparer.InvariantCultureIgnoreCase);
             }
-            this.Inventory[client.playername] = new PacketServerInventory()
+            this.inventories[client.playername] = new PacketServerInventory()
             {
                 Inventory = StartInventory(),
             };
@@ -2928,6 +2928,9 @@ namespace ManicDigger.Server
         private void SendSunLevels(int clientid)
         {
             Packet_ServerSunLevels p = new Packet_ServerSunLevels();
+            #if DEBUG
+                if (sunlevels == null) Console.WriteLine("SUN LEVELS IS NULL");
+            #endif
             p.SetSunlevels(sunlevels, sunlevels.Length, sunlevels.Length);
             SendPacket(clientid, Serialize(new Packet_Server() { Id = Packet_ServerIdEnum.SunLevels, SunLevels = p }));
         }

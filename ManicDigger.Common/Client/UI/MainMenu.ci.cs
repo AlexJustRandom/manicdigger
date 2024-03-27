@@ -269,6 +269,9 @@ public class MainMenu
 	public void ConnectToSingleplayer(string filename)
 	{
         ServerInitSettings serverInitSettings = new ServerInitSettings();
+        IntRef modsCount=new IntRef();
+        serverInitSettings.mods = p.GetCurrentMods(modsCount);//TODO load from config etc  
+        serverInitSettings.ModCount = modsCount.value;
         serverInitSettings.settingsOverride = null;
         serverInitSettings.filename = filename;
         StartGame(true, serverInitSettings, null);

@@ -13,7 +13,7 @@ namespace ManicDigger.Server
 		[ProtoMember(3, IsRequired = false)]
 		public int MapSizeZ;
 		[ProtoMember(4, IsRequired = false)]
-		public Dictionary<string, PacketServerInventory> Inventory;
+		public Dictionary<string, PacketServerInventory> Inventories;
 		[ProtoMember(7, IsRequired = false)]
 		public int Seed;
 		[ProtoMember(8, IsRequired = false)]

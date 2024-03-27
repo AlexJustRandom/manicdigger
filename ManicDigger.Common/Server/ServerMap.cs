@@ -42,8 +42,8 @@ namespace ManicDigger.Server
 		public int EntitiesCount;
 		[ProtoMember(8, IsRequired = false)]
 		public ServerEntity[] Entities;
-        //[ProtoMember(9, IsRequired = false)]
-        //public List<Li>
+        [ProtoMember(9, IsRequired = false)]
+        public Dictionary<Vector3i,Inventory> Cointainers;
     }
 
     public class ServerMap : IMapStorage2

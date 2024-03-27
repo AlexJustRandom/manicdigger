@@ -126,6 +126,7 @@
     int mBlockIdCuboid;
     int mBlockIdFillArea;
     int mBlockIdMinecart;
+    int mBlockIdChest;
     int mBlockIdRailstart; // 64 rail tiles
 
     public int BlockIdEmpty() { return mBlockIdEmpty; }
@@ -144,6 +145,7 @@
     public int BlockIdFillArea() { return mBlockIdFillArea; }
     public int BlockIdMinecart() { return mBlockIdMinecart; }
     public int BlockIdRailstart() { return mBlockIdRailstart; }
+    public int BlockIdChest() { return mBlockIdChest; }
 
     // TODO: atm it sets sepcial block id from block name - better use new block property
     public bool SetSpecialBlock(Packet_BlockType b, int id)
@@ -194,6 +196,9 @@
                 return true;
             case "Minecart":
                 this.mBlockIdMinecart = id;
+                return true;
+            case "Chest":
+                this.mBlockIdChest = id;
                 return true;
             case "Rail0":
                 this.mBlockIdRailstart = id;

@@ -14,7 +14,7 @@ namespace ManicDigger.Server
 		public List<ManicDigger.Action> onload = new List<ManicDigger.Action>();
 		public List<ManicDigger.Action> onsave = new List<ManicDigger.Action>();
 
-		public Dictionary<string, PacketServerInventory> Inventory = new Dictionary<string, PacketServerInventory>(StringComparer.InvariantCultureIgnoreCase);
+		public Dictionary<string, PacketServerInventory> inventories = new Dictionary<string, PacketServerInventory>(StringComparer.InvariantCultureIgnoreCase);
 		public Dictionary<string, PacketServerPlayerStats> PlayerStats = new Dictionary<string, PacketServerPlayerStats>(StringComparer.InvariantCultureIgnoreCase);
 		public Dictionary<string, byte[]> moddata = new Dictionary<string, byte[]>();
 
@@ -49,11 +49,11 @@ namespace ManicDigger.Server
 			Seed = save.Seed;
 			if (config.IsCreative)
 			{
-				this.Inventory = new Dictionary<string, PacketServerInventory>(StringComparer.InvariantCultureIgnoreCase);
+				this.inventories = new Dictionary<string, PacketServerInventory>(StringComparer.InvariantCultureIgnoreCase);
 			}
 			else
 			{
-				this.Inventory = save.Inventory;
+				this.inventories = save.Inventories;
 			}
 			this.PlayerStats = save.PlayerStats;
 			this.simulationcurrentframe = (int)save.SimulationCurrentFrame;
@@ -78,7 +78,7 @@ namespace ManicDigger.Server
 			ManicDiggerSave save = new ManicDiggerSave();
 			if (!config.IsCreative)
 			{
-				save.Inventory = Inventory;
+				save.Inventories = inventories;
 			}
 			save.PlayerStats = PlayerStats;
 			save.Seed = Seed;

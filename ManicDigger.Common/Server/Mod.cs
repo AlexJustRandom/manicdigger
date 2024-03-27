@@ -123,6 +123,7 @@ namespace ManicDigger.Server
         internal void Start(Server server)
         {
             this.server = server;
+
         }
 
         public void SetSunLevels(int[] sunLevels)

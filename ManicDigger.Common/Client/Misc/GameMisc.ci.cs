@@ -940,7 +940,8 @@ public enum GuiState
 	Inventory,
 	MapLoading,
 	CraftingRecipes,
-	ModalDialog
+	ModalDialog,
+    Container
 }
 
 public enum BlockSetMode

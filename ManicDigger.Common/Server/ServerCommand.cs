@@ -1452,9 +1452,9 @@ namespace ManicDigger.Server
 				return true;
 			}
 			// Player is not online.
-			if (Inventory != null && Inventory.ContainsKey(target))
+			if (inventories != null && inventories.ContainsKey(target))
 			{
-				Inventory.Remove(target);
+				inventories.Remove(target);
 				SendMessageToAll(string.Format(language.Get("Server_CommandResetInventoryOfflineSuccess"), colorImportant, GetClient(sourceClientId).ColoredPlayername(colorImportant), target));
 				ServerEventLog(string.Format("{0} resets inventory of {1} (offline).", GetClient(sourceClientId).playername, target));
 				return true;

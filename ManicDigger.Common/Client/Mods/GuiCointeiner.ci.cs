@@ -52,26 +52,35 @@
 
 	public int ActiveMaterialCellSize() { return game.platform.FloatToInt(48 * game.Scale()); }
 
-	public override void OnKeyPress(Game game_, KeyPressEventArgs args)
-	{
-		if (game.guistate != GuiState.Inventory)
-		{
-			return;
-		}
-		int keyChar = args.GetKeyChar();
-		if (keyChar == 49) { game.ActiveHudIndex = 0; }
-		if (keyChar == 50) { game.ActiveHudIndex = 1; }
-		if (keyChar == 51) { game.ActiveHudIndex = 2; }
-		if (keyChar == 52) { game.ActiveHudIndex = 3; }
-		if (keyChar == 53) { game.ActiveHudIndex = 4; }
-		if (keyChar == 54) { game.ActiveHudIndex = 5; }
-		if (keyChar == 55) { game.ActiveHudIndex = 6; }
-		if (keyChar == 56) { game.ActiveHudIndex = 7; }
-		if (keyChar == 57) { game.ActiveHudIndex = 8; }
-		if (keyChar == 48) { game.ActiveHudIndex = 9; }
-	}
 
-	int ScrollButtonSize() { return CellDrawSize; }
+    public override void OnKeyDown(Game game_, KeyEventArgs args)
+    {
+        int eKey = args.GetKeyCode();
+        if (eKey == (game_.GetKey(GlKeys.E)) && game_.GuiTyping == TypingState.None)
+        {
+            if (!(game_.SelectedBlockPosition.x == -1 && game_.SelectedBlockPosition.y == -1 && game_.SelectedBlockPosition.z == -1))
+            {
+                int posx = game_.SelectedBlockPosition.x;
+                int posy = game_.SelectedBlockPosition.z;
+                int posz = game_.SelectedBlockPosition.y;
+                if (game_.map.GetBlock(posx, posy, posz) == game_.d_Data.BlockIdChest())
+                {
+                    //draw crafting recipes list.
+                    IntRef tableCount = new IntRef();
+         
+                    OpenContainer(game_, posx, posy, posz);
+                    args.SetHandled(true);
+                }
+            }
+        }
+    }
+
+    public void OpenContainer(Game game_,int posx,int posy,int posz) {
+        game_.guistate = GuiState.Container;
+    }
+
+
+    int ScrollButtonSize() { return CellDrawSize; }
 
 	int ScrollUpButtonX() { return CellsStartX() + CellCountInPageX * CellDrawSize; }
 	int ScrollUpButtonY() { return CellsStartY(); }
@@ -81,7 +90,7 @@
 
 	public override void OnMouseDown(Game game_, MouseEventArgs args)
 	{
-		if (game.guistate != GuiState.Inventory)
+		if (game.guistate != GuiState.Container)
 		{
 			return;
 		}
@@ -103,7 +112,7 @@
 			return;
 		}
 
-		if (game.guistate != GuiState.Inventory)
+		if (game.guistate != GuiState.Container)
 		{
 			return;
 		}
@@ -147,7 +156,7 @@
 					controller.InventoryClick(p);
 				}
 			}
-			if (game.guistate == GuiState.Inventory)
+			if (game.guistate == GuiState.Container)
 			{
 				args.SetHandled(true);
 				return;
@@ -230,7 +239,7 @@
 
 	public override void OnMouseUp(Game game_, MouseEventArgs args)
 	{
-		if (game.guistate != GuiState.Inventory)
+		if (game.guistate != GuiState.Container)
 		{
 			return;
 		}
@@ -290,7 +299,7 @@
 			return;
 		}
 		DrawMaterialSelector();
-		if (game.guistate != GuiState.Inventory)
+		if (game.guistate != GuiState.Container)
 		{
 			return;
 		}
@@ -550,7 +559,7 @@
 	public override void OnMouseWheelChanged(Game game_, MouseWheelEventArgs args)
 	{
 		float delta = args.GetDeltaPrecise();
-		if ((game_.guistate == GuiState.Normal || (game_.guistate == GuiState.Inventory && !IsMouseOverCells()))
+		if ((game_.guistate == GuiState.Normal || (game_.guistate == GuiState.Container && !IsMouseOverCells()))
 			&& (!game_.keyboardState[game_.GetKey(GlKeys.LShift)]))
 		{
 			game_.ActiveHudIndex -= game_.platform.FloatToInt(delta);
@@ -560,7 +569,7 @@
 				game_.ActiveHudIndex += 10;
 			}
 		}
-		if (IsMouseOverCells() && game.guistate == GuiState.Inventory)
+		if (IsMouseOverCells() && game.guistate == GuiState.Container)
 		{
 			if (delta > 0)
 			{

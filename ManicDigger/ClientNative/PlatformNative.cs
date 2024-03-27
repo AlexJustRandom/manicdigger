@@ -2407,7 +2407,7 @@ namespace ManicDigger.ClientNative
         #endregion
 
 
-        public override ModInformation[] GetModlist(IntRef length) {
+        public override ModInformation[] GetCurrentMods(IntRef length) {
             return ModLodingUtil.GetModlist(length);
 
            }

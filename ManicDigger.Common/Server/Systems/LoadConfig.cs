@@ -108,6 +108,7 @@ namespace ManicDigger.Server
 					SaveConfig(server);
 				}
 			}
+            if (server.serverInitSettings.settingsOverride != null) 
             foreach(var setting in server.serverInitSettings.settingsOverride) {
                 if (setting._setting == "Server_IsCreative")
                     server.config.IsCreative = setting._value == "true";
@@ -133,7 +134,7 @@ namespace ManicDigger.Server
                 //Set default language to user's locale
                 server.config.ServerLanguage = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
                 //Ask for config parameters the first time the server is started
-
+                 if (server.serverInitSettings.settingsOverride != null) 
                 foreach (var setting in server.serverInitSettings.settingsOverride)
                 {
                     if (setting._setting == "Server_IsCreative")

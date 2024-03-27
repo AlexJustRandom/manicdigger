@@ -1,12 +1,12 @@
-﻿using ProtoBuf;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using ProtoBuf;
 
 namespace ManicDigger.Server
 {
-	//separate class because it's used by server and client. TODO: verify
-	public class InventoryUtil
+    //separate class because it's used by server and client. TODO: verify
+    public class InventoryUtil
 	{
 		public InventoryUtil()
 		{
@@ -374,14 +374,14 @@ namespace ManicDigger.Server
 			else
 			if (pos.Type == Packet_InventoryPositionTypeEnum.Ground)
 			{
-				/*
+		 
             if (d_Inventory.DragDropItem != null)
             {
                 d_DropItem.DropItem(ref d_Inventory.DragDropItem,
                     new Vector3i(pos.GroundPositionX, pos.GroundPositionY, pos.GroundPositionZ));
                 SendInventory();
             }
-            */
+ 
 			}
 			else
 			if (pos.Type == Packet_InventoryPositionTypeEnum.MaterialSelector)
@@ -413,7 +413,10 @@ namespace ManicDigger.Server
 				SendInventory();
 			}
 			else
-			if (pos.Type == Packet_InventoryPositionTypeEnum.WearPlace)
+                    if (pos.Type == Packet_InventoryPositionTypeEnum.WearPlace)
+            {
+                }
+                if (pos.Type == Packet_InventoryPositionTypeEnum.WearPlace)
 			{
 				//just swap.
 				Item wear = d_InventoryUtil.ItemAtWearPlace(pos.WearPlace, pos.ActiveMaterial);
@@ -496,9 +499,49 @@ namespace ManicDigger.Server
 				}
 			}
             if (from.Type == Packet_InventoryPositionTypeEnum.Container)
-            { 
-          //  d_map.GetBlock
-            
+            {
+                var chunk = d_map.GetChunk(from.GroundPositionX, from.GroundPositionY, from.GroundPositionZ);
+                if (!chunk.Cointainers.ContainsKey(new Vector3i(from.GroundPositionX, from.GroundPositionY, from.GroundPositionZ))) return;
+                ProtoPoint originPoint = new ProtoPoint(from.AreaX, from.AreaY);
+                var item = chunk.Cointainers[new Vector3i(from.GroundPositionX, from.GroundPositionY, from.GroundPositionZ)].Items[originPoint];
+                if (item == null) return;
+
+                //duplicate code with GrabItem().
+                 
+                //grab to main area - stacking
+                for (int x = 0; x < d_InventoryUtil.CellCountX; x++)
+                {
+                    for (int y = 0; y < d_InventoryUtil.CellCountY; y++)
+                    {
+                        IntRef pCount = new IntRef();
+                        PointRef[] p = d_InventoryUtil.ItemsAtArea(x, y, d_Items.ItemSizeX(item), d_Items.ItemSizeY(item), pCount);
+                        if (p != null && pCount.value == 1)
+                        {
+                            var stacked = d_Items.Stack(d_Inventory.Items[new ProtoPoint(p[0].X, p[0].Y)], item);
+                            if (stacked != null)
+                            {
+                                d_Inventory.Items[new ProtoPoint(x, y)] = stacked;
+                                d_Inventory.RightHand[from.MaterialId] = null;
+                                return;
+                            }
+                        }
+                    }
+                }
+                //grab to main area - adding
+                for (int x = 0; x < d_InventoryUtil.CellCountX; x++)
+                {
+                    for (int y = 0; y < d_InventoryUtil.CellCountY; y++)
+                    {
+                        IntRef pCount = new IntRef();
+                        PointRef[] p = d_InventoryUtil.ItemsAtArea(x, y, d_Items.ItemSizeX(item), d_Items.ItemSizeY(item), pCount);
+                        if (p != null && pCount.value == 0)
+                        {
+                            d_Inventory.Items[new ProtoPoint(x, y)] = item;
+                            d_Inventory.RightHand[from.MaterialId] = null;
+                            return;
+                        }
+                    }
+                }
             }
 
             Console.WriteLine("ERROR: Usnusported Position Type enum: " + from.Type);

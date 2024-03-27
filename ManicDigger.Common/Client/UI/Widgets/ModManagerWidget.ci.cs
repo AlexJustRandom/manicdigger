@@ -533,7 +533,7 @@
         IntRef lenght = new IntRef();
         string[] mods = p.GetMods(name, lenght);
         modinfosLenght = new IntRef();
-        modinfos = p.GetModlist(modinfosLenght);
+        modinfos = p.GetCurrentMods(modinfosLenght);
         modState = new bool[modinfosLenght.value];
         wlst_modList.Clear();
         for (int m = 0; m < modinfosLenght.GetValue(); m++)
