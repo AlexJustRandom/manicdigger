@@ -1,6 +1,6 @@
-﻿public class ModGuiInventory : ClientMod
+﻿public class ModGuiCointainer : ClientMod
 {
-	public ModGuiInventory()
+	public ModGuiCointainer()
 	{
 		//indexed by enum WearPlace
 		wearPlaceStart = new PointRef[5];
@@ -153,21 +153,21 @@
 				return;
 			}
 		}
-		 //drop items on ground
-		if (scaledMouse.X < CellsStartX() && scaledMouse.Y < MaterialSelectorStartY())
-		{
-		    int posx = game.SelectedBlockPosition.x;
-		    int posy = game.SelectedBlockPosition.y;
-            int posz = game.SelectedBlockPosition.z;
-            Packet_InventoryPosition p = new Packet_InventoryPosition();
-		    {
-		        p.Type = Packet_InventoryPositionTypeEnum.Ground;
-		        p.GroundPositionX = posx;
-		        p.GroundPositionY = posy;
-		        p.GroundPositionZ = posz;
-		    }
-		    controller.InventoryClick(p);
-		}
+		// //drop items on ground
+		//if (scaledMouse.X < CellsStartX() && scaledMouse.Y < MaterialSelectorStartY())
+		//{
+		//    int posx = game.SelectedBlockPositionX;
+		//    int posy = game.SelectedBlockPositionY;
+		//    int posz = game.SelectedBlockPositionZ;
+		//    Packet_InventoryPosition p = new Packet_InventoryPosition();
+		//    {
+		//        p.Type = Packet_InventoryPositionTypeEnum.Ground;
+		//        p.GroundPositionX = posx;
+		//        p.GroundPositionY = posy;
+		//        p.GroundPositionZ = posz;
+		//    }
+		//    controller.InventoryClick(p);
+		//}
 		if (SelectedWearPlace(scaledMouse) != null)
 		{
 			Packet_InventoryPosition p = new Packet_InventoryPosition();

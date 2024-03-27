@@ -42,9 +42,11 @@ namespace ManicDigger.Server
 		public int EntitiesCount;
 		[ProtoMember(8, IsRequired = false)]
 		public ServerEntity[] Entities;
-	}
+        //[ProtoMember(9, IsRequired = false)]
+        //public List<Li>
+    }
 
-	public class ServerMap : IMapStorage2
+    public class ServerMap : IMapStorage2
 	{
 		internal Server server;
 		internal IChunkDb d_ChunkDb;
@@ -143,6 +145,7 @@ namespace ManicDigger.Server
 				SetChunkValid(x, y, z, new ServerChunk() { data = newchunk });
 				GetChunkValid(x, y, z).DirtyForSaving = true;
 				UpdateChunkHeight(x, y, z);
+
 				return GetChunkValid(x, y, z);
 			}
 			return chunk;

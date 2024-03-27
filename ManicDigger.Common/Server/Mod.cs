@@ -44,7 +44,7 @@ namespace ManicDigger.Server
                     return i;
                 }
             }
-
+            Console.WriteLine("ERROR No Block id:" + name);
             return -1;
             //throw new Exception("No Block id:" + name);
         }
@@ -418,7 +418,7 @@ namespace ManicDigger.Server
 
         public void AddToStartInventory(string blocktype, int amount)
         {
-            server.d_Data.SetStartInventoryAmount(GetBlockId(blocktype), amount);
+             server.d_Data.SetStartInventoryAmount(GetBlockId(blocktype), amount);
         }
 
         public long GetCurrentTick()

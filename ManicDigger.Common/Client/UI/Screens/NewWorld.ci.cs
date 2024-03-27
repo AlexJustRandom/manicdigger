@@ -32,8 +32,15 @@ public class NewWorld : MainMenuScreen
 
 
         wlst_SettingList = new SettingsListWidget();
-         setting=new SettingListEntry[7];
+         setting=new SettingListEntry[8];
         int i = 0;
+        setting[i] = new SettingListEntry();
+        setting[i]._label = "Is Creative";
+        setting[i]._setting = "Server_IsCreative";
+        setting[i]._value = "false";
+        setting[i]._type = SettingEntryType.Bool;
+        i++;
+
         setting[i] = new SettingListEntry();
         setting[i]._label = "Public Server";
         setting[i]._setting = "Server_SetupPublic";

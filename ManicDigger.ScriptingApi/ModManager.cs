@@ -841,7 +841,7 @@ namespace ManicDigger
 		public delegate void PlayerLeave(int player);
 		public delegate void PlayerDisconnect(int player);
         public delegate void PlayerMove(int player,int x, int y, int z);//potentialy expensive
-
+         
         public delegate string PlayerChat(int player, string message, bool toteam);
 		public delegate void PlayerDeath(int player, DeathReason reason, int sourceID);
 		public delegate void DialogClick(int player, string widgetId);
@@ -859,9 +859,14 @@ namespace ManicDigger
 
 		public delegate void DialogClick2(DialogClickArgs args);
 		public delegate void Permission(PermissionArgs args);
-	}
 
-	public class DialogClickArgs
+        //public delegate void OnChunkLoad();
+        //public delegate void OnChunkSave();
+
+
+    }
+
+    public class DialogClickArgs
 	{
 		internal int player;
 		public int GetPlayer() { return player; }

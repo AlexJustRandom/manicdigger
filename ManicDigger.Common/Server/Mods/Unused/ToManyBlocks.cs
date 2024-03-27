@@ -82,13 +82,7 @@ namespace ManicDigger.Mods
                 IsSlipperyWalk = true,
                 WalkSpeed = 6f,
             });
-
-            Console.WriteLine("BASALT ID ID ID ID " + m.GetBlockId("Basalt"));
-            Console.WriteLine("BASALT ID ID ID ID " + m.GetBlockId("Basalt"));
-            Console.WriteLine("BASALT ID ID ID ID " + m.GetBlockId("Basalt"));
-            Console.WriteLine("BASALT ID ID ID ID " + m.GetBlockId("Basalt"));
-            Console.WriteLine("BASALT ID ID ID ID " + m.GetBlockId("Basalt"));
-            Console.WriteLine("BASALT ID ID ID ID " + m.GetBlockId("Basalt"));
+ 
             #region Start inventory
             m.AddToCreativeInventory("Basalt");
 

@@ -12,6 +12,11 @@
 
         switch (cmd)
         {
+            case "Guistate":
+                game.guistate = GuiState.CraftingRecipes;
+                break;
+
+
             case "clients":
                 game.Log("Clients:");
                 for (int i = 0; i < game.entitiesCount; i++)

@@ -108,7 +108,11 @@ namespace ManicDigger.Server
 					SaveConfig(server);
 				}
 			}
-			server.language.OverrideLanguage = server.config.ServerLanguage;  //Switch to user-defined language.
+            foreach(var setting in server.serverInitSettings.settingsOverride) {
+                if (setting._setting == "Server_IsCreative")
+                    server.config.IsCreative = setting._value == "true";
+            }
+            server.language.OverrideLanguage = server.config.ServerLanguage;  //Switch to user-defined language.
 			Console.WriteLine(server.language.ServerConfigLoaded());
 		}
         public void SaveConfig(Server server)
@@ -129,8 +133,12 @@ namespace ManicDigger.Server
                 //Set default language to user's locale
                 server.config.ServerLanguage = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
                 //Ask for config parameters the first time the server is started
-            
-               
+
+                foreach (var setting in server.serverInitSettings.settingsOverride)
+                {
+                    if (setting._setting == "Server_IsCreative")
+                        server.config.IsCreative = setting._value == "true";
+                }
             }
             if (server.config.Areas.Count == 0)
             {

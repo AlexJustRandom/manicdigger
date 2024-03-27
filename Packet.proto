@@ -103,6 +103,7 @@ enum InventoryPositionType {
 	Ground = 1;
 	MaterialSelector = 2;
 	WearPlace = 3;
+	Container = 4; //Chest,Barrel,Etc
 }
 
 message PositionAndOrientation {

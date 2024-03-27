@@ -53,7 +53,9 @@
 	{
 		currentRecipes = new int[1024];
 		currentRecipesCount = 0;
-		for (int i = 0; i < craftingrecipes2Count; i++)
+        game.platform.ConsoleWriteLine(game.platform.StringFormat("Recipe count : {0}",game.platform.IntToString(craftingrecipes2Count))); 
+
+        for (int i = 0; i < craftingrecipes2Count; i++)
 		{
 			Packet_CraftingRecipe r = craftingrecipes2[i];
 			if (r == null)
@@ -69,7 +71,7 @@
 				{
 					continue;
 				}
-				if (craftingblocksFindAllCount(craftingblocks, craftingblocksCount, ingredient.Type) < ingredient.Amount)
+				if (CraftingblocksFindAllCount(craftingblocks, craftingblocksCount, ingredient.Type) < ingredient.Amount)
 				{
 					next = true;
 					break;
@@ -107,7 +109,7 @@
 			}
 		}
 	}
-	int craftingblocksFindAllCount(int[] craftingblocks_, int craftingblocksCount_, int p)
+	int CraftingblocksFindAllCount(int[] craftingblocks_, int craftingblocksCount_, int p)
 	{
 		int count = 0;
 		for (int i = 0; i < craftingblocksCount_; i++)
@@ -162,9 +164,14 @@
 					//draw crafting recipes list.
 					IntRef tableCount = new IntRef();
 					Vector3IntRef[] table = d_CraftingTableTool.GetTable(posx, posy, posz, tableCount);
-					IntRef onTableCount = new IntRef();
-					int[] onTable = d_CraftingTableTool.GetOnTable(table, tableCount.value, onTableCount);
-					CraftingRecipesStart(game, d_CraftingRecipes, d_CraftingRecipesCount, onTable, onTableCount.value, posx, posy, posz);
+                    int onTableCount = game.d_Inventory.ItemsCount;
+
+                    Packet_PositionItem[] onTable = game.d_Inventory.Items;
+                    int[] items = new int[onTableCount];
+                    for(int i = 0; i < onTableCount; i++) {
+                        items[i] =onTable[i].Value_.BlockId;
+                    }
+                    CraftingRecipesStart(game, d_CraftingRecipes, d_CraftingRecipesCount, items, onTableCount, posx, posy, posz);
 					args.SetHandled(true);
 				}
 			}

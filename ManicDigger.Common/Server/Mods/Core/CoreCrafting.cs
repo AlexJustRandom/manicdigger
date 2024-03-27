@@ -11,14 +11,16 @@
 		}
 		public void Start(ModManager m)
 		{
-			/* Crafting recipes are given in the following style:
+            /* Crafting recipes are given in the following style:
 			 * 
 			 * m.AddCraftingRecipe ("Result", 1, "Ingredient_1", 1);
 			 * m.AddCraftingRecipe2("Result", 1, "Ingredient_1", 1, "Ingredient_2", 1);
 			 * m.AddCraftingRecipe3("Result", 1, "Ingredient_1", 1, "Ingredient_2", 1, "Ingredient_3", 1);
 			 */
+            m.AddToStartInventory("Stone", 64);
+            m.AddToStartInventory("OakTreeTrunk", 64);
 
-			m.AddCraftingRecipe("Cobblestone", 1, "Stone", 2);
+            m.AddCraftingRecipe("Cobblestone", 1, "Stone", 2);
 			m.AddCraftingRecipe("Stone", 2, "Cobblestone", 1);
 			m.AddCraftingRecipe("OakWood", 2, "OakTreeTrunk", 1);
 			m.AddCraftingRecipe("BirchWood", 2, "BirchTreeTrunk", 1);

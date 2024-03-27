@@ -307,6 +307,7 @@ namespace ManicDigger.Server
 		public Inventory d_Inventory;
 		public InventoryUtil d_InventoryUtil;
 		public IDropItem d_DropItem;
+        public ServerMap d_map;
 
 		public override void InventoryClick(Packet_InventoryPosition pos)
 		{
@@ -494,7 +495,14 @@ namespace ManicDigger.Server
 					}
 				}
 			}
-		}
+            if (from.Type == Packet_InventoryPositionTypeEnum.Container)
+            { 
+          //  d_map.GetBlock
+            
+            }
+
+            Console.WriteLine("ERROR: Usnusported Position Type enum: " + from.Type);
+            }
 	}
 	public class GameDataItemsBlocks : IGameDataItems
 	{

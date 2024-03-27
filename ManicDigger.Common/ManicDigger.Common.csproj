@@ -289,11 +289,13 @@
     <Compile Include="Client\UI\Widgets\ModDescriptionWidget.ci.cs" />
     <Compile Include="Client\UI\Widgets\LabeledTextWidget.ci.cs" />
     <Compile Include="Common\ModLodingUtil.cs" />
-    <Compile Include="Server\Mods\EXPERIMENTS\ToManyBlocks.cs" />
     <Compile Include="Client\UI\Widgets\SelectWidget.ci.cs" />
     <Compile Include="Client\SimpleServer\ModManagerScreen.ci.cs" />
     <Compile Include="Client\UI\Widgets\ModManagerWidget.ci.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Server\Mods\Unused\ToManyBlocks.cs" />
+    <Compile Include="Server\Mods\EXPERIMENTS\Chest.cs" />
+    <Compile Include="Client\Mods\GuiCointeiner.ci.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -322,7 +324,6 @@
     <None Include="Server\Mods\Core\TreeGenerator.cs" />
     <None Include="Server\Mods\Core\VandalFinder.cs" />
     <None Include="Server\Mods\Core\VegetationGrowth.cs" />
-    <None Include="Server\Mods\EXPERIMENTS\Frostwalk.cs" />
     <None Include="Server\Mods\EXPERIMENTS\Modinfo.json" />
     <None Include="Server\Mods\MoreCommands\ChatHighlighter.cs" />
     <None Include="Server\Mods\MoreCommands\EntitySigns.cs" />
@@ -341,6 +342,7 @@
     <None Include="Server\Mods\Unused\Sign.cs" />
     <None Include="Server\Mods\Upgrades\AdvancedWorldGenerator.cs" />
     <None Include="Server\Mods\Upgrades\Modinfo.json" />
+    <None Include="Server\Mods\Unused\Frostwalk.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Packet.proto">
