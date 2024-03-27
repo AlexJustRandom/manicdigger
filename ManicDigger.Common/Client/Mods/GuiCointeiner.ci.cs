@@ -4,6 +4,7 @@
     public int Y;
     public int Z;
     public Packet_Inventory d_container;
+    PacketHandlerContainerInventory handler;
     public ModGuiCointainer()
 	{
 		//indexed by enum WearPlace
@@ -38,7 +39,8 @@
         Y = 0;
         Z = 0;
         d_container = null;
-
+        handler = new PacketHandlerContainerInventory();
+        handler.mod = this;
     }
 
 	internal Game game;
@@ -87,6 +89,8 @@
     }
 
     public void OpenContainer(Game game_,int posx,int posy,int posz) {
+        game_.packetHandlers[Packet_ServerIdEnum.ContainerInventory] = handler;
+
         game_.guistate = GuiState.Container;
         game_.menustate = new MenuState();
         game_.SetFreeMouse(true);
