@@ -1,6 +1,6 @@
 {
     "name": "MoreComands",
-    "author": "Alex",
+    "author": "Mostly Croxx,Alex",
     "description": "experimental fetures",
     "version": "0.0.1",
     "ModDependencies": ["core"]

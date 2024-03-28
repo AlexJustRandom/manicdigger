@@ -38,7 +38,6 @@ namespace ManicDigger.Mods
 			m.RegisterTimer(CheckPlayerPosition, (double)1);
 			m.RegisterOnCommand(ManageAreas);
 			m.RegisterOnLoad(LoadLocations);
-			System.Console.WriteLine("[Locations] Loaded Mod Version 1.2");
 		}
 		ModManager m;
 		string chatPrefix = "&8[&6Locations&8] ";

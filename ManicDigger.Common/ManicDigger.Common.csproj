@@ -290,12 +290,12 @@
     <Compile Include="Client\UI\Widgets\LabeledTextWidget.ci.cs" />
     <Compile Include="Common\ModLodingUtil.cs" />
     <Compile Include="Client\UI\Widgets\SelectWidget.ci.cs" />
-    <Compile Include="Client\SimpleServer\ModManagerScreen.ci.cs" />
     <Compile Include="Client\UI\Widgets\ModManagerWidget.ci.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Server\Mods\Unused\ToManyBlocks.cs" />
     <Compile Include="Server\Mods\EXPERIMENTS\Chest.cs" />
     <Compile Include="Client\Mods\GuiCointeiner.ci.cs" />
+    <Compile Include="Client\UI\Screens\ModManagerScreen.ci.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -343,6 +343,7 @@
     <None Include="Server\Mods\Upgrades\AdvancedWorldGenerator.cs" />
     <None Include="Server\Mods\Upgrades\Modinfo.json" />
     <None Include="Server\Mods\Unused\Frostwalk.cs" />
+    <None Include="Server\Mods\EXPERIMENTS\SetGamemode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Packet.proto">

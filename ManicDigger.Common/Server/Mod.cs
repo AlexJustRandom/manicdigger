@@ -1221,6 +1221,9 @@ namespace ManicDigger.Server
         }
         #endregion
 
+        public void SetGamemode(bool IsCreative) {
+            server.config.IsCreative = IsCreative;
+        }
 
 
         public void LoadBlocks(string path) {

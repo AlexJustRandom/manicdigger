@@ -23,7 +23,6 @@ namespace ManicDigger.Mods
             m.RegisterOnCommand(TeleportToID);
             m.RegisterCommandHelp("SetModSpeed", "Teleports you to the player with the given ID");
 
-
         }
  
         bool TeleportToID(int player, string command, string argument)

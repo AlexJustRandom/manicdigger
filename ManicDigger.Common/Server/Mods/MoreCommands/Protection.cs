@@ -45,9 +45,7 @@ namespace ManicDigger.Mods
 			m.RegisterCheckOnBlockBuild(CheckBlock);
 			m.RegisterCheckOnBlockDelete(CheckBlock);
 			// m.RegisterCheckOnBlockUse(CheckBlock);
-
-			System.Console.WriteLine("[Protection] Loaded Mod Version 1.2");
-		}
+        }
 
 		//Internal variables.
 		//DO NOT CHANGE!

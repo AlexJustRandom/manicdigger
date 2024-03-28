@@ -39,9 +39,11 @@
         activeModsChanged = false;
 
         wlst_modList = new ListWidget();
- 
+        FontCi font = new FontCi();
+        font.size = 14;
         wt_ModDesc = new ModDescriptionWidget();
- 
+        wt_ModDesc.SetFont(font);
+
         wbtn_switchactive = new ButtonWidget();
  
         wbtn_configmod = new ButtonWidget();

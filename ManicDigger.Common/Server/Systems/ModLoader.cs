@@ -13,6 +13,10 @@ namespace ManicDigger.Server
         {
             jintEngine.DisableSecurity();
             jintEngine.AllowClr = true;
+
+            #if DEBUG
+                modlodingDebug = true;
+            #endif
         }
 
         bool started;
@@ -179,7 +183,7 @@ namespace ManicDigger.Server
                 }
                 catch (Exception ex)
                 {
-                    //meh, maybe next time
+                    Console.WriteLine("ERROR in Modloader files delete: " + ex.Message);
                 }
             }
 

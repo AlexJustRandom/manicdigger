@@ -57,7 +57,6 @@ namespace ManicDigger.Mods
 
             m.RegisterOnSave(SavePlayerStats);
 
-            System.Console.WriteLine("[PlayerStats] Loaded Mod Version 1.1");
         }
 
         //Internal variables.

@@ -111,8 +111,8 @@ namespace ManicDigger.Server
             if (server.serverInitSettings.settingsOverride != null) 
             foreach(var setting in server.serverInitSettings.settingsOverride) {
                 if (setting._setting == "Server_IsCreative")
-                    server.config.IsCreative = setting._value == "true";
-            }
+                    server.config.IsCreative = true;
+                }
             server.language.OverrideLanguage = server.config.ServerLanguage;  //Switch to user-defined language.
 			Console.WriteLine(server.language.ServerConfigLoaded());
 		}
@@ -137,8 +137,8 @@ namespace ManicDigger.Server
                  if (server.serverInitSettings.settingsOverride != null) 
                 foreach (var setting in server.serverInitSettings.settingsOverride)
                 {
-                    if (setting._setting == "Server_IsCreative")
-                        server.config.IsCreative = setting._value == "true";
+                        if (setting._setting == "Server_IsCreative")
+                            server.config.IsCreative = true;
                 }
             }
             if (server.config.Areas.Count == 0)

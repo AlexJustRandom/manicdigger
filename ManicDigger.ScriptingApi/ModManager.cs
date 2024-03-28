@@ -771,6 +771,11 @@ namespace ManicDigger
 
 
 
+        #endregion
+
+        #region VIP BUGGY
+
+        void SetGamemode(bool IsCreative);
 
         #endregion
 

@@ -94,8 +94,7 @@ namespace ManicDigger.Mods
 
 			//Load mod settings
 			LoadSettings();
-			System.Console.WriteLine(string.Format("[ServerUtilities] Loaded Mod Version {0}", versionNumber));
-			m.LogServerEvent(string.Format("[ServerUtilities] Loaded Mod Version {0}", versionNumber));
+			m.LogServerEvent(string.Format("[ServerUtilities] Loaded Mod Version {0}", versionNumber));//TODO ADD  EVENTS to rest of mods
 		}
 		//Enter the desired language code here. Currently supported are EN and DE.
 		string languageCode = "EN";
