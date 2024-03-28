@@ -15,6 +15,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManicDigger.ScriptingApi", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManicDigger.Tests", "ManicDigger.Tests\ManicDigger.Tests.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B6CA493E-9D3D-4C97-B23A-8B5A2DE9249B}"
+	ProjectSection(SolutionItems) = preProject
+		Assets.cs = Assets.cs
+		Packet.Serializer.cs = Packet.Serializer.cs
+		ProtocolParser.cs = ProtocolParser.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
