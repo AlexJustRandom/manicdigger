@@ -72,64 +72,59 @@ namespace ManicDigger.Server
             }
             else
             {
-                List<Tuple<ModInformation, Dictionary<string, string>>> modsources = new List<Tuple<ModInformation, Dictionary<string, string>>>();
-               
-                for(int index = 0; index < server.serverInitSettings.ModCount;index++) {
-                    modsources.Add(new Tuple<ModInformation, Dictionary<string, string>>(server.serverInitSettings.mods[index], ModLodingUtil.GetScriptSources(server.serverInitSettings.mods[index].SrcFolder)));
-                }
 
-                if (modlodingDebug) Console.WriteLine(string.Format("Server Mods to load: {0}", modsources.Count));
-                for(int index = 0; index < modsources.Count; index++)
+                if (modlodingDebug) Console.WriteLine(string.Format("Server Mods to load: {0}", server.serverInitSettings.mods.Length));
+                for(int index = 0; index < server.serverInitSettings.mods.Length; index++)
                 {
-                    CompileMod(modsources, index);
+                    CompileMod(new List<ModInformation>(server.serverInitSettings.mods), index);
                 }
  
             }
  
         }
 
-        bool CompileMod(List<Tuple<ModInformation, Dictionary<string, string>>> modsources,int index) {
+        bool CompileMod(List<ModInformation> modsources,int index) {
 
             //load all dependencis first
-            if (loadedMods.ContainsKey(modsources[index].Item1.ModID))
+            if (loadedMods.ContainsKey(modsources[index].ModID))
                 return true;
 
-            if (modsources[index].Item1.ModDependencies != null) 
-            foreach (var dep in modsources[index].Item1.ModDependencies)
+            if (modsources[index].ModDependencies != null) 
+            foreach (var dep in modsources[index].ModDependencies)
             {
                 if (loadedMods.ContainsKey(dep))
                     continue;
                 bool found=false;
                 for(int i = 0 ; i < modsources.Count;i++)
                 {
-                    if (modsources[i].Item1.ModID == dep)
+                    if (modsources[i].ModID == dep)
 
                         found = CompileMod(modsources, i);
                 }
                 if (!found) {
                     try
                     {
-                        System.Windows.Forms.MessageBox.Show(string.Format("Can't load mod {0} because its dependency {1} couldn't be loaded.", modsources[index].Item1.ModID, dep));
+                        System.Windows.Forms.MessageBox.Show(string.Format("Can't load mod {0} because its dependency {1} couldn't be loaded.", modsources[index].ModID, dep));
                        
                     }
                     catch
                     {
                         //This will be the case if the server is running on a headless linux server without X11 installed (previously crashed)
-                        Console.WriteLine(string.Format("[Mod error] Can't load mod {0} because its dependency {1} couldn't be loaded.", modsources[index].Item1.ModID, dep));
+                        Console.WriteLine(string.Format("[Mod error] Can't load mod {0} because its dependency {1} couldn't be loaded.", modsources[index].ModID, dep));
                     }
                     return false;
                 }
 
             }
-            if (modlodingDebug) Console.WriteLine(string.Format("Starting compilation of {0}", modsources[index].Item1.ModID));
+            if (modlodingDebug) Console.WriteLine(string.Format("Starting compilation of {0}", modsources[index].ModID));
            
 
-            CompileScripts(modsources[index].Item1.ModID, modsources[index].Item2, false);
+            CompileScripts(modsources[index].ModID, ModLodingUtil.GetScriptSources(modsources[index].SrcFolder), false);
             //Load all json as blocks in subfolder
-            LoadBlocks(modsources[index].Item1);
+            LoadBlocks(modsources[index]);
 
-            Start(server.modManager, server.modManager.required, modsources[index].Item1.ModID);
-            loadedMods.Add(modsources[index].Item1.ModID, true);
+            Start(server.modManager, server.modManager.required, modsources[index].ModID);
+            loadedMods.Add(modsources[index].ModID, true);
             return true;
         }
 

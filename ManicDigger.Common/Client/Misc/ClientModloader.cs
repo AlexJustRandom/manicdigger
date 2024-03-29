@@ -15,9 +15,9 @@ using System.Collections.Generic;
         }
 
 
-    public void AddMod(ClientMod mod)
+        public void AddMod(ClientMod mod)
         {
-        GetClientMods.Add(mod);
+            GetClientMods.Add(mod);
             mod.Start(modManager);
         }
 
