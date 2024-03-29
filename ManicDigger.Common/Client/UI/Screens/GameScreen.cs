@@ -51,7 +51,7 @@ public class ScreenGame : MainMenuScreen
 
 				serverSimpleMod = new ModServerSimple();
 				serverSimpleMod.server = serverSimple;
-				game.AddMod(serverSimpleMod);
+				game.clientModloader.AddMod(serverSimpleMod);
 				platform.SinglePlayerServerGetNetwork().ServerReceiveBuffer.Enqueue(new ByteArray());
 			}
 

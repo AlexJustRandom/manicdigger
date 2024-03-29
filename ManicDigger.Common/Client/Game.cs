@@ -58,8 +58,8 @@
 		playertexturedefault = -1;
 		a = new AnimationState();
 		constRotationSpeed = one * 180 / 20;
-		modmanager = new ClientModManager1();
-		particleEffectBlockBreak = new ModDrawParticleEffectBlockBreak();
+        clientModloader = new ClientModloader();
+         particleEffectBlockBreak = new ModDrawParticleEffectBlockBreak();
 		PICK_DISTANCE = 4.1f;
 		selectedmodelid = -1;
 		rotationspeed = one * 15 / 100;
@@ -152,23 +152,26 @@
 			config3d.viewdistance = 32;
 		}
 
-		ITerrainTextures terrainTextures = new ITerrainTextures();
-		terrainTextures.game = this;
-		d_TextureAtlasConverter = new TextureAtlasConverter();
+        ITerrainTextures terrainTextures = new ITerrainTextures{game = this};
+        d_TextureAtlasConverter = new TextureAtlasConverter();
 		d_TerrainTextures = terrainTextures;
 
-		FrustumCulling frustumculling = new FrustumCulling();
-		frustumculling.d_GetCameraMatrix = rend.CameraMatrix;
-		frustumculling.platform = platform;
-		d_FrustumCulling = frustumculling;
+        FrustumCulling frustumculling = new FrustumCulling
+        {
+            d_GetCameraMatrix = rend.CameraMatrix,
+            platform = platform
+        };
+        d_FrustumCulling = frustumculling;
 
 		TerrainChunkTesselatorCi terrainchunktesselator = new TerrainChunkTesselatorCi();
 		d_TerrainChunkTesselator = terrainchunktesselator;
-		d_Batcher = new MeshBatcher();
-		d_Batcher.d_FrustumCulling = frustumculling;
-		d_Batcher.game = this;
-		d_FrustumCulling = frustumculling;
-		d_Data = gamedata;
+        d_Batcher = new MeshBatcher
+        {
+            d_FrustumCulling = frustumculling,
+            game = this
+        };
+        d_FrustumCulling = frustumculling;
+        d_Data = gamedata;
 		d_DataMonsters = new GameDataMonsters();
 		d_Config3d = config3d;
 
@@ -182,17 +185,23 @@
 		SunMoonRenderer sunmoonrenderer = new SunMoonRenderer();
 		d_SunMoonRenderer = sunmoonrenderer;
 		d_SunMoonRenderer = sunmoonrenderer;
-		d_Heightmap = new InfiniteMapChunked2d();
-		d_Heightmap.d_Map = this;
-		d_Heightmap.Restart();
+        d_Heightmap = new InfiniteMapChunked2d
+        {
+            d_Map = this
+        };
+        d_Heightmap.Restart();
 		d_TerrainChunkTesselator = terrainchunktesselator;
 		terrainchunktesselator.game = this;
 
-		Packet_Inventory inventory = new Packet_Inventory();
-		inventory.RightHand = new Packet_Item[10];
-		GameDataItemsClient dataItems = new GameDataItemsClient();
-		dataItems.game = this;
-		InventoryUtilClient inventoryUtil = new InventoryUtilClient();
+        Packet_Inventory inventory = new Packet_Inventory
+        {
+            RightHand = new Packet_Item[10]
+        };
+        GameDataItemsClient dataItems = new GameDataItemsClient
+        {
+            game = this
+        };
+        InventoryUtilClient inventoryUtil = new InventoryUtilClient();
 		d_Inventory = inventory;
 		d_InventoryUtil = inventoryUtil;
 		inventoryUtil.d_Inventory = inventory;
@@ -202,71 +211,69 @@
 
 		rnd = platform.RandomCreate();
 
-		clientmods = new ClientMod[128];
-		clientmodsCount = 0;
-		modmanager.game = this;
-        AddMod(new CoreComands());
-		AddMod(new ModDrawMain());
-		AddMod(new ModNetworkProcess());
-		AddMod(new ModUnloadRendererChunks());
-		AddMod(new ModAutoCamera());
-		AddMod(new ModFpsHistoryGraph());
-		AddMod(new ModWalkSound());
-		AddMod(new ModFallDamageToPlayer());
-		AddMod(new ModBlockDamageToPlayer());
-		AddMod(new ModLoadPlayerTextures());
-		AddMod(new ModSendPosition());
-		AddMod(new ModInterpolatePositions());
-		AddMod(new ModRail());
-		AddMod(new ModCompass());
-		AddMod(new ModGrenade());
-		AddMod(new ModBullet());
-		AddMod(new ModExpire());
-		AddMod(new ModReloadAmmo());
-		AddMod(new ModPush());
+        clientModloader.SetGame(this);
+        clientModloader.AddMod(new CoreComands());
+        clientModloader.AddMod(new ModDrawMain());
+        clientModloader.AddMod(new ModNetworkProcess());
+        clientModloader.AddMod(new ModUnloadRendererChunks());
+        clientModloader.AddMod(new ModAutoCamera());
+        clientModloader.AddMod(new ModFpsHistoryGraph());
+        clientModloader.AddMod(new ModWalkSound());
+        clientModloader.AddMod(new ModFallDamageToPlayer());
+        clientModloader.AddMod(new ModBlockDamageToPlayer());
+        clientModloader.AddMod(new ModLoadPlayerTextures());
+        clientModloader.AddMod(new ModSendPosition());
+        clientModloader.AddMod(new ModInterpolatePositions());
+        clientModloader.AddMod(new ModRail());
+        clientModloader.AddMod(new ModCompass());
+        clientModloader.AddMod(new ModGrenade());
+        clientModloader.AddMod(new ModBullet());
+        clientModloader.AddMod(new ModExpire());
+        clientModloader.AddMod(new ModReloadAmmo());
+        clientModloader.AddMod(new ModPush());
 		if (platform.IsFastSystem())
 		{
-			// TODO: implement fallback in case shaders are unavailable
-			AddMod(new ModSkySphereShader());
+            // TODO: implement fallback in case shaders are unavailable
+            clientModloader.AddMod(new ModSkySphereShader());
 			//AddMod(new ModSkySphereAnimated());
 		}
 		else
 		{
-			AddMod(new ModSkySphereStatic());
+            clientModloader.AddMod(new ModSkySphereStatic());
 		}
-		AddMod(sunmoonrenderer);
-		AddMod(new ModDrawTestModel());
-		AddMod(new ModDrawLinesAroundSelectedBlock());
-		AddMod(new ModDebugChunk());
-		AddMod(new ModDrawArea());
-		AddMod(new ModDrawTerrain());
-		AddMod(new ModDrawPlayers());
-		AddMod(new ModDrawPlayerNames());
-		AddMod(new ModDrawText());
-		AddMod(new ModDrawParticleEffectBlockBreak());
-		AddMod(new ModDrawSprites());
-        AddMod(new ModDrawMinecarts());
-        AddMod(new ModDrawHand2d());
-		AddMod(new ModDrawHand3d());
-        AddMod(new ModGuiCrafting());
-        AddMod(new ModGuiCointainer());
-        AddMod(new ModDialog());
-		AddMod(new ModPicking());
-        AddMod(new ModFrost());
-        AddMod(new ModClearInactivePlayersDrawInfo());
-		AddMod(new ModCameraKeys());
-		AddMod(new ModSendActiveMaterial());
-		AddMod(new ModCamera());
-		AddMod(new ModNetworkEntity());
-		AddMod(new ModGuiInventory());
-		AddMod(new ModGuiTouchButtons());
-		AddMod(new ModGuiEscapeMenu());
-		AddMod(new ModGuiMapLoading());
-		AddMod(new ModDraw2dMisc());
-		AddMod(new ModGuiPlayerStats());
-		AddMod(new ModGuiChat());
-		AddMod(new ModScreenshot());
-		AddMod(new ModAudio());
+        clientModloader.AddMod(sunmoonrenderer);
+        clientModloader.AddMod(new ModDrawTestModel());
+        clientModloader.AddMod(new ModDrawLinesAroundSelectedBlock());
+        clientModloader.AddMod(new ModDebugChunk());
+        clientModloader.AddMod(new ModDrawArea());
+        clientModloader.AddMod(new ModDrawTerrain());
+        clientModloader.AddMod(new ModDrawPlayers());
+        clientModloader.AddMod(new ModDrawPlayerNames());
+        clientModloader.AddMod(new ModDrawText());
+        clientModloader.AddMod(new ModDrawParticleEffectBlockBreak());
+		clientModloader.AddMod(new ModDrawSprites());
+        clientModloader.AddMod(new ModDrawMinecarts());
+        clientModloader.AddMod(new ModDrawHand2d());
+        clientModloader.AddMod(new ModDrawHand3d());
+        clientModloader.AddMod(new ModGuiCrafting());
+        clientModloader.AddMod(new ModGuiCointainer());
+        clientModloader.AddMod(new ModDialog());
+        clientModloader.AddMod(new ModPicking());
+        clientModloader.AddMod(new ModFrost());
+        clientModloader.AddMod(new ModClearInactivePlayersDrawInfo());
+        clientModloader.AddMod(new ModCameraKeys());
+        clientModloader.AddMod(new ModSendActiveMaterial());
+        clientModloader.AddMod(new ModCamera());
+        clientModloader.AddMod(new ModNetworkEntity());
+        clientModloader.AddMod(new ModGuiInventory());
+        clientModloader.AddMod(new ModGuiTouchButtons());
+        clientModloader.AddMod(new ModGuiEscapeMenu());
+        clientModloader.AddMod(new ModGuiMapLoading());
+        clientModloader.AddMod(new ModDraw2dMisc());
+        clientModloader.AddMod(new ModGuiPlayerStats());
+        clientModloader.AddMod(new ModGuiChat());
+        clientModloader.AddMod(new ModScreenshot());
+        clientModloader.AddMod(new ModAudio());
 
 		s = new BlockOctreeSearcher();
 		s.platform = platform;
@@ -297,11 +304,6 @@
 		platform.GlShadeModelSmooth();
 	}
 
-	public void AddMod(ClientMod mod)
-	{
-		clientmods[clientmodsCount++] = mod;
-		mod.Start(modmanager);
-	}
 
 	// Main game loop
 	public void OnRenderFrame(float deltaTime)
@@ -365,11 +367,8 @@
 		platform.GlClearColorBufferAndDepthBuffer();
 		platform.BindTexture2d(d_TerrainTextures.terrainTexture());
 
-		for (int i = 0; i < clientmodsCount; i++)
-		{
-			if (clientmods[i] == null) { continue; }
-			clientmods[i].OnBeforeNewFrameDraw3d(this, deltaTime);
-		}
+ 
+        clientModloader.OnBeforeNewFrameDraw3d(this, deltaTime);
 
         rend.GLMatrixModeModelView();
         rend.GLLoadMatrix(camera);
@@ -380,12 +379,9 @@
 		bool drawgame = guistate != GuiState.MapLoading;
 		if (drawgame)
 		{
-			platform.GlEnableDepthTest();
-			for (int i = 0; i < clientmodsCount; i++)
-			{
-				if (clientmods[i] == null) { continue; }
-				clientmods[i].OnNewFrameDraw3d(this, deltaTime);
-			}
+            platform.GlEnableDepthTest();
+            clientModloader.OnNewFrameDraw3d(this, deltaTime);
+			
 		}
 		GotoDraw2d(deltaTime);
 	}
@@ -1378,10 +1374,8 @@
 		SendPacketClient(ClientPackets.Leave(reason));
 	}
 	internal FrustumCulling d_FrustumCulling;
-	internal ClientModManager1 modmanager;
-	internal ClientMod[] clientmods;
-	internal int clientmodsCount;
-	internal bool SkySphereNight;
+    public  ClientModloader clientModloader;
+    internal bool SkySphereNight;
 	internal ModDrawParticleEffectBlockBreak particleEffectBlockBreak;
 
 	public int SerializeFloat(float p)
@@ -1401,7 +1395,9 @@
 
 	public void PlaySoundAt(string name, float x, float y, float z)
 	{
-		if (x == 0 && y == 0 && z == 0)
+        float EPSILON = 0.1f;
+
+        if (System.Math.Abs(x) < EPSILON && System.Math.Abs(y) < EPSILON && System.Math.Abs(z) < EPSILON)
 		{
 			AudioPlay(name);
 		}
@@ -1913,12 +1909,11 @@
 				if (tppcameradistance > TPP_CAMERA_DISTANCE_MAX) { tppcameradistance = TPP_CAMERA_DISTANCE_MAX; }
 			}
 		}
-		for (int i = 0; i < clientmodsCount; i++)
-		{
-			if (clientmods[i] == null) { continue; }
-			clientmods[i].OnMouseWheelChanged(this, e);
-		}
-	}
+ 
+        clientModloader.OnMouseWheelChanged(this, e);
+
+
+    }
 
 	internal void Connect(string serverAddress, int port, string username, string auth)
 	{
@@ -2033,16 +2028,15 @@
 	internal void KeyUp(int eKey)
 	{
 		keyboardStateRaw[eKey] = false;
-		for (int i = 0; i < clientmodsCount; i++)
-		{
+
 			KeyEventArgs args_ = new KeyEventArgs();
 			args_.SetKeyCode(eKey);
-			clientmods[i].OnKeyUp(this, args_);
-			if (args_.GetHandled())
+		
+			if (clientModloader.OnKeyUp(this, args_))
 			{
 				return;
 			}
-		}
+		
 		keyboardState[eKey] = false;
 		if (eKey == GetKey(GlKeys.ShiftLeft) || eKey == GetKey(GlKeys.ShiftRight))
 		{
@@ -2072,20 +2066,17 @@
 		d_InventoryUtil.d_Inventory = packet_Inventory;
 	}
 
-	internal void KeyPress(int eKeyChar)
-	{
-		for (int i = 0; i < clientmodsCount; i++)
-		{
-			if (clientmods[i] == null) { continue; }
-			KeyPressEventArgs args_ = new KeyPressEventArgs();
-			args_.SetKeyChar(eKeyChar);
-			clientmods[i].OnKeyPress(this, args_);
-			if (args_.GetHandled())
-			{
-				return;
-			}
-		}
-	}
+    internal void KeyPress(int eKeyChar)
+    {
+
+        KeyPressEventArgs args_ = new KeyPressEventArgs();
+        args_.SetKeyChar(eKeyChar);
+        if (clientModloader.OnKeyPress(this, args_))
+        {
+            return;
+        }
+        
+    }
 
 	public string CharToString(int c)
 	{
@@ -2247,13 +2238,12 @@
 			SendChat(chatline);
 			
 			//Process clientside mod commands anyway
-			for (int i = 0; i < clientmodsCount; i++)
-			{
-				ClientCommandArgs args = new ClientCommandArgs();
-				args.arguments = arguments;
-				args.command = cmd;
-				clientmods[i].OnClientCommand(this, args);
-			}
+		
+			ClientCommandArgs args = new ClientCommandArgs();
+			args.arguments = arguments;
+			args.command = cmd;
+			clientModloader.OnClientCommand(this, args);
+		
 		}
 		else
 		{
@@ -2596,16 +2586,14 @@
 		if (guistate != GuiState.MapLoading)
 		{
 			// only handle keys once game has been loaded
-			for (int i = 0; i < clientmodsCount; i++)
+			KeyEventArgs args_ = new KeyEventArgs();
+			args_.SetKeyCode(eKey);
+			clientModloader.OnKeyDown(this, args_);
+			if (args_.GetHandled())
 			{
-				KeyEventArgs args_ = new KeyEventArgs();
-				args_.SetKeyCode(eKey);
-				clientmods[i].OnKeyDown(this, args_);
-				if (args_.GetHandled())
-				{
-					return;
-				}
+				return;
 			}
+			
 		}
 		keyboardState[eKey] = true;
 		InvalidVersionAllow();
@@ -2756,13 +2744,10 @@
 				{
 					if (entities[currentlyAttackedEntity].usable)
 					{
-						for (int i = 0; i < clientmodsCount; i++)
-						{
-							if (clientmods[i] == null) { continue; }
-							OnUseEntityArgs args = new OnUseEntityArgs();
-							args.entityId = currentlyAttackedEntity;
-							clientmods[i].OnUseEntity(this, args);
-						}
+						OnUseEntityArgs args = new OnUseEntityArgs();
+						args.entityId = currentlyAttackedEntity;
+						clientModloader.OnUseEntity(this, args);
+						
 						SendPacketClient(ClientPackets.UseEntity(currentlyAttackedEntity));
 					}
 				}
@@ -2900,11 +2885,9 @@
 
         rend.OrthoMode(Width(), Height());
 
-		for (int i = 0; i < clientmodsCount; i++)
-		{
-			if (clientmods[i] == null) { continue; }
-			clientmods[i].OnNewFrameDraw2d(this, dt);
-		}
+ 
+        clientModloader.OnNewFrameDraw2d(this, dt);
+		
 
         rend.PerspectiveMode();
 	}
@@ -2922,10 +2905,9 @@
 	{
 		NewFrameEventArgs args_ = new NewFrameEventArgs();
 		args_.SetDt(dt);
-		for (int i = 0; i < clientmodsCount; i++)
-		{
-			clientmods[i].OnNewFrameFixed(this, args_);
-		}
+
+        clientModloader.OnNewFrameFixed(this, args_);
+		
 		for (int i = 0; i < entitiesCount; i++)
 		{
 			Entity e = entities[i];
@@ -3027,11 +3009,9 @@
 		{
 			mouserightclick = true;
 		}
-		for (int i = 0; i < clientmodsCount; i++)
-		{
-			if (clientmods[i] == null) { continue; }
-			clientmods[i].OnMouseDown(this, args);
-		}
+
+        clientModloader.OnMouseDown(this, args);
+		
 		if (mousePointerLockShouldBe)
 		{
 			platform.RequestMousePointerLock();
@@ -3054,11 +3034,9 @@
 		{
 			mouserightdeclick = true;
 		}
-		for (int i = 0; i < clientmodsCount; i++)
-		{
-			if (clientmods[i] == null) { continue; }
-			clientmods[i].OnMouseUp(this, args);
-		}
+
+        clientModloader.OnMouseUp(this, args);
+		
 	}
 
 	public GamePlatform GetPlatform()
@@ -3110,20 +3088,18 @@
 	bool startedconnecting;
 	internal void GotoDraw2d(float dt)
 	{
-		for (int i = 0; i < clientmodsCount; i++)
-		{
-			clientmods[i].OnBeforeNewFrameDraw2d(this, dt);
-		}
+
+            clientModloader.OnBeforeNewFrameDraw2d(this, dt);
+		
 
 		SetAmbientLight(ColorCi.FromArgb(255, 255, 255, 255));
 		Draw2d(dt);
 
 		NewFrameEventArgs args_ = new NewFrameEventArgs();
 		args_.SetDt(dt);
-		for (int i = 0; i < clientmodsCount; i++)
-		{
-			clientmods[i].OnNewFrame(this, args_);
-		}
+
+        clientModloader.OnNewFrame(this, args_);
+		
 
 		mouseleftclick = mouserightclick = false;
 		mouseleftdeclick = mouserightdeclick = false;
@@ -3160,15 +3136,7 @@
 		mouseCurrentY = e.GetY();
 		mouseleftclick = true;
 
-		for (int i = 0; i < clientmodsCount; i++)
-		{
-			if (clientmods[i] == null) { continue; }
-			clientmods[i].OnTouchStart(this, e);
-			if (e.GetHandled())
-			{
-				return;
-			}
-		}
+        clientModloader.OnTouchStart(this, e);
 	}
 
 	internal float touchMoveDx;
@@ -3178,30 +3146,16 @@
 
 	public void OnTouchMove(TouchEventArgs e)
 	{
-		for (int i = 0; i < clientmodsCount; i++)
-		{
-			if (clientmods[i] == null) { continue; }
-			clientmods[i].OnTouchMove(this, e);
-			if (e.GetHandled())
-			{
-				return;
-			}
-		}
+        clientModloader.OnTouchMove(this, e);
 	}
 
 	public void OnTouchEnd(TouchEventArgs e)
 	{
 		mouseCurrentX = 0;
 		mouseCurrentY = 0;
-		for (int i = 0; i < clientmodsCount; i++)
-		{
-			if (clientmods[i] == null) { continue; }
-			clientmods[i].OnTouchEnd(this, e);
-			if (e.GetHandled())
-			{
-				return;
-			}
-		}
+
+        clientModloader.OnTouchEnd(this, e);
+
 	}
 
 	public void OnBackPressed()
@@ -3222,12 +3176,10 @@
 			mouseDeltaX += e.GetMovementX();
 			mouseDeltaY += e.GetMovementY();
         }
-		for (int i = 0; i < clientmodsCount; i++)
-		{
-			if (clientmods[i] == null) { continue; }
-			clientmods[i].OnMouseMove(this, e);
-		}
-	}
+
+        clientModloader.OnMouseMove(this, e);
+
+    }
 
 	internal ListAction commitActions;
 	public void QueueActionCommit(Action_ action)
@@ -3239,11 +3191,9 @@
 
 	public void Dispose()
 	{
-		for (int i = 0; i < clientmodsCount; i++)
-		{
-			if (clientmods[i] == null) { continue; }
-			clientmods[i].Dispose(this);
-		}
+	
+        clientModloader.Dispose(this);
+		
 		for (int i = 0; i < textures.count; i++)
 		{
 			if (textures.items[i] == null)

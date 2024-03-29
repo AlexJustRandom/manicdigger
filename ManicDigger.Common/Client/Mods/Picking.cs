@@ -655,13 +655,11 @@
 		//Only single hit when mouse clicked
 		if (game.currentlyAttackedEntity != -1 && game.mouseLeft)
 		{
-			for (int i = 0; i < game.clientmodsCount; i++)
-			{
-				if (game.clientmods[i] == null) { continue; }
-				OnUseEntityArgs args = new OnUseEntityArgs();
+ 
+ 				OnUseEntityArgs args = new OnUseEntityArgs();
 				args.entityId = game.currentlyAttackedEntity;
-				game.clientmods[i].OnHitEntity(game, args);
-			}
+				game.clientModloader.OnHitEntity(game, args);
+	 
 			game.SendPacketClient(ClientPackets.HitEntity(game.currentlyAttackedEntity));
 		}
 	}

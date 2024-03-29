@@ -11,8 +11,8 @@
 	{
 		if (actions == null)
 		{
-			actions = new BackgroundAction[game.clientmodsCount];
-			for (int i = 0; i < game.clientmodsCount; i++)
+			actions = new BackgroundAction[game.clientModloader.GetClientModsCount];
+			for (int i = 0; i < game.clientModloader.GetClientModsCount; i++)
 			{
 				actions[i] = new BackgroundAction();
 			}
@@ -20,13 +20,13 @@
 
 		if (game.platform.MultithreadingAvailable())
 		{
-			for (int i = 0; i < game.clientmodsCount; i++)
+			for (int i = 0; i < game.clientModloader.GetClientModsCount; i++)
 			{
-				game.clientmods[i].OnReadOnlyMainThread(game, dt);
+				game.clientModloader.GetClientMods[i].OnReadOnlyMainThread(game, dt);
 			}
 
 			bool allDone = true;
-			for (int i = 0; i < game.clientmodsCount; i++)
+			for (int i = 0; i < game.clientModloader.GetClientModsCount; i++)
 			{
 				if (actions[i] != null && actions[i].active && (!actions[i].finished))
 				{
@@ -38,16 +38,16 @@
 
 			if (allDone)
 			{
-				for (int i = 0; i < game.clientmodsCount; i++)
+				for (int i = 0; i < game.clientModloader.GetClientModsCount; i++)
 				{
-					game.clientmods[i].OnReadWriteMainThread(game, dt);
+                    game.clientModloader.GetClientMods[i].OnReadWriteMainThread(game, dt);
 				}
 				for (int i = 0; i < game.commitActions.count; i++)
 				{
 					game.commitActions.items[i].Run();
 				}
 				game.commitActions.Clear();
-				for (int i = 0; i < game.clientmodsCount; i++)
+				for (int i = 0; i < game.clientModloader.GetClientModsCount; i++)
 				{
 					BackgroundAction a = actions[i];
 					a.game = game;
@@ -61,19 +61,19 @@
 		}
 		else
 		{
-			for (int i = 0; i < game.clientmodsCount; i++)
+			for (int i = 0; i < game.clientModloader.GetClientModsCount; i++)
 			{
-				game.clientmods[i].OnReadOnlyMainThread(game, dt);
+                game.clientModloader.GetClientMods[i].OnReadOnlyMainThread(game, dt);
 			}
 
-			for (int i = 0; i < game.clientmodsCount; i++)
+			for (int i = 0; i < game.clientModloader.GetClientModsCount; i++)
 			{
-				game.clientmods[i].OnReadOnlyBackgroundThread(game, dt);
+                game.clientModloader.GetClientMods[i].OnReadOnlyBackgroundThread(game, dt);
 			}
 
-			for (int i = 0; i < game.clientmodsCount; i++)
+			for (int i = 0; i < game.clientModloader.GetClientModsCount; i++)
 			{
-				game.clientmods[i].OnReadWriteMainThread(game, dt);
+                game.clientModloader.GetClientMods[i].OnReadWriteMainThread(game, dt);
 			}
 
 			for (int i = 0; i < game.commitActions.count; i++)
@@ -103,7 +103,7 @@ public class BackgroundAction : Action_
 
 	public override void Run()
 	{
-		game.clientmods[i].OnReadOnlyBackgroundThread(game, dt);
+        game.clientModloader.GetClientMods[i].OnReadOnlyBackgroundThread(game, dt);
 		finished = true;
 	}
 }
