@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+//Imortant note :: Couple of mod funtions are caled FROM task sheduler
 
     public class ClientModloader
     {
@@ -28,12 +28,30 @@ using System.Collections.Generic;
             }
         }
 
-        public void OnNewFrame(Game game, NewFrameEventArgs args) { }
+        public void OnNewFrame(Game game, NewFrameEventArgs args) {
+            for (int i = 0; i < GetClientMods.Count; i++)
+            {
+                if (GetClientMods[i] == null) { continue; }
+                GetClientMods[i].OnNewFrame(game, args);
+            }
+        }
         
-        public void OnNewFrameFixed(Game game, NewFrameEventArgs args) { }
+        public void OnNewFrameFixed(Game game, NewFrameEventArgs args) {
+            for (int i = 0; i < GetClientMods.Count; i++)
+            {
+                if (GetClientMods[i] == null) { continue; }
+                GetClientMods[i].OnNewFrameFixed(game, args);
+            }
+        }
         
-        public void OnBeforeNewFrameDraw2d(Game game, float deltaTime) { }
-        
+        public void OnBeforeNewFrameDraw2d(Game game, float deltaTime) {
+            for (int i = 0; i < GetClientMods.Count; i++)
+            {
+                if (GetClientMods[i] == null) { continue; }
+                GetClientMods[i].OnBeforeNewFrameDraw2d(game, deltaTime);
+            }
+        }
+            
         public void OnNewFrameDraw2d(Game game, float deltaTime) {
             for (int i = 0; i < GetClientMods.Count; i++)
             {
