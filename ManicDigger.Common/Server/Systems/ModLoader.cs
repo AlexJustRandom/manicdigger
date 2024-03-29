@@ -22,6 +22,7 @@ namespace ManicDigger.Server
         bool started;
         Server server;
         public bool modlodingDebug = false;
+        public bool writeWarnings = false;
         public override void Update(Server _server, float dt)
         {
             if (!started)
@@ -147,9 +148,9 @@ namespace ManicDigger.Server
             parms.GenerateExecutable = false;
             parms.CompilerOptions = "/unsafe";
 
-#if !DEBUG
-            parms.GenerateInMemory = true;
-#else
+            #if !DEBUG
+                        parms.GenerateInMemory = true;
+            #else
             //Prepare for mod debugging
             //IMPORTANT: Visual Studio breakpoints will not jump into a generatet .cs file
             //Instead, call "System.Diagnostics.Debugger.Break()" to create a breakpoint in the mod-class
@@ -237,6 +238,7 @@ namespace ManicDigger.Server
                 for (int j =0; j < results.Errors.Count; j++) {
                     if (results.Errors[j].IsWarning) {
                         warningsCount++;
+                        if (!writeWarnings) continue;
                         if (modlodingDebug) Console.WriteLine("----------------------------------WARNING------------------------------------");
 
                     }
