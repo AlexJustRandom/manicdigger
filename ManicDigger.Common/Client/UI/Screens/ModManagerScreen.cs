@@ -4,8 +4,7 @@
     {
         // initialize widgets
 
-       
-        wbtn_back = new ButtonWidget();
+         wbtn_back = new ButtonWidget();
         AddWidget(wbtn_back);
 
         wbtn_modmanageroptions = new ButtonWidget();
@@ -45,24 +44,19 @@
 
     public override void Render(float dt)
     {
-
         float scale = menu.uiRenderer.GetScale();
-
-
+ 
 
         float buttonheight = 64 * scale;
         float buttonwidth = 256 * scale;
         float spacebetween = 5 * scale;
         float offsetfromborder = 50 * scale;
-
-
-
+ 
         wmm_ModManager.x = offsetfromborder;
         wmm_ModManager.y = 0;
         wmm_ModManager.sizex = gamePlatform.GetCanvasWidth()- offsetfromborder*2;
         wmm_ModManager.sizey = gamePlatform.GetCanvasHeight()- offsetfromborder;
-
-
+         
 
         wtxt_title.x = gamePlatform.GetCanvasWidth() / 2;
         wtxt_title.y = 10;
@@ -75,6 +69,7 @@
         wbtn_back.sizex = buttonwidth;
         wbtn_back.sizey = buttonheight;
         index++;
+
         wbtn_modmanageroptions.x = offsetfromborder + (index * (buttonwidth + spacebetween));
         wbtn_modmanageroptions.y = gamePlatform.GetCanvasHeight() - offsetfromborder - buttonheight;
         wbtn_modmanageroptions.sizex = buttonwidth;
@@ -101,8 +96,7 @@
 
     public override void OnButton(AbstractMenuWidget w)
     {
-
-
+ 
         if (w == wbtn_modmanageroptions)
         {
             OnBackPressed();
@@ -118,8 +112,5 @@
         } 
 
     }
-
-
-
-
+ 
 }

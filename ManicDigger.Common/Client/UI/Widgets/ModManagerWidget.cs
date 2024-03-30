@@ -64,6 +64,7 @@
         lastModpackID=0;
 
     }
+
     MainMenu menu;
     public void LoadTranslationsandMods(GamePlatform gamePlatform,MainMenu _menu) {
         menu = _menu;
