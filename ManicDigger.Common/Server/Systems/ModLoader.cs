@@ -9,6 +9,7 @@ namespace ManicDigger.Server
 {
     public class ServerSystemModLoader : ServerSystem
     {
+        private readonly string separator = "-----------------------------------------------------------------------------";
         public ServerSystemModLoader()
         {
             jintEngine.DisableSecurity();
@@ -21,8 +22,10 @@ namespace ManicDigger.Server
 
         bool started;
         Server server;
+
         public bool modlodingDebug = false;
         public bool writeWarnings = false;
+
         public override void Update(Server _server, float dt)
         {
             if (!started)
@@ -117,6 +120,7 @@ namespace ManicDigger.Server
                 }
 
             }
+            if (modlodingDebug) Console.WriteLine(separator);
             if (modlodingDebug) Console.WriteLine(string.Format("Starting compilation of {0}", modsources[index].ModID));
            
 
@@ -245,27 +249,27 @@ namespace ManicDigger.Server
                     else
                     {
                         errorCount++;
-                        if (modlodingDebug) Console.WriteLine("-----------------------------------ERROR-------------------------------------");
+                        Console.WriteLine("-----------------------------------ERROR-------------------------------------");
 
                     }
-                    if (modlodingDebug)
+                    if (modlodingDebug||!results.Errors[j].IsWarning)
                     {
                         //TODO ORGINAL FILENAME ?
                         Console.WriteLine("Filename:" + errorCount + results.Errors[j].FileName);
                         Console.WriteLine("Line:" + results.Errors[j].Line);
                         Console.WriteLine("Text:" + results.Errors[j].ErrorText);
-                        Console.WriteLine("-----------------------------------------------------------------------------");
+                        Console.WriteLine(separator);
                     }
 
                 }
                 if(errorCount!=0| warningsCount != 0) {
                     if (modlodingDebug)
                     {
-                        Console.WriteLine("-----------------------------------------------------------------------------");
+                        Console.WriteLine(separator);
                         Console.WriteLine("Compiled with:");
                         Console.WriteLine("Errors:" + errorCount);
                         Console.WriteLine("Warnings:" + warningsCount);
-                        Console.WriteLine("-----------------------------------------------------------------------------");
+                        Console.WriteLine(separator);
                     }
                 }
  

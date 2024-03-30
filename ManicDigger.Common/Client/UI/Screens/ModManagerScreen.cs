@@ -17,17 +17,21 @@
 
         wmm_ModManager = new ModManagerWidget();
         AddWidget(wmm_ModManager);
+
+        wbtn_ModEditor = new ButtonWidget();
+        AddWidget(wbtn_ModEditor);
     }
 
 
     ButtonWidget wbtn_modmanageroptions;
 
     ButtonWidget wbtn_back;
+    ButtonWidget wbtn_ModEditor;
 
     ModManagerWidget wmm_ModManager;
 
     TextWidget wtxt_title;
-     
+    bool editActive;
 
     public override void LoadTranslations()
     {
@@ -35,7 +39,9 @@
         wbtn_back.SetText(menu.lang.Get("MainMenu_ButtonBack"));
         wbtn_modmanageroptions.SetText(menu.lang.Get("Modloader_ModManagerOptions"));  
         wmm_ModManager.LoadTranslationsandMods(gamePlatform,menu);
-      }
+        wbtn_ModEditor.SetText("Mod Editor"); //TODO LANG
+        editActive = true;
+    }
 
     public override void Render(float dt)
     {
@@ -73,6 +79,15 @@
         wbtn_modmanageroptions.y = gamePlatform.GetCanvasHeight() - offsetfromborder - buttonheight;
         wbtn_modmanageroptions.sizex = buttonwidth;
         wbtn_modmanageroptions.sizey = buttonheight;
+        index++;
+
+        if (editActive)
+        {
+            wbtn_ModEditor.x = offsetfromborder + (index * (buttonwidth + spacebetween));
+            wbtn_ModEditor.y = gamePlatform.GetCanvasHeight() - offsetfromborder - buttonheight;
+            wbtn_ModEditor.sizex = buttonwidth;
+            wbtn_ModEditor.sizey = buttonheight;
+        }
 
         DrawWidgets(dt);
 
@@ -91,6 +106,11 @@
         if (w == wbtn_modmanageroptions)
         {
             OnBackPressed();
+        }
+        if (w == wbtn_ModEditor)
+        {
+            if(wmm_ModManager.GetSelectedModID()!="")
+                menu.StartModEdit(wmm_ModManager.GetSelectedModID());
         }
         if (w == wbtn_back)
         {

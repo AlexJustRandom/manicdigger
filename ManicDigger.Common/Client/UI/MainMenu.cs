@@ -138,7 +138,15 @@ public class MainMenu
 		screen.Init(this, uiRenderer);
 	}
 
-	internal void StartLogin(string serverHash, string ip, int port)
+    internal void StartModEdit(string modID)
+    {
+        ScreenModEditor screenModeditor = new ScreenModEditor();
+        screen = screenModeditor;
+        screen.Init(this, uiRenderer);
+        screenModeditor.SetModID(modID);
+    }
+
+    internal void StartLogin(string serverHash, string ip, int port)
 	{
 		ScreenLogin screenLogin = new ScreenLogin();
 		screenLogin.serverHash = serverHash;

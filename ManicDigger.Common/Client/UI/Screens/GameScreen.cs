@@ -1,9 +1,17 @@
-﻿/// <summary>
+﻿
+
+using System.Collections.Generic;
+/// <summary>
 /// ScreenGame acts as the interface towards the game itself. All user input is forwarded to be handled by game logic.
 /// </summary>
+public class GameInitSetings {
+    List<string> modsToStart;
+}
+
+
 public class ScreenGame : MainMenuScreen
 {
-	public ScreenGame()
+    public ScreenGame()
 	{
 		game = new Game();
 	}

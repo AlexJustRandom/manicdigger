@@ -292,8 +292,6 @@
     <Compile Include="Client\UI\Widgets\SelectWidget.cs" />
     <Compile Include="Client\UI\Widgets\ModManagerWidget.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Server\Mods\Unused\ToManyBlocks.cs" />
-    <Compile Include="Server\Mods\EXPERIMENTS\Chest.cs" />
     <Compile Include="Client\Mods\GuiCointeiner.cs" />
     <Compile Include="Client\UI\Screens\ModManagerScreen.cs" />
     <Compile Include="..\ProtocolParser.cs">
@@ -303,6 +301,7 @@
       <Link>Common\Packet.cs</Link>
     </Compile>
     <Compile Include="Client\Misc\ClientModloader.cs" />
+    <Compile Include="Client\UI\Screens\ModEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -351,6 +350,8 @@
     <None Include="Server\Mods\Upgrades\Modinfo.json" />
     <None Include="Server\Mods\Unused\Frostwalk.cs" />
     <None Include="Server\Mods\EXPERIMENTS\SetGamemode.cs" />
+    <None Include="Server\Mods\Unused\ToManyBlocks.cs" />
+    <None Include="Server\Mods\EXPERIMENTS\Chest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Packet.proto">

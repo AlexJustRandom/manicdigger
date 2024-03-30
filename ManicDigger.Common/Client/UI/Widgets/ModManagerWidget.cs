@@ -176,10 +176,12 @@
 
     public override void OnMouseDown(GamePlatform p, MouseEventArgs args)
     {
-        int modListIndex = wlst_modList.GetIndexSelected();
 
         wts_modpack.OnMouseDown(p, args);
         wlst_modList.OnMouseDown(p, args);
+
+        int modListIndex = wlst_modList.GetIndexSelected();
+
 
         wbtn_accept.OnMouseDown(p, args);
         wbtn_switchactive.OnMouseDown(p, args);
@@ -277,19 +279,7 @@
                 }
             }
         }
-        if (wlst_modList.HasBeenClicked(args))
-        {
-            if (modListIndex != -1)
-            {
-                wt_ModDesc.SetModinfo(modinfos[modListIndex]);
-               if (modState[modListIndex])
-                    wbtn_switchactive.SetText(menu.lang.Get("Modloder_ModTurnOff"));
-               else
-                    wbtn_switchactive.SetText(menu.lang.Get("Modloder_ModTurnOn"));
-
-
-            }
-        }
+     
         if (wbtn_switchactive.HasBeenClicked(args))
         {
  
@@ -313,9 +303,20 @@
             }
 
         }
+        if (modListIndex != -1 && SelectedModid != modListIndex)
+        {
+            SelectedModid = modListIndex;
+            wt_ModDesc.SetModinfo(modinfos[SelectedModid]);
+            if (modState[SelectedModid])
+                wbtn_switchactive.SetText(menu.lang.Get("Modloder_ModTurnOff"));
+            else
+                wbtn_switchactive.SetText(menu.lang.Get("Modloder_ModTurnOn"));
+
+
+        }
 
     }
-  
+    private int SelectedModid = 0;
 
     public override void OnKeyPress(GamePlatform p, KeyPressEventArgs args)
     {
@@ -386,6 +387,7 @@
         wlst_modList.sizex = sizex * 3 / 5 - spacebetween ;
         wlst_modList.sizey = sizey - spacebetween * 4;
         wlst_modList.Draw(dt, renderer);
+
 
 
         wt_ModDesc.x = wlst_modList.x + wlst_modList.sizex;
@@ -575,7 +577,12 @@
 
         }
         p.SetCurrentModpack(name);
+        wt_ModDesc.SetModinfo(modinfos[SelectedModid]);
 
+    }
+    public string GetSelectedModID() {
+     
+        return modinfos[SelectedModid].ModID; 
     }
 
 }
